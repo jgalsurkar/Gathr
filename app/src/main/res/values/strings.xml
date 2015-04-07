@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_create_event">CreateEvent</string>
+    <string name="title_activity_view_gathring">ViewGathring</string>
 </resources>

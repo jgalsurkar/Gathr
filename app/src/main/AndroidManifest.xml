@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateEvent"
+            android:label="@string/title_activity_create_event" >
+        </activity>
+        <activity
+            android:name=".ViewGathring"
+            android:label="@string/title_activity_view_gathring" >
+        </activity>
     </application>
 
 </manifest>

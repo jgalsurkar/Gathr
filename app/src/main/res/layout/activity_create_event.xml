@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+<!--<FrameLayout
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" > -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_event_text"
+            android:text="Create a Gathring!"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:layout_margin="12dp"
+            android:textAlignment="center"/>
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_name"
+            android:hint="Enter Gathring Name"
+            android:inputType="text"
+            android:textStyle="bold"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_location"
+            android:textStyle="bold"
+            android:inputType="textPostalAddress"
+            android:hint="Enter Gathring Location"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_date"
+            android:hint="Enter Gathring Date"
+            android:inputType="date"
+            android:textStyle="bold"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_time"
+            android:hint="Enter Gathring Time"
+            android:inputType="time"
+            android:textStyle="bold"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_limit"
+            android:hint="Enter Gathring Limit"
+            android:inputType="number"
+            android:textStyle="bold"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_description"
+            android:hint="Enter Gathring Description"
+            android:inputType="textMultiLine"
+            android:textStyle="bold"
+            android:layout_margin="12dp"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:id="@+id/create_event_button"
+            android:layout_marginLeft="140dp"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:onClick="viewGathring"/>
+
+    </LinearLayout>
+<!--</FrameLayout> -->
+<ListView android:id="@+id/left_drawer"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:choiceMode="singleChoice"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="0dp"
+    android:background="#fff"/>
+</android.support.v4.widget.DrawerLayout>
