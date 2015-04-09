@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.model.GraphUser;
@@ -26,7 +28,13 @@ public class ProfileActivity extends Activity{
     super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         setTitle("Gathr");
-       // View view = inflater.inflate(R.layout.activity_profile, container, false);
+
+        String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
+        Class<?>[] links = { CreateEvent.class, ProfileActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
+
+
+        // View view = inflater.inflate(R.layout.activity_profile, container, false);
         userNameView = (TextView)findViewById(R.id.user_name);
 
         final ImageButton insta = (ImageButton) findViewById(R.id.insta);

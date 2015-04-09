@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/Aarsh/Desktop/Gathr/Gathr/libraries/facebook/res/values-hdpi/dimens.xml -->
+    <!-- From: file:/C:/Users/Aarsh/Desktop/Gathr2/Gathr/libraries/facebook/res/values-hdpi/dimens.xml -->
     <eat-comment/>
     <dimen name="com_facebook_picker_divider_width">1px</dimen>
 </resources>

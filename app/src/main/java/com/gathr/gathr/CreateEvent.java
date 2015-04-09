@@ -27,7 +27,7 @@ public class CreateEvent extends ActionBarActivity {
         setContentView(R.layout.activity_create_event);
 
         String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MainActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class};
+        Class<?>[] links = { CreateEvent.class, ProfileActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
     }
 

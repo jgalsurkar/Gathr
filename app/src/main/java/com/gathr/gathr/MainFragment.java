@@ -101,7 +101,7 @@ public class MainFragment extends Fragment{
                             e.printStackTrace();
                         }
                     }
-                    Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                    Intent i = new Intent(getActivity().getApplicationContext(), CreateEvent.class);
                     Log.i(TAG,"USER: "+user_id);
                     i.putExtra("userId", user_id);
                     startActivity(i);
