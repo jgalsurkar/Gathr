@@ -8,6 +8,11 @@ android:layout_height="match_parent">
     android:id="@+id/content_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent" > -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -35,10 +40,28 @@ android:layout_height="match_parent">
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/gathring_location"
+            android:id="@+id/gathring_address"
             android:textStyle="bold"
             android:inputType="textPostalAddress"
-            android:hint="Enter Gathring Location"
+            android:hint="Location EX: 4567 Rockway Drive. Apt. 7B"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_city"
+            android:textStyle="bold"
+            android:inputType="textPostalAddress"
+            android:hint="Enter City"
+            android:layout_margin="12dp"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gathring_state"
+            android:textStyle="bold"
+            android:inputType="textPostalAddress"
+            android:hint="Enter State"
             android:layout_margin="12dp"/>
 
         <EditText
@@ -89,6 +112,7 @@ android:layout_height="match_parent">
             android:onClick="viewGathring"/>
 
     </LinearLayout>
+</ScrollView>
 <!--</FrameLayout> -->
 <ListView android:id="@+id/left_drawer"
     android:layout_width="240dp"

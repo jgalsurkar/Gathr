@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.util.Log;
 
 public class CreateEvent extends ActionBarActivity {
 
@@ -22,10 +24,33 @@ public class CreateEvent extends ActionBarActivity {
     }
 
     public void viewGathring(View view){
+        QueryDB DBconn = new QueryDB();
+
+        String name = DBconn.escapeString(getElementText(R.id.gathring_name));
+        String desc = DBconn.escapeString(getElementText(R.id.gathring_description));
+        String address = DBconn.escapeString(getElementText(R.id.gathring_address));
+        String city = DBconn.escapeString(getElementText(R.id.gathring_city));
+        String state = DBconn.escapeString(getElementText(R.id.gathring_state));
+        String date = DBconn.escapeString(getElementText(R.id.gathring_date));
+        String time = DBconn.escapeString(getElementText(R.id.gathring_time));
+        String capacity = DBconn.escapeString(getElementText(R.id.gathring_limit));
+
+        DBconn.executeQuery("INSERT INTO EVENTS " +
+                "(`Name`, `Desc`, `Address`, `City`, `State`, `Date`, `Time`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
+                " VALUES " +
+                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+date+"', '"+time+"', '"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
+
+
+        String results = DBconn.getResults();
+
         Intent i = new Intent(this, ViewGathring.class);
+        i.putExtra("eventId", results);
         startActivity(i);
     }
 
+    public String getElementText(int viewId){
+        return ((EditText)findViewById(viewId)).getText().toString();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,3 +74,4 @@ public class CreateEvent extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
