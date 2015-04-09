@@ -1,5 +1,8 @@
 package com.gathr.gathr;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +23,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.android.Facebook;
 import com.facebook.android.Util;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.ProfilePictureView;
 
@@ -31,63 +36,76 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Anya on 2/24/2015.
- */
 public class MainFragment extends Fragment{
-    Facebook fb;
-    ImageView pic;
-    TextView welcome;
-
+    String user_id;
+    String user_email;
+    String user_gender;
+    String user_fname;
+    String user_lname;
+    String user_dob;
+    String results;
+    String id;
     private MainFragment mainFragment;
     private static final String TAG = "MainFragment";
-    private ProfilePictureView profilePictureView;
-    private TextView userNameView,dob, userInfoTextView,location;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
     {
+
         View view = inflater.inflate(R.layout.activity_main, container, false);
-
         // Find the user's profile picture custom view
-        profilePictureView = (ProfilePictureView) view.findViewById(R.id.selection_profile_pic);
-        profilePictureView.setCropped(true);
-
-        // Find the user's name view
-        userNameView = (TextView) view.findViewById(R.id.user_name);
-        dob = (TextView)view.findViewById(R.id.DateOfBirth);
-
-        userInfoTextView = (TextView) view.findViewById(R.id.userInfoTextView);
-        location = (TextView)view.findViewById(R.id.location);
-
         LoginButton authButton = (LoginButton)view.findViewById(R.id.authButton);
         authButton.setFragment(this);
-        authButton.setReadPermissions(Arrays.asList("user_likes","user_about_me","user_location","email"/*,"publish_actions"*/,"user_birthday","user_friends"));
+        authButton.setReadPermissions(Arrays.asList("user_about_me","email","user_birthday","user_friends"));
 
         authButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
 
-                    userNameView.setText("Welcome, " + user.getName());
-                    profilePictureView.setProfileId(user.getId());
-                    profilePictureView.setVisibility(View.VISIBLE);
-                    // Example: typed access (birthday)
-                    // - requires user_birthday permission
-                    //dob.setText(user.getBirthday());
 
-                    //dob.setVisibility(View.VISIBLE);
+                    user_id = user.getId();
+                    user_email = user.asMap().get("email").toString();
+                    user_gender = user.getProperty("gender").toString();
+                    user_fname = user.getFirstName();
+                    user_lname = user.getLastName();
+                    user_dob = user.getBirthday();
 
-                    userInfoTextView.setVisibility(View.VISIBLE);
-                    userInfoTextView.setText(buildUserInfoDisplay(user));
-                   // user.getLocation().getProperty("name");
-                    //location.setVisibility(View.VISIBLE);
 
-                } else {
-                    userNameView.setText("You are not logged in.");
-                    profilePictureView.setVisibility(View.INVISIBLE);
-                    dob.setVisibility(View.INVISIBLE);
-                    userInfoTextView.setVisibility(View.INVISIBLE);
+                    QueryDB DBconn = new QueryDB();
+
+                    DBconn.executeQuery("SELECT Id, Facebook_Id, Email, First_Name, Last_Name, Birthday, Gender FROM USERS WHERE Facebook_Id = '"+user_id+"'");
+                    results = DBconn.getResults();
+
+                    if (results.contains("ERROR"))
+                    {
+                        String query = "INSERT INTO USERS " +
+                                "( `Facebook_Id`, `Email`, `First_Name`, `Last_Name`, `Birthday`, `Gender`)" +
+                                " VALUES " +
+                                "('"+user_id+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')";
+                        DBconn.executeQuery(query);
+                        results = DBconn.getResults();
+                    }
+                    else {
+                        JSONArray json;
+                        try {
+                            json = new JSONArray(results);
+                            int n = json.length();
+                            //String p = n+"";
+                           // Log.i(TAG,"JSON: "+p);
+                            AuthUser.id = json.getJSONObject(n-1).getString("Id");
+                            AuthUser.user_id = json.getJSONObject(n-1).getString("Facebook_Id");
+                            AuthUser.user_fname = json.getJSONObject(n-1).getString("First_Name");
+                            AuthUser.user_lname = json.getJSONObject(n-1).getString("Last_Name");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                    Log.i(TAG,"USER: "+user_id);
+                    i.putExtra("userId", user_id);
+                    startActivity(i);
+
                 }
             }
 
@@ -95,52 +113,11 @@ public class MainFragment extends Fragment{
 
         Session.getActiveSession().getPermissions();
 
+
         return view;
     }
-    /*public interface OnFragmentInteractionListener {
-    }*/
-    public String buildUserInfoDisplay(GraphUser user) {
-        StringBuilder userInfo = new StringBuilder("");
 
-        // Example: typed access (name)
-        // - no special permissions required
-        userInfo.append(String.format("Name: %s\n\n",
-                user.getName()));
-
-        // Example: typed access (birthday)
-        // - requires user_birthday permission
-        userInfo.append(String.format("Birthday: %s\n\n",
-                user.getBirthday()));
-
-        // Example: partially typed access, to location field,
-        // name key (location)
-        // - requires user_location permission
-        userInfo.append(String.format("Location: %s\n\n",
-                user.getLocation().getProperty("name")));
-
-        // Example: access via property name (locale)
-        // - no special permissions required
-        userInfo.append(String.format("Locale: %s\n\n",
-                user.getProperty("locale")));
-
-        // Example: access via key for array (languages)
-        // - requires user_likes permission
-        /*JSONArray languages = (JSONArray) user.getProperty("languages");
-        if (languages.length() > 0) {
-            ArrayList<String> languageNames = new ArrayList<String>();
-            for (int i = 0; i < languages.length(); i++) {
-                JSONObject language = languages.optJSONObject(i);
-                // Add the language name to a list. Use JSON
-                // methods to get access to the name field.
-                languageNames.add(language.optString("name"));
-            }
-            userInfo.append(String.format("Languages: %s\n\n",
-                    languageNames.toString()));
-        }
-*/
-        return userInfo.toString();
-    }
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
         } else if (state.isClosed()) {
@@ -154,11 +131,11 @@ public class MainFragment extends Fragment{
             Session session = Session.getActiveSession();
             if (!session.isOpened() && !session.isClosed()) {
                 session.openForRead(new Session.OpenRequest(getActivity())
-                        .setPermissions(Arrays.asList("user_likes","user_about_me","user_location","email"/*,"publish_actions"*/,"user_birthday","user_friends"))
+                        .setPermissions(Arrays.asList("user_about_me","email","user_birthday","user_friends"))
                         .setCallback(callback));
-            } else {
-            //    Session.openActiveSession(getActivity(),this,true);
 
+            } else {
+                Session.openActiveSession(getActivity(),true,callback);
             }
         }
         @Override
@@ -177,7 +154,7 @@ public class MainFragment extends Fragment{
         }
            };
 
-    private UiLifecycleHelper uiHelper;
+   private UiLifecycleHelper uiHelper;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,25 +166,21 @@ public class MainFragment extends Fragment{
         super.onResume();
         uiHelper.onResume();
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
     }
-
     @Override
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         uiHelper.onDestroy();
     }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
