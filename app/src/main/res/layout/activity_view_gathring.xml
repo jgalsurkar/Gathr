@@ -47,16 +47,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/gathring_date_text"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:text="TEMP"
-        android:gravity="center"/>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/gathring_time_text"
         android:textStyle="bold"
         android:layout_marginTop="12dp"
@@ -68,7 +58,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gathring_limit_text"
-        android:hint="Enter Gathring Limit"
         android:textStyle="bold"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"

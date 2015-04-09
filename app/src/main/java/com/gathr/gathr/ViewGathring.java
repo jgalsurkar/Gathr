@@ -20,6 +20,8 @@ public class ViewGathring extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
 
+        MyGlobals global = new MyGlobals();
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String eventId = "";
@@ -42,7 +44,6 @@ public class ViewGathring extends ActionBarActivity {
             String address = json.getJSONObject(json.length()-1).getString("Address");
             String city = json.getJSONObject(json.length()-1).getString("City");
             String state = json.getJSONObject(json.length()-1).getString("State");
-            String date = json.getJSONObject(json.length()-1).getString("Date");
             String time = json.getJSONObject(json.length()-1).getString("Time");
             String capacity = json.getJSONObject(json.length()-1).getString("Capacity");
 
@@ -56,12 +57,10 @@ public class ViewGathring extends ActionBarActivity {
             d.setText(city);
             TextView e =(TextView)findViewById(R.id.gathring_state_text);
             e.setText(state);
-            TextView f =(TextView)findViewById(R.id.gathring_date_text);
-            f.setText(date);
+            TextView f =(TextView)findViewById(R.id.gathring_limit_text);
+            f.setText(capacity);
             TextView g =(TextView)findViewById(R.id.gathring_time_text);
-            g.setText(time);
-            TextView h =(TextView)findViewById(R.id.gathring_limit_text);
-            h.setText(capacity);
+            g.setText(global.normalTime(time));
 
         } catch (JSONException e) {
             e.printStackTrace();

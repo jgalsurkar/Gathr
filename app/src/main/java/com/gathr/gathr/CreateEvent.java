@@ -1,5 +1,6 @@
 package com.gathr.gathr;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,14 +8,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.util.Log;
+import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CreateEvent extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
@@ -24,6 +32,7 @@ public class CreateEvent extends ActionBarActivity {
     }
 
     public void viewGathring(View view){
+        MyGlobals global = new MyGlobals();
         QueryDB DBconn = new QueryDB();
 
         String name = DBconn.escapeString(getElementText(R.id.gathring_name));
@@ -31,14 +40,13 @@ public class CreateEvent extends ActionBarActivity {
         String address = DBconn.escapeString(getElementText(R.id.gathring_address));
         String city = DBconn.escapeString(getElementText(R.id.gathring_city));
         String state = DBconn.escapeString(getElementText(R.id.gathring_state));
-        String date = DBconn.escapeString(getElementText(R.id.gathring_date));
-        String time = DBconn.escapeString(getElementText(R.id.gathring_time));
+        String time = DBconn.escapeString(global.mTime(((TextView) findViewById(R.id.gathring_time)).getText().toString()));
         String capacity = DBconn.escapeString(getElementText(R.id.gathring_limit));
 
         DBconn.executeQuery("INSERT INTO EVENTS " +
-                "(`Name`, `Desc`, `Address`, `City`, `State`, `Date`, `Time`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
+                "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
                 " VALUES " +
-                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+date+"', '"+time+"', '"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
+                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', '"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
 
 
         String results = DBconn.getResults();
@@ -46,6 +54,13 @@ public class CreateEvent extends ActionBarActivity {
         Intent i = new Intent(this, ViewGathring.class);
         i.putExtra("eventId", results);
         startActivity(i);
+    }
+
+
+
+    public void showTimePickerDialog(View v) {
+        TimePickerFragment newFragment = new TimePickerFragment((TextView)findViewById(R.id.gathring_time));
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
     public String getElementText(int viewId){

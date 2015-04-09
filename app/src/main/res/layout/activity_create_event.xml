@@ -32,7 +32,7 @@ android:layout_height="match_parent">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gathring_name"
-            android:hint="Enter Gathring Name"
+            android:hint="Name"
             android:inputType="text"
             android:textStyle="bold"
             android:layout_margin="12dp"/>
@@ -43,7 +43,7 @@ android:layout_height="match_parent">
             android:id="@+id/gathring_address"
             android:textStyle="bold"
             android:inputType="textPostalAddress"
-            android:hint="Location EX: 4567 Rockway Drive. Apt. 7B"
+            android:hint="Address"
             android:layout_margin="12dp"/>
 
         <EditText
@@ -52,7 +52,7 @@ android:layout_height="match_parent">
             android:id="@+id/gathring_city"
             android:textStyle="bold"
             android:inputType="textPostalAddress"
-            android:hint="Enter City"
+            android:hint="City"
             android:layout_margin="12dp"/>
 
         <EditText
@@ -61,32 +61,14 @@ android:layout_height="match_parent">
             android:id="@+id/gathring_state"
             android:textStyle="bold"
             android:inputType="textPostalAddress"
-            android:hint="Enter State"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_date"
-            android:hint="Enter Gathring Date"
-            android:inputType="date"
-            android:textStyle="bold"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_time"
-            android:hint="Enter Gathring Time"
-            android:inputType="time"
-            android:textStyle="bold"
+            android:hint="State"
             android:layout_margin="12dp"/>
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gathring_limit"
-            android:hint="Enter Gathring Limit"
+            android:hint="Limit"
             android:inputType="number"
             android:textStyle="bold"
             android:layout_margin="12dp"/>
@@ -95,10 +77,36 @@ android:layout_height="match_parent">
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gathring_description"
-            android:hint="Enter Gathring Description"
+            android:hint="Description"
             android:inputType="textMultiLine"
             android:textStyle="bold"
             android:layout_margin="12dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gathring_time"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:layout_margin="12dp"
+                android:text="Pick a time"/>
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Pick Time"
+                android:id="@+id/time_picker_button"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:textAlignment="center"
+                android:onClick="showTimePickerDialog" />
+
+        </LinearLayout>
 
         <Button
             android:layout_width="100dp"
