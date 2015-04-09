@@ -44,9 +44,9 @@ public class CreateEvent extends ActionBarActivity {
         String capacity = DBconn.escapeString(getElementText(R.id.gathring_limit));
 
         DBconn.executeQuery("INSERT INTO EVENTS " +
-                "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
+                "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
                 " VALUES " +
-                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', '"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
+                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', DATE(NOW()),'"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
 
 
         String results = DBconn.getResults();
