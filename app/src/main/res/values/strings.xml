@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Gathr</string>
+    <string name="facebook_app_id">1406139246357321</string>
+    <string name="title_activity_main">Gathr</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_create_event">CreateEvent</string>
     <string name="title_activity_view_gathring">ViewGathring</string>
+    <string name="title_facebook_login"></string>
 </resources>

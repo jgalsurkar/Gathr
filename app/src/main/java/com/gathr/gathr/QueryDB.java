@@ -75,4 +75,5 @@ public class QueryDB {
         escapeThis = escapeThis.replace("\"","\\\"");
         return escapeThis;
     }
+
 }
