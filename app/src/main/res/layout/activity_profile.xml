@@ -4,72 +4,212 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#33CCCC"
-    android:weightSum="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#E5E5E5"
+        android:weightSum="1">
 
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gathr"
+            android:text="My Profile"
             android:id="@+id/button"
-            android:layout_weight="0.05" />
+            android:fontFamily="Times New Roman"
+            android:layout_weight="0.05"
+            android:background="#CCFFFF"
+            android:textStyle="bold|italic" />
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="5pt"
+            android:id="@+id/space"
+            android:layout_below="@+id/button"/>
 
         <com.facebook.widget.ProfilePictureView
-        android:id="@+id/selection_profile_pic"
-        android:layout_width="117dp"
-        android:layout_height="wrap_content"
+            android:id="@+id/selection_profile_pic"
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
             android:layoutMode="clipBounds"
             android:textAlignment="inherit"
-            android:layout_below="@+id/button"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"></com.facebook.widget.ProfilePictureView>
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/space"></com.facebook.widget.ProfilePictureView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearance"
             android:id="@+id/user_name"
+            android:textSize="10pt"
             android:textAlignment="inherit"
-            android:layout_below="@+id/selection_profile_pic"
+            android:fontFamily="Times New Roman"
+            android:textStyle = "italic|bold"
+            android:layout_toRightOf="@+id/selection_profile_pic"
+            android:layout_below="@+id/space"/>
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space2"
+            android:layout_below="@+id/user_name"
             android:layout_toRightOf="@+id/selection_profile_pic"/>
 
         <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/insta"
-        android:layout_below="@+id/user_name"
-        android:layout_toRightOf="@+id/selection_profile_pic" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/insta"
+            android:layout_below="@+id/space2"
+            android:layout_toRightOf="@+id/selection_profile_pic"/>
+
         <Space
-            android:layout_width="5pt"
-            android:layout_height="5pt" />
+            android:layout_width = "3pt"
+            android:layout_height="fill_parent"
+            android:id="@+id/space3"
+            android:layout_below="@+id/space2"
+            android:layout_toRightOf="@+id/insta"/>
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/face"
-            android:layout_below="@+id/user_name"
-            android:layout_toRightOf="@+id/insta"/>
+            android:layout_below="@+id/space2"
+            android:layout_toRightOf="@+id/space3" />
+
         <Space
-            android:layout_width="5pt"
-            android:layout_height="5pt" />
+            android:layout_width = "3pt"
+            android:layout_height="fill_parent"
+            android:id="@+id/space4"
+            android:layout_below="@+id/space2"
+            android:layout_toRightOf="@+id/face"/>
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/twit"
-            android:layout_below="@+id/user_name"
-            android:layout_toRightOf="@+id/face"/>
+            android:layout_below="@+id/space2"
+            android:layout_toRightOf="@+id/space4"/>
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space5"
+            android:layout_below="@+id/face"
+            android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Block User"
+            android:id="@+id/lock"
+            android:layout_below="@+id/space5"
+            android:layout_toRightOf="@+id/selection_profile_pic"
+            android:checked="false" />
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space6"
+            android:layout_below="@+id/selection_profile_pic"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About Me"
+            android:id="@+id/about_me"
+            android:layout_below="@+id/space6"
+            android:lines="3"
+            android:fontFamily="Times New Roman"
+            android:textStyle = "italic|bold"
+            android:textSize="10pt"
+            android:background="#CCFFFF"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:linksClickable="false" />
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space7"
+            android:layout_below="@+id/about_me"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Past Events"
+            android:id="@+id/past_events"
+            android:layout_below="@+id/space7"
+            android:lines="3"
+            android:background="#CCFFFF"
+            android:fontFamily="Times New Roman"
+            android:textStyle = "italic|bold"
+            android:textSize="10pt"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:linksClickable="false" />
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space8"
+            android:layout_below="@+id/past_events"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Interests"
+            android:id="@+id/my_interests"
+            android:layout_below="@+id/space8"
+            android:lines="3"
+            android:background="#CCFFFF"
+            android:fontFamily="Times New Roman"
+            android:textStyle = "italic|bold"
+            android:textSize="10pt"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:linksClickable="false" />
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space9"
+            android:layout_below="@+id/past_events"
+            />
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontalScrollView"
+            android:background="#FFFFFF"
+            android:layout_below="@+id/space9"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GATHR"
+            android:id="@+id/to_gathr"
+            android:background="#33CCCC"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
 
     </RelativeLayout>
     <ListView android:id="@+id/left_drawer"
-    android:layout_width="240dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:choiceMode="singleChoice"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0dp"
-    android:background="#fff"/>
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#fff"/>
 </android.support.v4.widget.DrawerLayout>

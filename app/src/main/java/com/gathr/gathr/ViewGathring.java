@@ -30,7 +30,7 @@ public class ViewGathring extends ActionBarActivity {
 
         Log.i("EVENT ID IS: ", "" + eventId);
 
-        QueryDB x = new QueryDB();
+        QueryDB x = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         x.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
 
         String result = x.getResults();

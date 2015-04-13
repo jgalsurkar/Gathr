@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-/**
- * Created by JohnnyXD1 on 4/9/2015.
- */
 public class MyGlobals {
+
+    Context c;
+    MyGlobals(Context _c){
+        c = _c;
+    }
+    MyGlobals(){ }
 
     public String mTime(String nTime){
         SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss");

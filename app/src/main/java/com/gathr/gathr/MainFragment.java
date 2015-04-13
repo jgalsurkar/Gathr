@@ -1,48 +1,22 @@
 package com.gathr.gathr;
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.android.Facebook;
-import com.facebook.android.Util;
 import com.facebook.model.GraphUser;
-import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.ProfilePictureView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainFragment extends Fragment{
-    String user_id;
-    String user_email;
-    String user_gender;
-    String user_fname;
-    String user_lname;
-    String user_dob;
+
     String results;
     String id;
     private MainFragment mainFragment;
@@ -63,47 +37,26 @@ public class MainFragment extends Fragment{
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
 
+                    String user_id = user.getId();
+                    String user_email = user.asMap().get("email").toString();
+                    String user_gender= user.getProperty("gender").toString();
+                    String user_fname = user.getFirstName();
+                    String user_lname = user.getLastName();
+                    String user_dob= user.getBirthday();
 
-                    user_id = user.getId();
-                    user_email = user.asMap().get("email").toString();
-                    user_gender = user.getProperty("gender").toString();
-                    user_fname = user.getFirstName();
-                    user_lname = user.getLastName();
-                    user_dob = user.getBirthday();
-
-
-                    QueryDB DBconn = new QueryDB();
-
-                    DBconn.executeQuery("SELECT Id, Facebook_Id, Email, First_Name, Last_Name, Birthday, Gender FROM USERS WHERE Facebook_Id = '"+user_id+"'");
+                    QueryDB DBconn = new QueryDB(user_id);
+                    DBconn.executeQuery("INSERT USER('"+user_id+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')");
                     results = DBconn.getResults();
 
-                    if (results.contains("ERROR"))
-                    {
-                        String query = "INSERT INTO USERS " +
-                                "( `Facebook_Id`, `Email`, `First_Name`, `Last_Name`, `Birthday`, `Gender`)" +
-                                " VALUES " +
-                                "('"+user_id+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')";
-                        DBconn.executeQuery(query);
-                        results = DBconn.getResults();
+                    if (results.contains("ERROR")){
+                        Log.i("Log In: ",results);
+                    }else{
+                        AuthUser.user_id = results;
+                        AuthUser.fb_id = user_id;
+                        AuthUser.user_fname = user_fname;
+                        AuthUser.user_lname = user_lname;
                     }
-                    else {
-                        JSONArray json;
-                        try {
-                            json = new JSONArray(results);
-                            int n = json.length();
-                            //String p = n+"";
-                           // Log.i(TAG,"JSON: "+p);
-                            AuthUser.id = json.getJSONObject(n-1).getString("Id");
-                            AuthUser.user_id = json.getJSONObject(n-1).getString("Facebook_Id");
-                            AuthUser.user_fname = json.getJSONObject(n-1).getString("First_Name");
-                            AuthUser.user_lname = json.getJSONObject(n-1).getString("Last_Name");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Intent i = new Intent(getActivity().getApplicationContext(), CreateEvent.class);
-                    Log.i(TAG,"USER: "+user_id);
-                    i.putExtra("userId", user_id);
+                    Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
                     startActivity(i);
 
                 }
@@ -112,8 +65,6 @@ public class MainFragment extends Fragment{
         });
 
         Session.getActiveSession().getPermissions();
-
-
         return view;
     }
 
@@ -122,7 +73,7 @@ public class MainFragment extends Fragment{
             Log.i(TAG, "Logged in...");
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
-             }
+        }
     }
     private Session.StatusCallback callback = new Session.StatusCallback() {
 

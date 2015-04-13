@@ -1,9 +1,9 @@
 package com.gathr.gathr;
 
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -11,12 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.util.Log;
 import android.widget.TextView;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class CreateEvent extends ActionBarActivity {
 
@@ -27,13 +22,14 @@ public class CreateEvent extends ActionBarActivity {
         setContentView(R.layout.activity_create_event);
 
         String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { CreateEvent.class, ProfileActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        Class<?>[] links = { MapsActivity.class, ProfileActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
     }
 
     public void viewGathring(View view){
-        MyGlobals global = new MyGlobals();
-        QueryDB DBconn = new QueryDB();
+        MyGlobals global = new MyGlobals(this);
+
+        QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
 
         String name = DBconn.escapeString(getElementText(R.id.gathring_name));
         String desc = DBconn.escapeString(getElementText(R.id.gathring_description));

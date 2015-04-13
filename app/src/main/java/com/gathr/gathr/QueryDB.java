@@ -15,12 +15,25 @@ import static java.sql.DriverManager.println;
 public class QueryDB {
 
     protected String result = "";
+    protected String user_id = "0";
+    protected String fb_id = "0";
+
+    QueryDB(String _fb_id){
+        fb_id = _fb_id;
+    }
+    QueryDB(String _fb_id, String _user_id){
+        fb_id = _fb_id;
+        user_id = _user_id;
+    }
 
     private class innerQueryDB extends AsyncTask<String, Void, String> {
+
+
         @Override
         protected String doInBackground(String[] arg0) {
             try {
-                String link = "http://aarshv.siteground.net/gathr_db.php";
+                String link = "http://aarshv.siteground.net/gathr_db_new.php?fid=" + fb_id + "&uid=" + user_id;
+
                 String data = URLEncoder.encode("query", "UTF-8") + "=" + URLEncoder.encode(arg0[0], "UTF-8");
 
                 //Open URL
@@ -48,13 +61,16 @@ public class QueryDB {
             }
 
         }
-
-
     }
 
     public void executeQuery(String query){
-        result = null;
-        new innerQueryDB().execute(query);
+        Log.i("HHEREHERHHER", fb_id + " " + user_id);
+        if(fb_id == "0"){
+            //THROW
+        }else {
+            result = null;
+            new innerQueryDB().execute(query);
+        }
     }
 
     public String getResults() {//throws java.lang.Throwable{
@@ -75,5 +91,4 @@ public class QueryDB {
         escapeThis = escapeThis.replace("\"","\\\"");
         return escapeThis;
     }
-
 }
