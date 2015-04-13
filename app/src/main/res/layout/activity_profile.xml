@@ -61,7 +61,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/insta"
             android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/selection_profile_pic"/>
+            android:layout_toRightOf="@+id/selection_profile_pic"
+            android:linksClickable="true"
+            android:autoLink="web"
+            android:clickable="true"
+            android:onClick="goToInsta"/>
 
         <Space
             android:layout_width = "3pt"
@@ -75,7 +79,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/face"
             android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/space3" />
+            android:layout_toRightOf="@+id/space3"
+            android:linksClickable="true"
+            android:autoLink="web"
+            android:clickable="true"
+            android:onClick="goToFace"/>
 
         <Space
             android:layout_width = "3pt"
@@ -89,7 +97,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/twit"
             android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/space4"/>
+            android:layout_toRightOf="@+id/space4"
+            android:linksClickable="true"
+            android:autoLink="web"
+            android:clickable="true"
+            android:onClick="goToTwit"/>
 
         <Space
             android:layout_width = "fill_parent"

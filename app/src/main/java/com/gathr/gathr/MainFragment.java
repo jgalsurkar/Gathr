@@ -37,27 +37,31 @@ public class MainFragment extends Fragment{
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
 
-                    String user_id = user.getId();
+                    String user_fid = user.getId();
                     String user_email = user.asMap().get("email").toString();
                     String user_gender= user.getProperty("gender").toString();
                     String user_fname = user.getFirstName();
                     String user_lname = user.getLastName();
                     String user_dob= user.getBirthday();
 
-                    QueryDB DBconn = new QueryDB(user_id);
-                    DBconn.executeQuery("INSERT USER('"+user_id+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')");
+                    QueryDB DBconn = new QueryDB(user_fid);
+                    DBconn.executeQuery("INSERT USER('"+user_fid+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')");
                     results = DBconn.getResults();
 
                     if (results.contains("ERROR")){
                         Log.i("Log In: ",results);
                     }else{
                         AuthUser.user_id = results;
-                        AuthUser.fb_id = user_id;
+                        AuthUser.fb_id = user_fid;
                         AuthUser.user_fname = user_fname;
                         AuthUser.user_lname = user_lname;
                     }
                     Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                    Log.i(TAG,"USER: "+AuthUser.user_id);
+                    i.putExtra("userId", AuthUser.user_id);
                     startActivity(i);
+                    //Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                    //startActivity(i);
 
                 }
             }
@@ -68,7 +72,7 @@ public class MainFragment extends Fragment{
         return view;
     }
 
-     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
         } else if (state.isClosed()) {
@@ -103,9 +107,9 @@ public class MainFragment extends Fragment{
 
             uiHelper.onResume();
         }
-           };
+    };
 
-   private UiLifecycleHelper uiHelper;
+    private UiLifecycleHelper uiHelper;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

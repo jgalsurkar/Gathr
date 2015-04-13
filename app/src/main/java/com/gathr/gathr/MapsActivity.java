@@ -68,9 +68,9 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
 
         //Set up user location services
-       // locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
-        //locationListener = new MyLocationListener();   //Location listener listens to changes in location
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
+        locationListener = new MyLocationListener();   //Location listener listens to changes in location
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
 
         //Set up map
         setUpMapIfNeeded();
@@ -196,9 +196,9 @@ def change_in_longitude(latitude, miles):
 
         //Set camera to user location
 
-        //Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-        //LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
+        Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+       // LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
     }
 
 
