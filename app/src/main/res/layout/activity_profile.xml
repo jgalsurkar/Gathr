@@ -6,27 +6,11 @@
     android:layout_height="match_parent">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#E5E5E5"
-        android:weightSum="1">
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Profile"
-            android:id="@+id/button"
-            android:fontFamily="Times New Roman"
-            android:layout_weight="0.05"
-            android:background="#CCFFFF"
-            android:textStyle="bold|italic" />
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="5pt"
-            android:id="@+id/space"
-            android:layout_below="@+id/button"/>
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.gathr.gathr.Profile">
 
         <com.facebook.widget.ProfilePictureView
             android:id="@+id/selection_profile_pic"
@@ -34,8 +18,9 @@
             android:layout_height="wrap_content"
             android:layoutMode="clipBounds"
             android:textAlignment="inherit"
-            android:layout_centerVertical="true"
-            android:layout_below="@+id/space"></com.facebook.widget.ProfilePictureView>
+            android:layout_alignTop="@+id/user_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +32,7 @@
             android:fontFamily="Times New Roman"
             android:textStyle = "italic|bold"
             android:layout_toRightOf="@+id/selection_profile_pic"
-            android:layout_below="@+id/space"/>
+            />
 
         <Space
             android:layout_width = "fill_parent"
@@ -110,14 +95,6 @@
             android:layout_below="@+id/face"
             android:layout_toRightOf="@+id/selection_profile_pic"/>
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Block User"
-            android:id="@+id/lock"
-            android:layout_below="@+id/space5"
-            android:layout_toRightOf="@+id/selection_profile_pic"
-            android:checked="false" />
         <Space
             android:layout_width = "fill_parent"
             android:layout_height="3pt"
@@ -129,89 +106,101 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="About Me"
-            android:id="@+id/about_me"
+            android:id="@+id/about_me_label"
             android:layout_below="@+id/space6"
-            android:lines="3"
             android:fontFamily="Times New Roman"
-            android:textStyle = "italic|bold"
+            android:textStyle = "bold"
             android:textSize="10pt"
-            android:background="#CCFFFF"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:linksClickable="false" />
 
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space7"
-            android:layout_below="@+id/about_me"
-            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Past Events"
-            android:id="@+id/past_events"
-            android:layout_below="@+id/space7"
-            android:lines="3"
-            android:background="#CCFFFF"
+            android:id="@+id/about_me"
+            android:layout_below="@+id/about_me_label"
+            android:lines="2"
             android:fontFamily="Times New Roman"
-            android:textStyle = "italic|bold"
+            android:textSize="9pt"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:linksClickable="false"
+            />
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="3pt"
+            android:id="@+id/space11"
+            android:layout_below="@+id/about_me"
+            android:background="#ff010001"
+            android:backgroundTint="#feffffff"
+            android:padding="5dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Interests"
+            android:id="@+id/my_interests_label"
+            android:layout_below="@+id/space11"
+            android:fontFamily="Times New Roman"
+            android:textStyle = "bold"
             android:textSize="10pt"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:linksClickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_interests"
+            android:layout_below="@+id/my_interests_label"
+            android:lines="2"
+            android:fontFamily="Times New Roman"
+            android:textSize="9pt"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:linksClickable="false" />
+
 
         <Space
             android:layout_width = "fill_parent"
             android:layout_height="3pt"
             android:id="@+id/space8"
-            android:layout_below="@+id/past_events"
+            android:layout_below="@+id/my_interests"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Interests"
-            android:id="@+id/my_interests"
+            android:text="Past Events"
+            android:id="@+id/past_events_label"
             android:layout_below="@+id/space8"
-            android:lines="3"
-            android:background="#CCFFFF"
             android:fontFamily="Times New Roman"
-            android:textStyle = "italic|bold"
+            android:textStyle = "bold"
             android:textSize="10pt"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:linksClickable="false" />
-
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space9"
-            android:layout_below="@+id/past_events"
-            />
-        <HorizontalScrollView
+        />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/horizontalScrollView"
-            android:background="#FFFFFF"
-            android:layout_below="@+id/space9"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GATHR"
-            android:id="@+id/to_gathr"
-            android:background="#33CCCC"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/past_events"
+            android:lines="2"
+            android:fontFamily="Times New Roman"
+            android:textSize="9pt"
+            android:linksClickable="false"
+            android:layout_alignBottom="@+id/past_events_label"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentStart="true" />
 
 
 

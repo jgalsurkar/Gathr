@@ -56,7 +56,7 @@ public class MainFragment extends Fragment{
                         AuthUser.user_fname = user_fname;
                         AuthUser.user_lname = user_lname;
                     }
-                    Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                    Intent i = new Intent(getActivity().getApplicationContext(), Profile.class);
                     Log.i(TAG,"USER: "+AuthUser.user_id);
                     i.putExtra("userId", AuthUser.user_id);
                     startActivity(i);

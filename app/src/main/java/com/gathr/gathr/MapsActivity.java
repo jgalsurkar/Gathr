@@ -64,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
 
         String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, ProfileActivity.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
 
         //Set up user location services
