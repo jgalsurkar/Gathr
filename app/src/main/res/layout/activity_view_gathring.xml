@@ -149,6 +149,18 @@
                 android:text="No Input"/>
         </LinearLayout>
 
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Join"
+            android:id="@+id/join_leave_button"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:onClick="joinOrLeave"/>
+
 
     </LinearLayout>
     </ScrollView>

@@ -41,23 +41,29 @@ public class GathringsList extends ListActivity {
 
         String results = DBConn.getResults();
 
-        try{
-            JSONArray json = new JSONArray(results);
-            int numEvents = json.length();
-            eventNames = new String[numEvents];
-            eventDescriptions = new String[numEvents];
-            eventIds = new String[numEvents];
+        if(results.contains("ERROR")){
+            eventNames = new String[] {"Sorry"};
+            eventDescriptions =  new String[] {"You are not part of any events"};
+            eventIds = new String[] {"-1"};
 
-            for (int i=0;i<json.length();i++)
-            {
-                eventIds[i] = json.getJSONObject(i).getString("Id");
-                eventNames[i] = json.getJSONObject(i).getString("Name");
-                eventDescriptions[i] = json.getJSONObject(i).getString("Desc");
+        }else {
+
+            try {
+                JSONArray json = new JSONArray(results);
+                int numEvents = json.length();
+                eventNames = new String[numEvents];
+                eventDescriptions = new String[numEvents];
+                eventIds = new String[numEvents];
+
+                for (int i = 0; i < json.length(); i++) {
+                    eventIds[i] = json.getJSONObject(i).getString("Id");
+                    eventNames[i] = json.getJSONObject(i).getString("Name");
+                    eventDescriptions[i] = json.getJSONObject(i).getString("Desc");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
     setListAdapter(new GathringArrayAdapter(this, eventNames, eventDescriptions));
 
     }
@@ -69,10 +75,11 @@ public class GathringsList extends ListActivity {
         //Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 
         String eventID = eventIds[position];
-
-        Intent i = new Intent(this, ViewGathring.class);
-        i.putExtra("eventId", eventID);
-        startActivity(i);
+        if(eventID != "-1") {
+            Intent i = new Intent(this, ViewGathring.class);
+            i.putExtra("eventId", eventID);
+            startActivity(i);
+        }
 
     }
 

@@ -6,14 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
 import android.content.Intent;
+import android.widget.Toast;
 
 public class ViewGathring extends ActionBarActivity {
+
+    private boolean partOf = false;
+    private QueryDB x = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    private String eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +34,12 @@ public class ViewGathring extends ActionBarActivity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        String eventId = "";
+        eventId = "1";
         if(extras != null)
             eventId =(String)extras.get("eventId");
 
         Log.i("EVENT ID IS: ", "" + eventId);
 
-        QueryDB x = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         x.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
 
         String result = x.getResults();
@@ -70,7 +75,39 @@ public class ViewGathring extends ActionBarActivity {
             e.printStackTrace();
         }
 
+        x.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = "+AuthUser.user_id+" AND Event_Id = "+eventId+";");
+        result = x.getResults();
+        try{
+            json = new JSONArray(result);
+            String count = json.getJSONObject(json.length()-1).getString("Count");
+            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
+            if( count == "0"){
+                buttonText.setText("Join");
+                partOf = false;
+            }
+            else {
+                buttonText.setText("Leave");
+                partOf = true;
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void joinOrLeave(View view){
+        TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
+        if(!partOf) {
+            x.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES ("+AuthUser.user_id+","+eventId+");");
+            x.getResults();
+            Toast.makeText(this, "Welcome to the Gathring", Toast.LENGTH_SHORT).show();
+            partOf = true;
+            buttonText.setText("Leave");
+        }
+        else{
+            Toast.makeText(this, "Goodbye", Toast.LENGTH_SHORT).show();
+            partOf = false;
+            buttonText.setText("Join");
+        }
     }
 
     @Override
