@@ -22,7 +22,7 @@ public class CreateEvent extends ActionBarActivity {
         setContentView(R.layout.activity_create_event);
 
         String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, Profile.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
     }
 
@@ -42,7 +42,7 @@ public class CreateEvent extends ActionBarActivity {
         DBconn.executeQuery("INSERT INTO EVENTS " +
                 "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
                 " VALUES " +
-                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', DATE(NOW()),'"+capacity+"', '1', 'OPEN', '1', '40.768947', '-73.958845');");
+                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', DATE(NOW()),'"+capacity+"', '1', 'OPEN', "+ AuthUser.user_id +", '40.768947', '-73.958845');");
 
 
         String results = DBconn.getResults();

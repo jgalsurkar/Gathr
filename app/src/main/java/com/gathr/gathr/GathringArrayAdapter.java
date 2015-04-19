@@ -10,11 +10,13 @@ import android.widget.TextView;
 public class GathringArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
+    private final String[] descriptions;
 
-    public GathringArrayAdapter(Context context, String[] values) {
+    public GathringArrayAdapter(Context context, String[] values, String[] descriptions) {
         super(context, R.layout.activity_gathrings_list, values);
         this.context = context;
         this.values = values;
+        this.descriptions = descriptions;
     }
 
     @Override
@@ -25,6 +27,9 @@ public class GathringArrayAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.activity_gathrings_list, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.gathring_list_item);
         textView.setText(values[position]);
+
+        TextView descrView = (TextView) rowView.findViewById(R.id.gathring_list_descr);
+        descrView.setText(descriptions[position]);
 
         return rowView;
     }

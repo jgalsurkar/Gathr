@@ -20,6 +20,10 @@ public class ViewGathring extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
 
+        String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
+        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
+
         MyGlobals global = new MyGlobals();
 
         Intent intent = getIntent();
