@@ -104,6 +104,8 @@ public class ViewGathring extends ActionBarActivity {
             buttonText.setText("Leave");
         }
         else{
+            x.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id="+AuthUser.user_id+" and Event_Id= "+eventId+";");
+            x.getResults();
             Toast.makeText(this, "Goodbye", Toast.LENGTH_SHORT).show();
             partOf = false;
             buttonText.setText("Join");
