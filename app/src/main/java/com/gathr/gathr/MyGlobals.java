@@ -17,6 +17,12 @@ public class MyGlobals {
     }
     MyGlobals(){ }
 
+    public String nDate(String uDate){// uDate = XXXX-XX-XX
+        String[] temp = uDate.split("-");
+
+        return temp[1] + "-" + temp[2] + "-" + temp[0];
+    }
+
     public String mTime(String nTime){
         SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");

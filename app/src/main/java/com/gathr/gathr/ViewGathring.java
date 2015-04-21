@@ -26,8 +26,9 @@ public class ViewGathring extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
 
-        String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+
+        String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
+        Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
 
         MyGlobals global = new MyGlobals();
@@ -106,7 +107,7 @@ public class ViewGathring extends ActionBarActivity {
         else{
             x.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id="+AuthUser.user_id+" and Event_Id= "+eventId+";");
             x.getResults();
-            Toast.makeText(this, "Goodbye", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You have left the Gathring", Toast.LENGTH_SHORT).show();
             partOf = false;
             buttonText.setText("Join");
         }

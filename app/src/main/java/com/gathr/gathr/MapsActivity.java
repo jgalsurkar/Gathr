@@ -1,6 +1,7 @@
 package com.gathr.gathr;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import java.util.List;
 
 import android.support.v4.widget.DrawerLayout;
 
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,14 +59,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
         //Query database
         database = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
-        database.executeQuery("SELECT * FROM EVENTS");
+        database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
 
         super.onCreate(savedInstanceState);   //Every app
         setContentView(R.layout.activity_maps);  //Sets up map
 
 
-        String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
+        Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
 
         //Set up user location services
@@ -133,7 +135,7 @@ def change_in_longitude(latitude, miles):
 
         JSONArray json;
         String raw_json = database.getResults();
-        String event_name, event_desc;
+        String event_name, event_desc, event_time, event_date;
         int event_pop, event_cap;
         double event_lat, event_lon;
         try {
@@ -150,11 +152,14 @@ def change_in_longitude(latitude, miles):
                 event_desc = json.getJSONObject(i).getString("Desc");
                 event_pop = Integer.parseInt(json.getJSONObject(i).getString("Population"));
                 event_cap = Integer.parseInt(json.getJSONObject(i).getString("Capacity"));
-                //event_time = json.getJSONObject(i).getString("Time");
+                event_date = json.getJSONObject(i).getString("Date");
+                event_time = json.getJSONObject(i).getString("Time");
                 event_lat = Double.parseDouble(json.getJSONObject(i).getString("Latitude"));
                 event_lon = Double.parseDouble(json.getJSONObject(i).getString("Longitude"));
 
-                thisEvent = new Event(event_name, event_desc, event_cap, event_pop, 0, 0, event_lat, event_lon);
+                thisEvent = new Event(event_name, event_desc, event_cap, event_pop, event_time, event_lat, event_lon);
+                thisEvent.date = event_date;
+                thisEvent.id = json.getJSONObject(i).getString("Id");
                 thisMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(event_lat, event_lon)));
                 markerHash = thisMarker.hashCode();
                 result.put(markerHash, thisEvent);
@@ -207,22 +212,27 @@ def change_in_longitude(latitude, miles):
     public boolean onMarkerClick(final Marker marker) {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-        EventMsg(allEvents.get(marker.hashCode()));
+        EventMsg(allEvents.get(marker.hashCode()), this);
 
         return true;
     }
 
 
-    public void EventMsg(Event event){
+    public void EventMsg(final Event event,  final Context c){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-        String time;
-        if(event.time.hour > 12)
-            time = (event.time.hour%13+1) + ":" + event.time.minute + "pm";
-        else
-            time = (event.time.hour == 0 ? "12" : event.time.hour) + ":" + event.time.minute + "am";
+        //String time.toString();
+        //Log.i("TEST", event.time);
 
-        String eventInfo = time +  "\nCapacity: " + Integer.toString(event.pop) + "/" + Integer.toString(event.capacity);
+        MyGlobals globals = new MyGlobals();
+        String time = globals.normalTime(event.time.toString());
+        //Log.i("TEST", time);
+        //if(event.time.hour > 12)
+         //   time = (event.time.hour%13+1) + ":" + event.time.minute + "pm";
+        //else
+         //   time = (event.time.hour == 0 ? "12" : event.time.hour) + ":" + event.time.minute + "am";
+
+        String eventInfo = globals.nDate(event.date) + " at " + time +  "\n" +event.description + "\n\nCapacity: " + Integer.toString(event.pop) + "/" + Integer.toString(event.capacity);
 
         alertDialogBuilder.setTitle(event.name);
         alertDialogBuilder
@@ -230,7 +240,10 @@ def change_in_longitude(latitude, miles):
                 .setCancelable(true)
                 .setPositiveButton("Join Event", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //WHAT YOU WANT TO HAPPEN WHEN THEY CLICK THE BUTTON
+                        Intent i = new Intent(c, ViewGathring.class);
+                        i.putExtra("eventId", (event.id));
+                        startActivity(i);
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

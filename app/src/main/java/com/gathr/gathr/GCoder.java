@@ -25,6 +25,8 @@ public class GCoder {
         LatLng result = new LatLng(0,0);
         try {
             queryResults = coder.getFromLocationName(address,1);
+            if(queryResults.size() < 1)
+                return new LatLng(0,0);
             result = new LatLng(queryResults.get(0).getLatitude(), queryResults.get(0).getLongitude());
         } catch (IOException e){
             Log.i("error", e.toString());
