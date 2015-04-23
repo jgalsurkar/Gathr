@@ -31,7 +31,7 @@ public class Profile extends ActionBarActivity {
         setContentView(R.layout.activity_profile);
 
         String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, Profile.class, GathringsList.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
+        Class<?>[] links = { MapsActivity.class, Profile.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
 
         userNameView = (TextView)findViewById(R.id.user_name);
@@ -42,15 +42,16 @@ public class Profile extends ActionBarActivity {
         twit.setBackgroundResource(R.drawable.twit);
         final ImageButton face = (ImageButton) findViewById(R.id.face);
         face.setBackgroundResource(R.drawable.facebook);
-        // final ImageButton edit = (ImageButton) findViewById(R.id.edit_profile);
-        //edit.setBackgroundResource(R.drawable.edit);
+
 
         profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
         profilePictureView.setCropped(true);
         about_me =(TextView)findViewById(R.id.about_me);
         Intent i = getIntent();
         userId =i.getStringExtra("userId");
-        //String userId = AuthUser.fb_id;
+        if (userId==null)
+            userId=AuthUser.user_id;
+        Log.i("USER ID","USER ID: "+ userId);
         QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         DBconn.executeQuery("SELECT * FROM USERS WHERE Id = "+userId+";");
         results = DBconn.getResults();
@@ -71,10 +72,6 @@ public class Profile extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-        // aboutMe.setText("About Me\n"+" The id is:"+ results);
-        // profilePictureView.setProfileId(AuthUser.fb_id);
-        // profilePictureView.setVisibility(View.VISIBLE);
-        //userNameView.setText(AuthUser.user_fname+" "+AuthUser.user_lname);
 
 
     }
@@ -94,13 +91,6 @@ public class Profile extends ActionBarActivity {
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         startActivity(launchBrowser);
     }
-    /* public void goToEditProfile(View view){
-         Intent i = new Intent(this, EditProfile.class);
-         Log.i(PR, "USER FROM: " + AuthUser.user_id);
-         i.putExtra("userId", AuthUser.user_id);
-         startActivity(i);
-     }
- */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

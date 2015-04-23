@@ -77,15 +77,7 @@
                 android:id="@+id/space8"
                 android:layout_below="@+id/about_me"
                 />
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:id="@+id/add_category"
-                android:layout_alignTop="@+id/my_interests"
-                android:layout_alignRight="@+id/space9"
-                android:layout_alignEnd="@+id/space9" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,8 +86,20 @@
                 android:textSize="10pt"
                 android:textStyle="bold"
                 android:layout_below="@id/space8" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:id="@+id/add_category"
+                android:clickable="true"
+                android:linksClickable="true"
+                android:onClick="openCategory"
+                android:layout_below="@+id/my_interests_label"
+                android:layout_alignRight="@+id/space8"
+                android:layout_alignEnd="@+id/space8" />
 
-            <ListView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/my_interests"
