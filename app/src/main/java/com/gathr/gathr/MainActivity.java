@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.android.Facebook;
 
@@ -40,7 +41,7 @@ public class MainActivity extends FragmentActivity
         long expires = sp.getLong("access_expires",0);
         if(access_token!= null)
         {
-           // Log.i("TOKEN",access_token);
+            // Log.i("TOKEN",access_token);
             fb.setAccessToken(access_token);
         }
         if (expires!=0)
@@ -62,6 +63,7 @@ public class MainActivity extends FragmentActivity
 
         }
         if (savedInstanceState == null) {
+
             // Add the fragment on initial activity setup
             mainFragment = new com.gathr.gathr.MainFragment();
             getSupportFragmentManager()
@@ -69,6 +71,7 @@ public class MainActivity extends FragmentActivity
                     .add(android.R.id.content, mainFragment)
                     .commit();
         } else {
+
             // Or set the fragment from restored state info
             mainFragment = (com.gathr.gathr.MainFragment) getSupportFragmentManager()
                     .findFragmentById(android.R.id.content);

@@ -8,161 +8,161 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
-        <TextView
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_name_text"
-            android:text="No input"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:layout_margin="5dp"
-            android:textAlignment="center"/>
-        <TextView
-            android:textSize="23dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_description_text"
-            android:textStyle="italic"
-            android:layout_margin="5dp"
-            android:text="No Input"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20px">
+            android:layout_height="fill_parent"
+            >
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/gathring_address_header"
+                android:id="@+id/gathring_name_text"
+                android:text="No input"
                 android:textStyle="bold"
-                android:text="Address: "
-                android:layout_margin="10dp"
-                android:textSize="23dp"
-                android:layout_gravity="center"/>
+                android:gravity="center"
+                android:textSize="30dp"
+                android:layout_margin="5dp"
+                android:textAlignment="center"/>
             <TextView
                 android:textSize="23dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/gathring_address_text"
+                android:id="@+id/gathring_description_text"
                 android:textStyle="italic"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:text="No Input"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_address_header"
+                    android:textStyle="bold"
+                    android:text="Address: "
+                    android:layout_margin="10dp"
+                    android:textSize="23dp"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_address_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_city_header"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:text="Gathring City: "
+                    android:textSize="23dp"/>
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_city_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_state_header"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:text="Gathring State: "
+                    android:textSize="23dp"/>
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_state_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_time_header"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:text="Gathring Time: "
+                    android:textSize="23dp"/>
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_time_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_limit_header"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:text="Gathring Limit: "
+                    android:textSize="23dp"/>
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_limit_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Join"
+                android:id="@+id/join_leave_button"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:onClick="joinOrLeave"/>
+
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20px">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_city_header"
-                android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:text="Gathring City: "
-                android:textSize="23dp"/>
-            <TextView
-                android:textSize="23dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_city_text"
-                android:textStyle="italic"
-                android:layout_margin="10dp"
-                android:text="No Input"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20px">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_state_header"
-                android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:text="Gathring State: "
-                android:textSize="23dp"/>
-            <TextView
-                android:textSize="23dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_state_text"
-                android:textStyle="italic"
-                android:layout_margin="10dp"
-                android:text="No Input"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20px">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_time_header"
-                android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:text="Gathring Time: "
-                android:textSize="23dp"/>
-            <TextView
-                android:textSize="23dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_time_text"
-                android:textStyle="italic"
-                android:layout_margin="10dp"
-                android:text="No Input"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20px">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_limit_header"
-                android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:text="Gathring Limit: "
-                android:textSize="23dp"/>
-            <TextView
-                android:textSize="23dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/gathring_limit_text"
-                android:textStyle="italic"
-                android:layout_margin="10dp"
-                android:text="No Input"/>
-        </LinearLayout>
-
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Join"
-            android:id="@+id/join_leave_button"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:onClick="joinOrLeave"/>
-
-
-    </LinearLayout>
     </ScrollView>
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

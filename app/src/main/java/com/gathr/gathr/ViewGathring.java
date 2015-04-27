@@ -19,27 +19,20 @@ public class ViewGathring extends ActionBarActivity {
 
     private boolean partOf = false;
     private QueryDB x = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
-    private String eventId;
+    private String eventId= "1";
+    MyGlobals global = new MyGlobals();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
 
-
-        String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-        Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
-
-        MyGlobals global = new MyGlobals();
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        eventId = "1";
         if(extras != null)
             eventId =(String)extras.get("eventId");
-
-        Log.i("EVENT ID IS: ", "" + eventId);
 
         x.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
 
@@ -82,11 +75,10 @@ public class ViewGathring extends ActionBarActivity {
             json = new JSONArray(result);
             String count = json.getJSONObject(json.length()-1).getString("Count");
             TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-            if( count == "0"){
+            if( count == "0") {
                 buttonText.setText("Join");
                 partOf = false;
-            }
-            else {
+            }  else {
                 buttonText.setText("Leave");
                 partOf = true;
             }

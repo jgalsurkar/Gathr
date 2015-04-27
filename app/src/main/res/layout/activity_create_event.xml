@@ -1,134 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/drawer_layout"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-<!--<FrameLayout
-    android:id="@+id/content_frame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" > -->
-<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--<FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" > -->
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/create_event_text"
-            android:text="Create a Gathring!"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:layout_margin="12dp"
-            android:textAlignment="center"/>
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_name"
-            android:hint="Name"
-            android:inputType="text"
-            android:textStyle="bold"
-            android:layout_margin="12dp"/>
+        android:layout_height="fill_parent">
 
-        <EditText
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_address"
-            android:textStyle="bold"
-            android:inputType="textPostalAddress"
-            android:hint="Address"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_city"
-            android:textStyle="bold"
-            android:inputType="textPostalAddress"
-            android:hint="City"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_state"
-            android:textStyle="bold"
-            android:inputType="textPostalAddress"
-            android:hint="State"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_limit"
-            android:hint="Limit"
-            android:inputType="number"
-            android:textStyle="bold"
-            android:layout_margin="12dp"/>
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gathring_description"
-            android:hint="Description"
-            android:inputType="textMultiLine"
-            android:textStyle="bold"
-            android:layout_margin="12dp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
+            android:layout_height="fill_parent"
+            >
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/gathring_time"
+                android:id="@+id/create_event_text"
+                android:text="Create a Gathring!"
                 android:textStyle="bold"
-                android:textSize="20dp"
+                android:gravity="center"
+                android:textSize="30dp"
                 android:layout_margin="12dp"
-                android:text="                    "/>
+                android:textAlignment="center"/>
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gathring_name"
+                android:hint="Name"
+                android:inputType="text"
+                android:textStyle="bold"
+                android:layout_margin="12dp"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gathring_address"
+                android:textStyle="bold"
+                android:inputType="textPostalAddress"
+                android:hint="Address"
+                android:layout_margin="12dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <EditText
+                    android:layout_width="213dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_city"
+                    android:textStyle="bold"
+                    android:inputType="textPostalAddress"
+                    android:hint="City"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="12dp" />
+
+                <EditText
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_state"
+                    android:textStyle="bold"
+                    android:inputType="textCapCharacters"
+                    android:hint="State"
+                    android:layout_gravity="right"
+                    android:maxLength="2"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="12dp" />
+            </RelativeLayout>
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gathring_limit"
+                android:hint="Limit"
+                android:inputType="number"
+                android:textStyle="bold"
+                android:layout_margin="12dp"
+                android:phoneNumber="true" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="92dp"
+                android:id="@+id/gathring_description"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:textStyle="bold"
+                android:layout_margin="12dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New ToggleButton"
+                    android:id="@+id/toggleButton"
+                    android:checked="false"
+                    android:textOn="    Today    "
+                    android:textOff="Tomorrow"
+                    android:elegantTextHeight="false"
+                    android:layout_margin="12dp"
+                    android:onClick="onToggleClicked"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_time"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_margin="12dp"
+                    android:text="12:00 PM"
+                    android:autoText="false"
+                    android:layout_gravity="center|left" />
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Pick Time"
+                    android:id="@+id/time_picker_button"
+                    android:gravity="center"
+                    android:textSize="15dp"
+                    android:textAlignment="center"
+                    android:onClick="showTimePickerDialog"
+                    android:layout_margin="12dp" />
+
+            </LinearLayout>
+
+
+            <!--    <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Category"
+                    android:id="@+id/button"
+                    android:clickable="true"
+                    android:linksClickable="true"
+                    android:onClick="openCategory"
+                    android:layout_below="@+id/my_interests_label"
+                    android:layout_alignRight="@+id/space8"
+                    android:layout_alignEnd="@+id/space8"
+                    android:layout_gravity="center_horizontal" /> -->
 
             <Button
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Pick Time"
-                android:id="@+id/time_picker_button"
+                android:text="Create"
+                android:id="@+id/create_event_button"
+                android:layout_marginLeft="140dp"
                 android:gravity="center"
-                android:layout_marginLeft="15dp"
-                android:textSize="15dp"
+                android:textSize="20dp"
                 android:textAlignment="center"
-                android:onClick="showTimePickerDialog" />
+                android:onClick="viewGathring"/>
 
         </LinearLayout>
-
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Create"
-            android:id="@+id/create_event_button"
-            android:layout_marginLeft="140dp"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:onClick="viewGathring"/>
-
-    </LinearLayout>
-</ScrollView>
-<!--</FrameLayout> -->
-<ListView android:id="@+id/left_drawer"
-    android:layout_width="240dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:choiceMode="singleChoice"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0dp"
-    android:background="#fff"/>
+    </ScrollView>
+    <!--</FrameLayout> -->
+    <ListView android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="#fff"/>
 </android.support.v4.widget.DrawerLayout>

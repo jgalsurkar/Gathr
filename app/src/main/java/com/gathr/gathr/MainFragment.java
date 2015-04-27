@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
+
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -32,6 +34,7 @@ public class MainFragment extends Fragment{
         authButton.setFragment(this);
         authButton.setReadPermissions(Arrays.asList("user_about_me","email","user_birthday","user_friends"));
 
+
         authButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -57,12 +60,7 @@ public class MainFragment extends Fragment{
                         AuthUser.user_lname = user_lname;
                     }
                     Intent i = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
-                    Log.i(TAG,"USER: "+AuthUser.user_id);
-                    i.putExtra("userId", AuthUser.user_id);
                     startActivity(i);
-                    //Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
-                    //startActivity(i);
-
                 }
             }
 
@@ -74,14 +72,12 @@ public class MainFragment extends Fragment{
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
-            Log.i(TAG, "Logged in...");
+            Toast.makeText(super.getActivity(), "Logged In!", Toast.LENGTH_SHORT).show();
         } else if (state.isClosed()) {
-            Log.i(TAG, "Logged out...");
+            Toast.makeText(super.getActivity(), "Logged Out!", Toast.LENGTH_SHORT).show();
         }
     }
     private Session.StatusCallback callback = new Session.StatusCallback() {
-
-
         private void onClickLogin() {
             Session session = Session.getActiveSession();
             if (!session.isOpened() && !session.isClosed()) {

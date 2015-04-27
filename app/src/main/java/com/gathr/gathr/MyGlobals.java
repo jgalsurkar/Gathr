@@ -7,16 +7,25 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
 
 public class MyGlobals {
+    String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
+    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
 
     Context c;
     MyGlobals(Context _c){
         c = _c;
     }
     MyGlobals(){ }
-
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     public String nDate(String uDate){// uDate = XXXX-XX-XX
         String[] temp = uDate.split("-");
 
@@ -74,9 +83,3 @@ public class MyGlobals {
     }
 
 }
-
-
-
-
-
-

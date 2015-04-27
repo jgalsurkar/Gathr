@@ -13,12 +13,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class CreateEvent extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
     QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    String date = "CURDATE()";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +29,7 @@ public class CreateEvent extends ActionBarActivity {
         setContentView(R.layout.activity_create_event);
 
         //Generate Sidebar
-        String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-        Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
     }
 
     public void viewGathring(View view){
@@ -55,10 +55,8 @@ public class CreateEvent extends ActionBarActivity {
             return;
         }
 
-        //Get time, need to check to make sure they actually give this to us
         String time = DBconn.escapeString(global.mTime(((TextView) findViewById(R.id.gathring_time)).getText().toString()));
 
-        // Make sure you give a capacity of atleast 2
         if(Integer.parseInt(getElementText(R.id.gathring_limit)) < 2){
             Toast.makeText(this, "You must provide a Gathring Capacity greater than 3!", Toast.LENGTH_LONG).show();
             return;
@@ -69,7 +67,7 @@ public class CreateEvent extends ActionBarActivity {
         DBconn.executeQuery("INSERT INTO EVENTS " +
                 "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
                 " VALUES " +
-                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', DATE(NOW()),'"+capacity+"', '1', 'OPEN', "+ AuthUser.user_id +", '"+x.latitude+"', '"+ x.longitude+"');");
+                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', "+date+",'"+capacity+"', '1', 'OPEN', "+ AuthUser.user_id +", '"+x.latitude+"', '"+ x.longitude+"');");
         String results = DBconn.getResults();
 
         //Go to the event page that we just created
@@ -108,5 +106,12 @@ public class CreateEvent extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+    public void onToggleClicked(View view) {
+        if (((ToggleButton) view).isChecked()) {
+            date = "CURDATE()";
+        } else {
+            date = "CURDATE() + INTERVAL 1 DAY";
+        }
+    }
 
+}
