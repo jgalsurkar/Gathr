@@ -14,6 +14,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
 
+import static android.support.v4.app.ActivityCompat.startActivity;
+
 public class MyGlobals {
     String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
     Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
@@ -24,8 +26,11 @@ public class MyGlobals {
 
     public void checkInternet(){
        if(!isNetworkAvailable()) {
-           MsgBox("Sorry","Your phone must be connected to the internet to use this application!");
+           MsgBox("Sorry", "Your phone must be connected to the internet to use this application!");
+           Intent intent = new Intent(c, ConnectionError.class);
+           c.startActivity(intent);
        }
+
    }
     public void MsgBox(String Title, String Message){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);

@@ -74,9 +74,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         setUpMapIfNeeded();
 
     }
-
-
-
     /*
 
 
