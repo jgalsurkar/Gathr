@@ -66,6 +66,10 @@
             android:name=".ViewGathring"
             android:label="@string/title_activity_view_gathring" >
         </activity>
+        <activity
+            android:name=".ListViewMultipleSelectionActivity"
+            android:label="@string/title_activity_list_view_multiple_selection" >
+        </activity>
         <activity android:name=".Profile" />
 
         <meta-data
@@ -83,6 +87,10 @@
         <activity
             android:name=".EditProfile"
             android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 
