@@ -20,4 +20,5 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_connection_error">ConnectionError</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>
