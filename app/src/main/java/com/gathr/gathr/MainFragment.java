@@ -72,9 +72,9 @@ public class MainFragment extends Fragment{
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
-            Toast.makeText(super.getActivity(), "Logged In!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(super.getActivity(), "Logging in, Please Wait!", Toast.LENGTH_SHORT).show();
         } else if (state.isClosed()) {
-            Toast.makeText(super.getActivity(), "Logged Out!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(super.getActivity(), "Successfully Logged Out!", Toast.LENGTH_SHORT).show();
         }
     }
     private Session.StatusCallback callback = new Session.StatusCallback() {

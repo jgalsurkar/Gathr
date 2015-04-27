@@ -21,33 +21,30 @@ import java.util.List;
 
 public class GathringsList extends ListActivity {
 
+    QueryDB DBConn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    MyGlobals global = new MyGlobals(this);
 
-    static String[] eventNames;// =
-            //new String[] { "eventName1", "eventName2", "eventName3"};
 
-    static String[] eventDescriptions;// =
-           // new String[] { "eventDescrihgkgfjhfjhf hjjgfv hjfhvvghv hgfvgf gfgjfjhption1", "eventDescription2", "eventDescription3"};
 
-    static String[] eventIds;// =
-          //  new String[] { "1", "2", "3"};
+    static String[] eventNames;
+    static String[] eventDescriptions;
+    static String[] eventIds;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        QueryDB DBConn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+        global.checkInternet();
+
+        
         DBConn.executeQuery("SELECT DISTINCT Id, `Name`, `Desc`  FROM (EVENTS JOIN JOINED_EVENTS) WHERE (((EVENTS.Id = JOINED_EVENTS.Event_Id AND JOINED_EVENTS.User_Id = "+AuthUser.user_id+") OR EVENTS.Organizer = "+AuthUser.user_id+") AND (EVENTS.Date > DATE(NOW()) OR (EVENTS.Date = DATE(NOW()) AND EVENTS.TIME >= time(NOW()))));");
-
-
         String results = DBConn.getResults();
 
         if(results.contains("ERROR")){
             eventNames = new String[] {"Sorry"};
             eventDescriptions =  new String[] {"You are not part of any events"};
             eventIds = new String[] {"-1"};
-
         }else {
-
             try {
                 JSONArray json = new JSONArray(results);
                 int numEvents = json.length();
@@ -64,8 +61,7 @@ public class GathringsList extends ListActivity {
                 e.printStackTrace();
             }
         }
-    setListAdapter(new GathringArrayAdapter(this, eventNames, eventDescriptions));
-
+        setListAdapter(new GathringArrayAdapter(this, eventNames, eventDescriptions));
     }
 
     @Override

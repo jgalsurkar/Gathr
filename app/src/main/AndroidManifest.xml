@@ -63,6 +63,11 @@
             android:label="@string/title_activity_create_event" >
         </activity>
         <activity
+            android:name=".ListViewMultipleSelectionActivity"
+            android:label="@string/title_activity_list_view_multiple_selection" >
+        </activity>
+
+        <activity
             android:name=".ViewGathring"
             android:label="@string/title_activity_view_gathring" >
         </activity>

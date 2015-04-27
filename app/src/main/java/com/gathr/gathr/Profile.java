@@ -24,16 +24,18 @@ public class Profile extends ActionBarActivity {
     private ProfilePictureView profilePictureView;
     private TextView userNameView,about_me;
     private static final String PR = "Profile";
-    public String userId,interests = "",categoryId="";
-    String results;
+    public String userId = AuthUser.user_id,interests = "",categoryId="", results;
+
+    MyGlobals global = new MyGlobals(this);
+    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        String[] titles = new String[]{"Map","My Profile","Gathrings","Friends","Settings","Notifications","Log Out"};
-        Class<?>[] links = { MapsActivity.class, Profile.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, CreateEvent.class, MainActivity.class};
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
+        global.checkInternet();
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         userNameView = (TextView)findViewById(R.id.user_name);
 
@@ -50,10 +52,11 @@ public class Profile extends ActionBarActivity {
         TextView my_interests = (TextView) findViewById(R.id.my_interests);
         about_me =(TextView)findViewById(R.id.about_me);
         Intent i = getIntent();
-        userId =i.getStringExtra("userId");
-        if (userId==null)
-            userId=AuthUser.user_id;
-        QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+
+        String temp = i.getStringExtra("userId");
+        if (temp != null)
+            userId = temp;
+
         DBconn.executeQuery("SELECT * FROM USERS WHERE Id = "+userId+";");
         results = DBconn.getResults();
         if (!results.contains("ERROR"))
@@ -71,7 +74,7 @@ public class Profile extends ActionBarActivity {
         }
         DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
         results = DBconn.getResults();
-        Log.i("result",results);
+
         if (!results.contains("ERROR")) {
             JSONArray json1;
             try {
@@ -81,14 +84,12 @@ public class Profile extends ActionBarActivity {
                     interests = interests + json1.getJSONObject(j).getString("Name") + ",";
                     categoryId = categoryId + json1.getJSONObject(j).getString("Category_Id")+",";
                 }
-                interests=interests.substring(0, interests.length() - 1);
-                Log.i("list","category "+interests+" : "+categoryId );
+                interests = interests.substring(0, interests.length() - 1);
                 my_interests.setText(interests);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
 
     }
     public void goToInsta (View view ) {
@@ -134,8 +135,8 @@ public class Profile extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit_profile) {
             Intent i = new Intent(this, EditProfile.class);
-            Log.i(PR, "USER FROM: " + AuthUser.user_id);
-            i.putExtra("userId", AuthUser.user_id);
+            //Log.i(PR, "USER FROM: " + AuthUser.user_id);
+            //i.putExtra("userId", AuthUser.user_id);
             i.putExtra("category",interests);
             i.putExtra("categoryId",categoryId);
             startActivity(i);

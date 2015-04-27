@@ -40,14 +40,12 @@ import org.json.JSONException;
 
 public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener {
 
-
-
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager locationManager;
     private LocationListener locationListener;
     private HashMap<Integer, Event> allEvents;
-    private QueryDB database;
-
+    private QueryDB database= new QueryDB(AuthUser.fb_id, AuthUser.user_id);;
+    MyGlobals global = new MyGlobals(this);
     @Override
     public FragmentManager getFragmentManager() {
         return super.getFragmentManager();
@@ -57,17 +55,15 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        //Query database
-        database = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
-        database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
-
         super.onCreate(savedInstanceState);   //Every app
         setContentView(R.layout.activity_maps);  //Sets up map
 
+        global.checkInternet();
 
-        String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-        Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, titles, links );
+        //Query database
+        database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
+
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         //Set up user location services
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks

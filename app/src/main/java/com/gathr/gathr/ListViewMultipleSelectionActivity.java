@@ -23,7 +23,8 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     Button button;
     ListView listView;
     ArrayAdapter<String> adapter;
-    public String userId,output="",results,checkedId="";
+    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    public String userId = AuthUser.user_id, output="", results, checkedId="";
     public String[] categoryName;
     public String[] categoryId;
     @Override
@@ -31,11 +32,12 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_multiple_selection);
         findViewsById();
+
         Intent i = getIntent();
-        userId = i.getStringExtra("userId");
         String userCategoryId = i.getStringExtra("categoryId");
+
         String[] selectedCategoryId = userCategoryId.split(",");
-        QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+
         DBconn.executeQuery("SELECT Id,Name FROM CATEGORIES;");
         results = DBconn.getResults();
         if (!results.contains("ERROR"))
@@ -55,8 +57,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, categoryName);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, categoryName);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter);
         if(selectedCategoryId[0]!="" )
@@ -76,9 +77,8 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     }
 
     public void onSubmit(View v) {
-
         SparseBooleanArray checked = listView.getCheckedItemPositions();
-        ArrayList<String> selectedItems = new ArrayList<String>();
+        //ArrayList<String> selectedItems = new ArrayList<String>();
         for (int i = 0; i < checked.size(); i++)
         {
             // Item position in adapter
@@ -87,20 +87,17 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
             // Add sport if it is checked i.e.) == TRUE!
             if (checked.valueAt(i))
             {
-                selectedItems.add(adapter.getItem(position));
-                output = output+ selectedItems.get(i)+", ";
+               // selectedItems.add(adapter.getItem(position));
+                output = output+ adapter.getItem(position) + ", ";//selectedItems.get(i)+", ";
                 checkedId = checkedId+categoryId[position]+",";
             }
         }
         output = output.substring(0, output.length()-2);
 //        checkedId = checkedId.substring(0, checkedId.length()-1);
         Log.i("Check:","Checked: "+checkedId);
-        Intent intent = new Intent(getApplicationContext(),
-                EditProfile.class);
-        intent.putExtra("checkedId",checkedId);
+        Intent intent = new Intent(getApplicationContext(), EditProfile.class);
+        intent.putExtra("categoryId",checkedId);
         intent.putExtra("category",output);
-        intent.putExtra("userId", AuthUser.user_id);
-
         // start the ResultActivity
         startActivity(intent);
     }

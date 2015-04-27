@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import static java.sql.DriverManager.println;
@@ -32,9 +33,11 @@ public class QueryDB {
         @Override
         protected String doInBackground(String[] arg0) {
             try {
-                String link = "http://aarshv.siteground.net/gathr_db_new.php?fid=" + fb_id + "&uid=" + user_id;
+                String link = "http://aarshv.siteground.net/gathr_db.php?fid=" + fb_id + "&uid=" + user_id;
 
-                String data = URLEncoder.encode("query", "UTF-8") + "=" + URLEncoder.encode(arg0[0], "UTF-8");
+                byte[] encoded = Base64.encode(arg0[0].getBytes("CP1252"), Base64.DEFAULT);
+                String str = new String(encoded, "CP1252");
+                String data = URLEncoder.encode("query", "UTF-8") + "=" + URLEncoder.encode(str, "UTF-8");
 
                 //Open URL
                 URL url = new URL(link);

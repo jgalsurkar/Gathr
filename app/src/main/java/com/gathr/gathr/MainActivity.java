@@ -27,12 +27,15 @@ public class MainActivity extends FragmentActivity
     SharedPreferences sp;
     String access_token;
     private com.gathr.gathr.MainFragment mainFragment;
-
+    MyGlobals global = new MyGlobals(this);
     private static final String TAG = "MainFragment";
     private static final String Token = "MainActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        global.checkInternet();
+
         super.onCreate(savedInstanceState);
         String APP_ID = getString(R.string.facebook_app_id);
         fb = new Facebook(APP_ID);

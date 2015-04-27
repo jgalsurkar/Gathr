@@ -3,9 +3,12 @@ package com.gathr.gathr;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,28 +17,46 @@ import android.support.v4.app.NotificationCompat;
 public class MyGlobals {
     String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
     Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
-
     Context c;
-    MyGlobals(Context _c){
-        c = _c;
-    }
+
+    MyGlobals(Context _c){ c = _c; }
     MyGlobals(){ }
+
+    public void checkInternet(){
+       if(!isNetworkAvailable()) {
+           MsgBox("Sorry","Your phone must be connected to the internet to use this application!");
+       }
+   }
+    public void MsgBox(String Title, String Message){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
+
+
+        alertDialogBuilder.setTitle(Title);
+        alertDialogBuilder
+                .setMessage(Message)
+                .setCancelable(true)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //WHAT YOU WANT TO HAPPEN WHEN THEY CLICK THE BUTTON
+                    }
+                })
+        ;
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
     public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     public String nDate(String uDate){// uDate = XXXX-XX-XX
         String[] temp = uDate.split("-");
-
         return temp[1] + "-" + temp[2] + "-" + temp[0];
     }
-
     public String mTime(String nTime){
         SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");
-
         try {
             Date d = nFormat.parse(nTime);
             return mFormat.format(d).toString();
@@ -44,7 +65,6 @@ public class MyGlobals {
         }
         return "";
     }
-
     public String normalTime(String mTime){
         SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");
