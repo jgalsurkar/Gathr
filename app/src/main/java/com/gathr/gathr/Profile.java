@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class Profile extends ActionBarActivity {
     private ProfilePictureView profilePictureView;
     private TextView userNameView,about_me;
     private static final String PR = "Profile";
-    public String userId;
+    public String userId,interests = "",categoryId="";
     String results;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +47,12 @@ public class Profile extends ActionBarActivity {
 
         profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
         profilePictureView.setCropped(true);
+        TextView my_interests = (TextView) findViewById(R.id.my_interests);
         about_me =(TextView)findViewById(R.id.about_me);
         Intent i = getIntent();
         userId =i.getStringExtra("userId");
         if (userId==null)
             userId=AuthUser.user_id;
-        Log.i("USER ID","USER ID: "+ userId);
         QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         DBconn.executeQuery("SELECT * FROM USERS WHERE Id = "+userId+";");
         results = DBconn.getResults();
@@ -61,13 +62,28 @@ public class Profile extends ActionBarActivity {
             try {
                 json = new JSONArray(results);
                 int n = json.length();
-                //String p = n+"";
-                // Log.i(TAG,"JSON: "+p);
-                //AuthUser.id = json.getJSONObject(n-1).getString("Id");
-                //AuthUser.user_id = json.getJSONObject(n-1).getString("Facebook_Id");
                 userNameView.setText(json.getJSONObject(n-1).getString("First_Name")+" "+json.getJSONObject(n-1).getString("Last_Name"));
                 profilePictureView.setProfileId(json.getJSONObject(n-1).getString("Facebook_Id"));
                 about_me.setText(json.getJSONObject(n-1).getString("About_Me"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
+        results = DBconn.getResults();
+        Log.i("result",results);
+        if (!results.contains("ERROR")) {
+            JSONArray json1;
+            try {
+                json1 = new JSONArray(results);
+                int n = json1.length();
+                for (int j = 0; j < n; j++) {
+                    interests = interests + json1.getJSONObject(j).getString("Name") + ",";
+                    categoryId = categoryId + json1.getJSONObject(j).getString("Category_Id")+",";
+                }
+                interests=interests.substring(0, interests.length() - 1);
+                Log.i("list","category "+interests+" : "+categoryId );
+                my_interests.setText(interests);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -120,6 +136,8 @@ public class Profile extends ActionBarActivity {
             Intent i = new Intent(this, EditProfile.class);
             Log.i(PR, "USER FROM: " + AuthUser.user_id);
             i.putExtra("userId", AuthUser.user_id);
+            i.putExtra("category",interests);
+            i.putExtra("categoryId",categoryId);
             startActivity(i);
             return true;
         }

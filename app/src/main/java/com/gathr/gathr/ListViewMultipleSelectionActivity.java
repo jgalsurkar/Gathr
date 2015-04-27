@@ -33,6 +33,8 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
         findViewsById();
         Intent i = getIntent();
         userId = i.getStringExtra("userId");
+        String userCategoryId = i.getStringExtra("categoryId");
+        String[] selectedCategoryId = userCategoryId.split(",");
         QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         DBconn.executeQuery("SELECT Id,Name FROM CATEGORIES;");
         results = DBconn.getResults();
@@ -48,7 +50,6 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
                 {
                     categoryId[j] = json.getJSONObject(j).getString("Id");
                     categoryName[j] = json.getJSONObject(j).getString("Name");
-                    //description[j] = json.getJSONObject(j).getString("Description");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -58,6 +59,15 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
                 android.R.layout.simple_list_item_multiple_choice, categoryName);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter);
+        if(selectedCategoryId[0]!="" )
+        {
+            for(int j=0;j<selectedCategoryId.length;j++)
+            {
+                listView.setItemChecked(Integer.valueOf(selectedCategoryId[j])-1,true);
+            }
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     private void findViewsById() {
@@ -80,11 +90,11 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
                 selectedItems.add(adapter.getItem(position));
                 output = output+ selectedItems.get(i)+", ";
                 checkedId = checkedId+categoryId[position]+",";
-                Log.i("Check:","Checked: "+checkedId);
             }
         }
         output = output.substring(0, output.length()-2);
-        checkedId = checkedId.substring(0, checkedId.length()-1);
+//        checkedId = checkedId.substring(0, checkedId.length()-1);
+        Log.i("Check:","Checked: "+checkedId);
         Intent intent = new Intent(getApplicationContext(),
                 EditProfile.class);
         intent.putExtra("checkedId",checkedId);

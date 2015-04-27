@@ -24,9 +24,9 @@ import org.json.JSONException;
 public class EditProfile extends ActionBarActivity {
     private ProfilePictureView profilePictureView;
     private TextView userNameView;
-    private EditText twitter, facebook, instagram,about_me,my_interests;
+    private EditText about_me;
     private static final String PR = "Profile";
-    public String userId,category,checkedId;
+    public String userId,category,checkedId,categoryId;
     String results;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +49,13 @@ public class EditProfile extends ActionBarActivity {
         profilePictureView.setCropped(true);
         about_me = (EditText) findViewById(R.id.about_me);
 
-        EditText my_interest = (EditText) findViewById(R.id.my_interests);
+        EditText my_interests = (EditText) findViewById(R.id.my_interests);
 
         Intent i = getIntent();
         userId = i.getStringExtra("userId");
-        //String userId = AuthUser.fb_id;
+        category = i.getStringExtra("category");
+        categoryId = i.getStringExtra("categoryId");
+        my_interests.setText(category);
         QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
         DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
         results = DBconn.getResults();
@@ -71,7 +73,7 @@ public class EditProfile extends ActionBarActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
+            /*DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
             results = DBconn.getResults();
             if (!results.contains("ERROR")) {
                 JSONArray json1;
@@ -82,15 +84,17 @@ public class EditProfile extends ActionBarActivity {
                     for (int j = 0; j < n; j++) {
                         interests = interests + json1.getJSONObject(j).getString("Name") + ",";
                     }
-                    my_interest.setText(interests.substring(0, interests.length() - 1));
+                    my_interests.setText(interests.substring(0, interests.length() - 1));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
+
             checkedId = i.getStringExtra("checkedId");
             if (checkedId != null) {
                 category = i.getStringExtra("category");
-                my_interest.setText(category);
+                my_interests.setText(category);
+                checkedId.substring(0, checkedId.length()-1);
             }
         }
     }
@@ -98,16 +102,12 @@ public class EditProfile extends ActionBarActivity {
     public void openCategory(View view){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
         i.putExtra("userId", AuthUser.user_id);
+        i.putExtra("categoryId",categoryId);
         startActivity(i);
-
-
     }
 
     public void saveChanges (View view) {
-        MyGlobals global = new MyGlobals(this);
-
         QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
-
         String about_me = DBconn.escapeString(getElementText(R.id.about_me));
         String my_interests = DBconn.escapeString(getElementText(R.id.my_interests));
         String instagram = DBconn.escapeString(getElementText(R.id.instagram));
