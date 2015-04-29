@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,12 +21,11 @@ import org.json.JSONException;
 
 public class Profile extends ActionBarActivity {
     private ProfilePictureView profilePictureView;
-    private TextView userNameView,about_me;
-    private static final String PR = "Profile";
+    private TextView userNameView,about_me, past_events;
     public String userId = AuthUser.user_id,interests = "",categoryId="", results;
 
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +37,10 @@ public class Profile extends ActionBarActivity {
 
         userNameView = (TextView)findViewById(R.id.user_name);
 
-        final ImageButton insta = (ImageButton) findViewById(R.id.insta);
-        insta.setBackgroundResource(R.drawable.insta);
-        final ImageButton twit = (ImageButton) findViewById(R.id.twit);
-        twit.setBackgroundResource(R.drawable.twit);
-        final ImageButton face = (ImageButton) findViewById(R.id.face);
-        face.setBackgroundResource(R.drawable.facebook);
-
+        ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.insta);
+        ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.twit);
+        ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.facebook);
+        past_events = (TextView) findViewById(R.id.past_events);
 
         profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
         profilePictureView.setCropped(true);
@@ -57,10 +52,9 @@ public class Profile extends ActionBarActivity {
         if (temp != null)
             userId = temp;
 
-        DBconn.executeQuery("SELECT * FROM USERS WHERE Id = "+userId+";");
-        results = DBconn.getResults();
-        if (!results.contains("ERROR"))
-        {
+        try {
+            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
+            results = DBconn.getResults();
             JSONArray json;
             try {
                 json = new JSONArray(results);
@@ -71,26 +65,48 @@ public class Profile extends ActionBarActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
-        results = DBconn.getResults();
-
-        if (!results.contains("ERROR")) {
-            JSONArray json1;
-            try {
-                json1 = new JSONArray(results);
-                int n = json1.length();
-                for (int j = 0; j < n; j++) {
-                    interests = interests + json1.getJSONObject(j).getString("Name") + ",";
-                    categoryId = categoryId + json1.getJSONObject(j).getString("Category_Id")+",";
-                }
-                interests = interests.substring(0, interests.length() - 1);
-                my_interests.setText(interests);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        }catch(GathrException e){
+            Log.i("Exception", e.error);
         }
 
+       try {
+           DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
+           results = DBconn.getResults();
+           JSONArray json1;
+           try {
+               json1 = new JSONArray(results);
+               int n = json1.length();
+               for (int j = 0; j < n; j++) {
+                   interests = interests + json1.getJSONObject(j).getString("Name") + ",";
+                   categoryId = categoryId + json1.getJSONObject(j).getString("Category_Id")+",";
+               }
+               interests = interests.substring(0, interests.length() - 1);
+               my_interests.setText(interests);
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+       }catch(GathrException e){
+           Log.i ("Exception", e.error);
+       }
+
+       try {
+           DBconn.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + ";");
+           results = DBconn.getResults();
+           JSONArray json;
+           try {
+               String events="";
+               json = new JSONArray(results);
+               int n = json.length();
+               for (int j = 0; j < n; j++)
+                   events = events + json.getJSONObject(j).getString("Name") + ",";
+               events = events.substring(0, events.length() - 1);
+               past_events.setText(events);
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+       }catch(GathrException e){
+           Log.i ("Exception", e.error);
+       }
     }
     public void goToInsta (View view ) {
         goToUrl ("https://instagram.com/p/");
@@ -144,6 +160,16 @@ public class Profile extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        if(AuthUser.user_id != userId){
+            menu.findItem(R.id.action_block).setVisible(true);
+            menu.findItem(R.id.action_follow).setVisible(true);
+        }else{
+            menu.findItem(R.id.action_edit_profile).setVisible(true);
+        }
+        return true;
     }
 
 }

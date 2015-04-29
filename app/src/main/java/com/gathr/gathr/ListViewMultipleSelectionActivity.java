@@ -15,15 +15,13 @@ import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 
 public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     Button button;
     ListView listView;
     ArrayAdapter<String> adapter;
-    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
     public String userId = AuthUser.user_id, output="", results, checkedId="";
     public String[] categoryName;
     public String[] categoryId;
@@ -37,11 +35,9 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
         String userCategoryId = i.getStringExtra("categoryId");
 
         String[] selectedCategoryId = userCategoryId.split(",");
-
-        DBconn.executeQuery("SELECT Id,Name FROM CATEGORIES;");
-        results = DBconn.getResults();
-        if (!results.contains("ERROR"))
-        {
+        try {
+            DBconn.executeQuery("SELECT Id,Name FROM CATEGORIES;");
+            results = DBconn.getResults();
             JSONArray json;
             try {
                 json = new JSONArray(results);
@@ -56,7 +52,11 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }catch(GathrException e){
+            Log.i("Exception", e.error);
         }
+
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, categoryName);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter);

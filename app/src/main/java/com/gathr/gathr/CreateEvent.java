@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class CreateEvent extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
     String date = "CURDATE()"; //Default date if they do not select anything
 
     @Override
@@ -62,16 +62,22 @@ public class CreateEvent extends ActionBarActivity {
         String capacity = DBconn.escapeString(getElementText(R.id.gathring_limit));
 
         //Run the Query to add the event
-        DBconn.executeQuery("INSERT INTO EVENTS " +
-                "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
-                " VALUES " +
-                "('"+name+"', '"+desc+"', '"+address+"', '"+city+"','"+state+"', '"+time+"', "+date+",'"+capacity+"', '1', 'OPEN', "+ AuthUser.user_id +", '"+x.latitude+"', '"+ x.longitude+"');");
-        String results = DBconn.getResults();
-
+        String results = "";
+        try {
+            DBconn.executeQuery("INSERT INTO EVENTS " +
+                    "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
+                    " VALUES " +
+                    "('" + name + "', '" + desc + "', '" + address + "', '" + city + "','" + state + "', '" + time + "', " + date + ",'" + capacity + "', '1', 'OPEN', " + AuthUser.user_id + ", '" + x.latitude + "', '" + x.longitude + "');");
+            results = DBconn.getResults();
+            global.tip(results);
+        }catch(GathrException e){
+            global.errorHandler(e);
+        }
         //Go to the event page that we just created
         Intent i = new Intent(this, ViewGathring.class);
         i.putExtra("eventId", results);
         startActivity(i);
+        finish();
     }
 
     public void showTimePickerDialog(View v) {
@@ -90,20 +96,6 @@ public class CreateEvent extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     public void onToggleClicked(View view) {
         if (((ToggleButton) view).isChecked()) {
             date = "CURDATE()";

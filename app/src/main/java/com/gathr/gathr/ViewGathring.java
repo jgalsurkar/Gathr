@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
 import android.content.Intent;
@@ -18,9 +17,10 @@ import android.widget.Toast;
 public class ViewGathring extends ActionBarActivity {
 
     private boolean partOf = false;
-    private QueryDB x = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    private QueryDB DBConn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
     private String eventId= "1";
-    MyGlobals global = new MyGlobals();
+    MyGlobals global = new MyGlobals(this);
+    private String event_organizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +28,18 @@ public class ViewGathring extends ActionBarActivity {
         setContentView(R.layout.activity_view_gathring);
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+        try{
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if(extras != null)
-            eventId =(String)extras.get("eventId");
+            Bundle extras = getIntent().getExtras();
+            if(extras != null)
+                eventId =(String)extras.get("eventId");
 
-        x.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
+            String result = "";
 
-        String result = x.getResults();
-        Log.i("RESULTS: ", result);
+            DBConn.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
+            result = DBConn.getResults();
 
-        JSONArray json;
-        try {
+            JSONArray json;
             json = new JSONArray(result);
             String eventName = json.getJSONObject(json.length()-1).getString("Name");
             String description = json.getJSONObject(json.length()-1).getString("Desc");
@@ -49,59 +48,57 @@ public class ViewGathring extends ActionBarActivity {
             String state = json.getJSONObject(json.length()-1).getString("State");
             String time = json.getJSONObject(json.length()-1).getString("Time");
             String capacity = json.getJSONObject(json.length()-1).getString("Capacity");
+            event_organizer = json.getJSONObject(json.length()-1).getString("Organizer").trim();
 
-            TextView a =(TextView)findViewById(R.id.gathring_name_text);
-            a.setText(eventName);
-            TextView b =(TextView)findViewById(R.id.gathring_description_text);
-            b.setText(description);
-            TextView c =(TextView)findViewById(R.id.gathring_address_text);
-            c.setText(address);
-            TextView d =(TextView)findViewById(R.id.gathring_city_text);
-            d.setText(city);
-            TextView e =(TextView)findViewById(R.id.gathring_state_text);
-            e.setText(state);
-            TextView f =(TextView)findViewById(R.id.gathring_limit_text);
-            f.setText(capacity);
-            TextView g =(TextView)findViewById(R.id.gathring_time_text);
-            g.setText(global.normalTime(time));
+            ((TextView)findViewById(R.id.gathring_name_text)).setText(eventName);
+            ((TextView)findViewById(R.id.gathring_description_text)).setText(description);
+            ((TextView)findViewById(R.id.gathring_address_text)).setText(address);
+            ((TextView)findViewById(R.id.gathring_city_text)).setText(city);
+            ((TextView)findViewById(R.id.gathring_state_text)).setText(state);
+            ((TextView)findViewById(R.id.gathring_limit_text)).setText(capacity);
+            ((TextView)findViewById(R.id.gathring_time_text)).setText(global.normalTime(time));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        x.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = "+AuthUser.user_id+" AND Event_Id = "+eventId+";");
-        result = x.getResults();
-        try{
-            json = new JSONArray(result);
-            String count = json.getJSONObject(json.length()-1).getString("Count");
             TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-            if( count == "0") {
-                buttonText.setText("Join");
-                partOf = false;
-            }  else {
-                buttonText.setText("Leave");
-                partOf = true;
+
+            if(!event_organizer.equals(AuthUser.user_id)) {
+                DBConn.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = " + AuthUser.user_id + " AND Event_Id = " + eventId + ";");
+                result = DBConn.getResults();
+                json = new JSONArray(result);
+                String count = json.getJSONObject(json.length() - 1).getString("Count").trim();
+
+                if (count.equals("0")) {
+                    buttonText.setText("Join");
+                    partOf = false;
+                } else {
+                    buttonText.setText("Leave");
+                    partOf = true;
+                }
+            }else{
+                buttonText.setVisibility(View.GONE);
             }
-        }catch (JSONException e) {
-            e.printStackTrace();
+        }catch(Exception e){
+            global.errorHandler(e);
         }
     }
 
     public void joinOrLeave(View view){
-        TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-        if(!partOf) {
-            x.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES ("+AuthUser.user_id+","+eventId+");");
-            x.getResults();
-            Toast.makeText(this, "Welcome to the Gathring", Toast.LENGTH_SHORT).show();
-            partOf = true;
-            buttonText.setText("Leave");
-        }
-        else{
-            x.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id="+AuthUser.user_id+" and Event_Id= "+eventId+";");
-            x.getResults();
-            Toast.makeText(this, "You have left the Gathring", Toast.LENGTH_SHORT).show();
-            partOf = false;
-            buttonText.setText("Join");
+        try {
+            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
+            if(!partOf) {
+                DBConn.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES (" + AuthUser.user_id + "," + eventId + ");");
+                DBConn.getResults();
+                global.tip("Welcome to the Gathring");
+                partOf = true;
+                buttonText.setText("Leave");
+            }else{
+                DBConn.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id=" + AuthUser.user_id + " and Event_Id= " + eventId + ";");
+                DBConn.getResults();
+                global.tip("You have left the Gathring");
+                partOf = false;
+                buttonText.setText("Join");
+            }
+        }catch(GathrException e){
+            global.errorHandler (e);
         }
     }
 

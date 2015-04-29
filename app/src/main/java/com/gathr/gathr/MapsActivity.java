@@ -44,7 +44,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     private LocationManager locationManager;
     private LocationListener locationListener;
     private HashMap<Integer, Event> allEvents;
-    private QueryDB database= new QueryDB(AuthUser.fb_id, AuthUser.user_id);;
+    private QueryDB database= new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
     MyGlobals global = new MyGlobals(this);
     @Override
     public FragmentManager getFragmentManager() {
@@ -53,16 +53,17 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);   //Every app
         setContentView(R.layout.activity_maps);  //Sets up map
 
         global.checkInternet();
 
         //Query database
-        database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
-
+        try {
+            database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
+        }catch(GathrException e){
+            Log.i ("Exception", e.error);
+        }
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         //Set up user location services
@@ -127,7 +128,12 @@ def change_in_longitude(latitude, miles):
         //use to populate events
 
         JSONArray json;
-        String raw_json = database.getResults();
+        String raw_json = "";
+        try {
+            raw_json = database.getResults();
+        }catch(GathrException e){
+            Log.i ("Exception", e.error);
+        }
         String event_name, event_desc, event_time, event_date;
         int event_pop, event_cap;
         double event_lat, event_lon;
@@ -214,16 +220,8 @@ def change_in_longitude(latitude, miles):
     public void EventMsg(final Event event,  final Context c){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-        //String time.toString();
-        //Log.i("TEST", event.time);
-
         MyGlobals globals = new MyGlobals();
         String time = globals.normalTime(event.time.toString());
-        //Log.i("TEST", time);
-        //if(event.time.hour > 12)
-         //   time = (event.time.hour%13+1) + ":" + event.time.minute + "pm";
-        //else
-         //   time = (event.time.hour == 0 ? "12" : event.time.hour) + ":" + event.time.minute + "am";
 
         String eventInfo = globals.nDate(event.date) + " at " + time +  "\n" +event.description + "\n\nCapacity: " + Integer.toString(event.pop) + "/" + Integer.toString(event.capacity);
 
@@ -231,12 +229,12 @@ def change_in_longitude(latitude, miles):
         alertDialogBuilder
                 .setMessage(eventInfo)
                 .setCancelable(true)
-                .setPositiveButton("Join Event", new DialogInterface.OnClickListener() {
+                .setPositiveButton("View Details", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent i = new Intent(c, ViewGathring.class);
                         i.putExtra("eventId", (event.id));
                         startActivity(i);
-
+                        finish();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

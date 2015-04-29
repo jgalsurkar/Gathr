@@ -1,5 +1,6 @@
 package com.gathr.gathr;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -22,19 +23,15 @@ public class MainActivity extends FragmentActivity
         //implements MainFragment.OnFragmentInteractionListener
 {
     Facebook fb;
-    ImageView pic;
-    TextView welcome;
     SharedPreferences sp;
     String access_token;
     private com.gathr.gathr.MainFragment mainFragment;
-    MyGlobals global = new MyGlobals(this);
-    private static final String TAG = "MainFragment";
-    private static final String Token = "MainActivity";
+    MyGlobals global = new MyGlobals();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        global.checkInternet();
+        global.checkInternet(this);
 
         super.onCreate(savedInstanceState);
         String APP_ID = getString(R.string.facebook_app_id);
@@ -43,12 +40,9 @@ public class MainActivity extends FragmentActivity
         access_token = sp.getString("access_token", null);
         long expires = sp.getLong("access_expires",0);
         if(access_token!= null)
-        {
-            // Log.i("TOKEN",access_token);
             fb.setAccessToken(access_token);
-        }
         if (expires!=0)
-        {fb.setAccessExpires(expires);}
+            fb.setAccessExpires(expires);
 
         // Add code to print out the key hash
         try {
@@ -60,26 +54,37 @@ public class MainActivity extends FragmentActivity
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
 
         }
-        if (savedInstanceState == null) {
 
-            // Add the fragment on initial activity setup
-            mainFragment = new com.gathr.gathr.MainFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(android.R.id.content, mainFragment)
-                    .commit();
-        } else {
+        SharedPreferences settings = getSharedPreferences("AuthUser", 0);
+        AuthUser.user_id = settings.getString("userid", "");
+        AuthUser.fb_id = settings.getString("fbid", "");
+        AuthUser.user_fname = settings.getString("fname", "");
+        AuthUser.user_lname = settings.getString("lname", "");
 
-            // Or set the fragment from restored state info
-            mainFragment = (com.gathr.gathr.MainFragment) getSupportFragmentManager()
-                    .findFragmentById(android.R.id.content);
+        if(AuthUser.user_id == ""){
+            if (savedInstanceState == null) {
+
+                // Add the fragment on initial activity setup
+                mainFragment = new com.gathr.gathr.MainFragment();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(android.R.id.content, mainFragment)
+                        .commit();
+            } else {
+
+                // Or set the fragment from restored state info
+                mainFragment = (com.gathr.gathr.MainFragment) getSupportFragmentManager()
+                        .findFragmentById(android.R.id.content);
+            }
+        }else{
+            Intent i = new Intent(this, MapsActivity.class);
+            startActivity(i);
         }
     }
+
 
 
 
