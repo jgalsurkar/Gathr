@@ -7,33 +7,36 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import static java.sql.DriverManager.println;
 
 public class QueryDB {
 
-    protected String result = "";
+    protected String result = null;
     protected String user_id = "0";
     protected String fb_id = "0";
-
-    QueryDB(String _fb_id){
+    MyGlobals global;
+    QueryDB(Context c, String _fb_id){
         fb_id = _fb_id;
+        global = new MyGlobals(c);
     }
-    QueryDB(String _fb_id, String _user_id){
+    QueryDB(Context c, String _fb_id, String _user_id){
+        global = new MyGlobals(c);
         fb_id = _fb_id;
         user_id = _user_id;
     }
 
     private class innerQueryDB extends AsyncTask<String, Void, String> {
-
-
         @Override
         protected String doInBackground(String[] arg0) {
             try {
-                String link = "http://aarshv.siteground.net/gathr_db.php?fid=" + fb_id + "&uid=" + user_id;
+                String link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
 
                 byte[] encoded = Base64.encode(arg0[0].getBytes("CP1252"), Base64.DEFAULT);
                 String str = new String(encoded, "CP1252");
@@ -49,16 +52,18 @@ public class QueryDB {
                 wr.write(data);
                 wr.flush();
 
-                //Read JSON from Server
+                //Read Encoded JSON from Server
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder sb = new StringBuilder();
                 String line = null;
 
                 while ((line = reader.readLine()) != null)
                     sb.append(line + "\n");
-                result = sb.toString();
-                //Log.i("Test", sb.toString());
-                return sb.toString();
+
+                byte[] decoded = Base64.decode(sb.toString().getBytes("CP1252"), Base64.DEFAULT);
+                result = new String(decoded,"CP1252");
+
+                return result;
             } catch (Exception e) {
                 return "Exception: " + e.getMessage();
             }
@@ -66,24 +71,25 @@ public class QueryDB {
         }
     }
 
-    public void executeQuery(String query){
-        Log.i("HHEREHERHHER", fb_id + " " + user_id);
+    public void executeQuery(String query) throws GathrException{
+        global.checkInternet();
         if(fb_id == "0"){
-            //THROW
+            throw new GathrException("NO FID - PERMISSION DENIED");
         }else {
             result = null;
             new innerQueryDB().execute(query);
         }
     }
 
-    public String getResults() {//throws java.lang.Throwable{
+    public String getResults() throws GathrException{
+        global.checkInternet();
         while(result == null){
             //We must wait till we actually have stuff
         }
 
-        // if(result.contains("ERROR")){
-        //    throw (result.split(":")[1].trim());
-        //}
+        if(result.contains("ERROR")){
+            throw new GathrException(result.split(":")[1].trim());
+        }
 
         return result;
     }

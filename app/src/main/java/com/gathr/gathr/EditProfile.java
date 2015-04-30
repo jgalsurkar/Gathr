@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +20,11 @@ public class EditProfile extends ActionBarActivity {
     private ProfilePictureView profilePictureView;
     private TextView userNameView;
     private EditText about_me;
-    private static final String PR = "Profile";
 
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
 
-    public String userId, category, checkedId, categoryId;
+    public String userId, category, categoryId;
     String results;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +47,14 @@ public class EditProfile extends ActionBarActivity {
         Intent i = getIntent();
         userId = AuthUser.user_id;
         category = i.getStringExtra("category");
-
         categoryId = i.getStringExtra("categoryId");
         my_interests.setText(category);
-
-        DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
-        results = DBconn.getResults();
+        try{
+            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
+            results = DBconn.getResults();
+        }catch(GathrException e){
+            Log.i("Exception: ", e.error);
+        }
         if (!results.contains("ERROR")) {
             JSONArray json;
             try {
@@ -68,12 +70,6 @@ public class EditProfile extends ActionBarActivity {
                 e.printStackTrace();
             }
 
-          /*  checkedId = i.getStringExtra("checkedId");
-            if (checkedId != null) {
-                //category = i.getStringExtra("category");
-                my_interests.setText(category);
-                checkedId.substring(0, checkedId.length()-1);
-            }*/
         }
     }
 
@@ -82,6 +78,7 @@ public class EditProfile extends ActionBarActivity {
         //i.putExtra("userId", AuthUser.user_id);
         i.putExtra("categoryId",categoryId);
         startActivity(i);
+        finish();
     }
 
     public void saveChanges (View view) {
@@ -90,16 +87,19 @@ public class EditProfile extends ActionBarActivity {
         String instagram = DBconn.escapeString(getElementText(R.id.instagram));
         String twitter = DBconn.escapeString(getElementText(R.id.twitter));
         String facebook =DBconn.escapeString(getElementText(R.id.facebook));
-
-        DBconn.executeQuery("UPDATE USERS " +
-                "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+
-                "where `Id` ="+userId+";");
-        DBconn.getResults();
-        DBconn.executeQuery("ADD INTERESTS " +checkedId+" FOR "+userId);
-        DBconn.getResults();
+        try{
+            DBconn.executeQuery("UPDATE USERS " +
+                    "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+
+                    "where `Id` ="+userId+";");
+            DBconn.getResults();
+            DBconn.executeQuery("ADD INTERESTS " +categoryId+" FOR "+userId);
+            DBconn.getResults();
+        }catch(GathrException e){
+            Log.i("Exception: ", e.error);
+        }
         Intent i = new Intent(this, Profile.class);
-        i.putExtra("userId", userId);
         startActivity(i);
+        finish();
     }
     public String getElementText(int viewId){
         return ((EditText)findViewById(viewId)).getText().toString();

@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
 public class ConnectionError extends ActionBarActivity {
+
+    MyGlobals global = new MyGlobals(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +19,14 @@ public class ConnectionError extends ActionBarActivity {
     }
 
     public void tryAgain(View view){
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        if(global.isNetworkAvailable(this)) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }else{
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -29,18 +35,4 @@ public class ConnectionError extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

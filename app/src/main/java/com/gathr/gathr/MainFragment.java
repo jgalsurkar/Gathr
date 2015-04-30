@@ -1,5 +1,6 @@
 package com.gathr.gathr;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,8 +22,6 @@ public class MainFragment extends Fragment{
 
     String results;
     String id;
-    private MainFragment mainFragment;
-    private static final String TAG = "MainFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
@@ -39,26 +38,34 @@ public class MainFragment extends Fragment{
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-
                     String user_fid = user.getId();
                     String user_email = user.asMap().get("email").toString();
-                    String user_gender= user.getProperty("gender").toString();
+                    String user_gender = user.getProperty("gender").toString();
                     String user_fname = user.getFirstName();
                     String user_lname = user.getLastName();
-                    String user_dob= user.getBirthday();
+                    String user_dob = user.getBirthday();
 
-                    QueryDB DBconn = new QueryDB(user_fid);
-                    DBconn.executeQuery("INSERT USER('"+user_fid+"', '"+ user_email+"', '"+user_fname+"', '"+user_lname+"', '"+user_dob+"', '"+user_gender+"')");
-                    results = DBconn.getResults();
-
-                    if (results.contains("ERROR")){
-                        Log.i("Log In: ",results);
-                    }else{
+                    QueryDB DBconn = new QueryDB(getActivity(), user_fid);
+                    try {
+                        DBconn.executeQuery("INSERT USER('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "')");
+                        results = DBconn.getResults();
                         AuthUser.user_id = results;
                         AuthUser.fb_id = user_fid;
                         AuthUser.user_fname = user_fname;
                         AuthUser.user_lname = user_lname;
+
+                        SharedPreferences settings = getActivity().getSharedPreferences("AuthUser", 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("userid", AuthUser.user_id);
+                        editor.putString("fbid",  AuthUser.fb_id);
+                        editor.putString("fname", AuthUser.user_fname);
+                        editor.putString("lname", AuthUser.user_lname);
+                        editor.commit();
+
+                    }catch(GathrException e){
+                        Log.i("Exception", e.error);
                     }
+
                     Intent i = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
                     startActivity(i);
                 }

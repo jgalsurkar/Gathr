@@ -10,47 +10,51 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import static android.support.v4.app.ActivityCompat.startActivity;
 
 public class MyGlobals {
     String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, MapsActivity.class};
+    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, Settings.class};
     Context c;
 
-    MyGlobals(Context _c){ c = _c; }
-    MyGlobals(){ }
+    MyGlobals(Context _c){ c = _c; loadUser();}
+    MyGlobals(){  }
+
+    public void loadUser(){
+        if(AuthUser.user_id == null || AuthUser.user_id == ""){
+            try {
+                SharedPreferences settings = c.getSharedPreferences("AuthUser", 0);
+                AuthUser.user_id = settings.getString("userid", "");
+                AuthUser.fb_id = settings.getString("fbid", "");
+                AuthUser.user_fname = settings.getString("fname", "");
+                AuthUser.user_lname = settings.getString("lname", "");
+
+                if (AuthUser.user_id.equals(""))
+                    c.startActivity(new Intent(c, MainActivity.class));
+
+            }catch(Exception e){
+                //Intent intent = new Intent(c, MainActivity.class); // Send them back to login page
+                //c.startActivity(intent);
+            }
+        }
+    }
 
     public void checkInternet(){
-       if(!isNetworkAvailable()) {
-           MsgBox("Sorry", "Your phone must be connected to the internet to use this application!");
-           Intent intent = new Intent(c, ConnectionError.class);
-           c.startActivity(intent);
-       }
-
+       if(!isNetworkAvailable(c))
+           c.startActivity(new Intent(c, ConnectionError.class));
    }
-    public void MsgBox(String Title, String Message){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
-
-
-        alertDialogBuilder.setTitle(Title);
-        alertDialogBuilder
-                .setMessage(Message)
-                .setCancelable(true)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //WHAT YOU WANT TO HAPPEN WHEN THEY CLICK THE BUTTON
-                    }
-                })
-        ;
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+    public void checkInternet(Context c){
+        if(!isNetworkAvailable(c))
+            c.startActivity(new Intent(c, ConnectionError.class));
     }
-    public boolean isNetworkAvailable() {
+
+    public boolean isNetworkAvailable(Context c) {
         ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
@@ -73,7 +77,6 @@ public class MyGlobals {
     public String normalTime(String mTime){
         SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");
-
         try {
             Date d = mFormat.parse(mTime);
             return nFormat.format(d).toString();
@@ -106,5 +109,13 @@ public class MyGlobals {
         nm.notify(uniqueID, notification.build());
 
     }
-
+    public void errorHandler(Exception e){
+        e.printStackTrace();
+        tip(e.getClass() + ": " + e.getMessage());
+        Intent intent = new Intent(c, MainActivity.class);
+        c.startActivity(intent);
+    }
+    public void tip(String message){
+        Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
+    }
 }

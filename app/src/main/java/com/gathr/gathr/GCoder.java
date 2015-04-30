@@ -4,12 +4,9 @@ import android.content.Context;
 import android.location.Geocoder;
 import android.location.Address;
 import android.util.Log;
-
 import java.io.IOException;
 import java.util.List;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.Locale;
 
 public class GCoder {
@@ -33,7 +30,7 @@ public class GCoder {
         }
         return result;
     }
-
+/*
     public double getLat(String address){
         List<Address> queryResults;
         double result = 0.0;
@@ -58,4 +55,5 @@ public class GCoder {
         }
         return address;
     }
+    */
 }
