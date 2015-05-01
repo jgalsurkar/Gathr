@@ -49,7 +49,7 @@ public class FriendList extends ListActivity {
             }
         }
 
-        setListAdapter(new GathringArrayAdapter(this, friendNames, images));
+        setListAdapter(new FriendArrayAdapter(this, friendNames, images));
     }
 
     @Override

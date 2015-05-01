@@ -31,7 +31,7 @@ public class FriendArrayAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.friend_list_name);
         textView.setText(names[position]);
 
-        ProfilePictureView imgView = (ProfilePictureView) rowView.findViewById(R.id.selection_profile_pic);
+        ProfilePictureView imgView = (ProfilePictureView) rowView.findViewById(R.id.friend_profile_pic);
         new MyGlobals(context).tip(images[position]);
         imgView.setCropped(true);
         imgView.setProfileId(images[position]);
