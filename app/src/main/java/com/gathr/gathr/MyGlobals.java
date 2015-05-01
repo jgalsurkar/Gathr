@@ -1,5 +1,10 @@
 package com.gathr.gathr;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +25,7 @@ import static android.support.v4.app.ActivityCompat.startActivity;
 
 public class MyGlobals {
     String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, MapsActivity.class, Settings.class};
+    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsList.class, FriendList.class, Settings.class};
     Context c;
 
     MyGlobals(Context _c){ c = _c; loadUser();}
@@ -46,9 +51,9 @@ public class MyGlobals {
     }
 
     public void checkInternet(){
-       if(!isNetworkAvailable(c))
-           c.startActivity(new Intent(c, ConnectionError.class));
-   }
+        if(!isNetworkAvailable(c))
+            c.startActivity(new Intent(c, ConnectionError.class));
+    }
     public void checkInternet(Context c){
         if(!isNetworkAvailable(c))
             c.startActivity(new Intent(c, ConnectionError.class));
@@ -112,10 +117,64 @@ public class MyGlobals {
     public void errorHandler(Exception e){
         e.printStackTrace();
         tip(e.getClass() + ": " + e.getMessage());
-        Intent intent = new Intent(c, MainActivity.class);
-        c.startActivity(intent);
+        //Intent intent = new Intent(c, MainActivity.class);
+        //c.startActivity(intent);
     }
     public void tip(String message){
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public String getUserJSON(){
+        String JSON = "";
+        FileInputStream inputStream;
+        try {
+            if(!fileExists("UserFile")){
+                JSON = getUserJSON(1);
+            }else{
+                inputStream = c.openFileInput("UserFile");
+
+                InputStreamReader in = new InputStreamReader(inputStream);
+                BufferedReader br = new BufferedReader(in);
+                JSON = br.readLine();
+
+                inputStream.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return JSON;
+    }
+    public String getUserJSON(int x){
+        String JSON = "";
+        FileInputStream inputStream;
+        try {
+            QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
+            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";");
+            JSON = DBconn.getResults();
+            setUserJSON(JSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return JSON;
+    }
+
+    public void setUserJSON(String JSON){
+        FileOutputStream outputStream;
+        try {
+            outputStream = c.openFileOutput("UserFile", Context.MODE_PRIVATE);
+            outputStream.write(JSON.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            errorHandler(e);
+        }
+
+    }
+
+    public boolean fileExists( String filename) {
+        File file = c.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -28,6 +28,9 @@ import java.util.List;
 import android.support.v4.widget.DrawerLayout;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -61,19 +64,20 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         //Query database
         try {
             database.executeQuery("SELECT * FROM EVENTS WHERE Population < Capacity AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))");
-        }catch(GathrException e){
-            Log.i ("Exception", e.error);
+
+
+            new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
+            //Set up user location services
+            locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
+            locationListener = new MyLocationListener();   //Location listener listens to changes in location
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
+
+            //Set up map
+            setUpMapIfNeeded();
+        }catch(Exception e){
+            global.errorHandler(e);
         }
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
-
-        //Set up user location services
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
-        locationListener = new MyLocationListener();   //Location listener listens to changes in location
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
-
-        //Set up map
-        setUpMapIfNeeded();
-
     }
     /*
 
@@ -97,12 +101,21 @@ def change_in_longitude(latitude, miles):
     # Find the radius of a circle around the earth at given latitude.
     r = earth_radius*math.cos(latitude*degrees_to_radians)
     return (miles/r)*radians_to_degrees
+    */
 
-     */
+    public void goToSearchInput(View v){
+        EditText mEdit = (EditText)findViewById(R.id.et_location);
+        String input = mEdit.getText().toString();
+        GCoder geocoder = new GCoder(this);
+        LatLng searchLatLng = geocoder.addressToCoor(input);
+        if(searchLatLng.latitude != 0.0 & searchLatLng.longitude != 0.0)
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 15));
+        else
+            MsgBox("Sorry", "We couldn't find " + input + ". Try searching by address, city, zip code, or landmark");
+    }
 
     public void MsgBox(String Title, String Message){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
 
         alertDialogBuilder.setTitle(Title);
         alertDialogBuilder
@@ -120,24 +133,22 @@ def change_in_longitude(latitude, miles):
     }
 
     public HashMap<Integer, Event> populateEvents(){
+
         HashMap<Integer, Event> result = new HashMap<Integer, Event>();
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try{
 
+            //get json parser
+            //use to populate events
 
-        //get json parser
-        //use to populate events
+            JSONArray json;
+            String raw_json = "";
 
-        JSONArray json;
-        String raw_json = "";
-        try {
             raw_json = database.getResults();
-        }catch(GathrException e){
-            Log.i ("Exception", e.error);
-        }
-        String event_name, event_desc, event_time, event_date;
-        int event_pop, event_cap;
-        double event_lat, event_lon;
-        try {
+
+            String event_name, event_desc, event_time, event_date;
+            int event_pop, event_cap;
+            double event_lat, event_lon;
             Event thisEvent;
             Marker thisMarker;
             int markerHash;
@@ -163,8 +174,8 @@ def change_in_longitude(latitude, miles):
                 markerHash = thisMarker.hashCode();
                 result.put(markerHash, thisEvent);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        }catch(Exception e){
+            global.errorHandler(e);
         }
 
         return result;
@@ -198,13 +209,21 @@ def change_in_longitude(latitude, miles):
         //Populate events
         allEvents = populateEvents();
 
-        //Set camera to user location
+        //Set camera to user location if location provider available
 
-        Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-       // LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
+        String thisProvider;
+        Location location;
+        List<String> allProviders = locationManager.getAllProviders();
+        for(int n = 0; n < allProviders.size(); n++){
+            thisProvider = allProviders.get(n);
+            location = locationManager.getLastKnownLocation(thisProvider);
+            if(location != null){
+                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
+                break;
+            }
+        }
     }
-
 
 
     @Override
@@ -215,7 +234,6 @@ def change_in_longitude(latitude, miles):
 
         return true;
     }
-
 
     public void EventMsg(final Event event,  final Context c){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

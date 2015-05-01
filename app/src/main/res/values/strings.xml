@@ -16,6 +16,7 @@
     <string name="title_activity_list_view_multiple_selection">Pick The Category</string>
     <string name="submit">Submit</string>
     <string name="title_activity_gathrings_list">Gathring List</string>
+    <string name="title_activity_friend_list">Friend List</string>
     <string name="title_activity_edit_profile">Edit Profile</string>
 
     <string name="hello_world">Hello world!</string>

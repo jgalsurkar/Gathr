@@ -20,7 +20,7 @@ public class ViewGathring extends ActionBarActivity {
     private QueryDB DBConn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
     private String eventId= "1";
     MyGlobals global = new MyGlobals(this);
-    private String event_organizer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,26 +29,26 @@ public class ViewGathring extends ActionBarActivity {
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
         try{
-
+            String event_organizer;
             Bundle extras = getIntent().getExtras();
             if(extras != null)
-                eventId =(String)extras.get("eventId");
+                eventId = (String)extras.get("eventId");
 
-            String result = "";
+            String result;
 
             DBConn.executeQuery("SELECT * FROM EVENTS WHERE Id =" + eventId);
             result = DBConn.getResults();
 
             JSONArray json;
             json = new JSONArray(result);
-            String eventName = json.getJSONObject(json.length()-1).getString("Name");
-            String description = json.getJSONObject(json.length()-1).getString("Desc");
-            String address = json.getJSONObject(json.length()-1).getString("Address");
-            String city = json.getJSONObject(json.length()-1).getString("City");
-            String state = json.getJSONObject(json.length()-1).getString("State");
-            String time = json.getJSONObject(json.length()-1).getString("Time");
-            String capacity = json.getJSONObject(json.length()-1).getString("Capacity");
-            event_organizer = json.getJSONObject(json.length()-1).getString("Organizer").trim();
+            String eventName = json.getJSONObject(0).getString("Name");
+            String description = json.getJSONObject(0).getString("Desc");
+            String address = json.getJSONObject(0).getString("Address");
+            String city = json.getJSONObject(0).getString("City");
+            String state = json.getJSONObject(0).getString("State");
+            String time = json.getJSONObject(0).getString("Time");
+            String capacity = json.getJSONObject(0).getString("Capacity");
+            event_organizer = json.getJSONObject(0).getString("Organizer").trim();
 
             ((TextView)findViewById(R.id.gathring_name_text)).setText(eventName);
             ((TextView)findViewById(R.id.gathring_description_text)).setText(description);
@@ -86,13 +86,13 @@ public class ViewGathring extends ActionBarActivity {
             TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
             if(!partOf) {
                 DBConn.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES (" + AuthUser.user_id + "," + eventId + ");");
-                DBConn.getResults();
+                //DBConn.getResults(); // We do not need to wait
                 global.tip("Welcome to the Gathring");
                 partOf = true;
                 buttonText.setText("Leave");
             }else{
                 DBConn.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id=" + AuthUser.user_id + " and Event_Id= " + eventId + ";");
-                DBConn.getResults();
+                //DBConn.getResults(); // We do not need to wait
                 global.tip("You have left the Gathring");
                 partOf = false;
                 buttonText.setText("Join");

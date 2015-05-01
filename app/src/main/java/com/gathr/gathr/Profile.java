@@ -17,107 +17,104 @@ import com.facebook.widget.ProfilePictureView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class Profile extends ActionBarActivity {
-    private ProfilePictureView profilePictureView;
-    private TextView userNameView,about_me, past_events;
-    public String userId = AuthUser.user_id,interests = "",categoryId="", results;
+    public String userId = AuthUser.user_id,
+            interests = "",
+            categoryId = "",
+            results = "",
+            inst,
+            fb,
+            tw;
 
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        global.checkInternet();
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
-
-        userNameView = (TextView)findViewById(R.id.user_name);
-
-        ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.insta);
-        ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.twit);
-        ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.facebook);
-        past_events = (TextView) findViewById(R.id.past_events);
-
-        profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
-        profilePictureView.setCropped(true);
-        TextView my_interests = (TextView) findViewById(R.id.my_interests);
-        about_me =(TextView)findViewById(R.id.about_me);
-        Intent i = getIntent();
-
-        String temp = i.getStringExtra("userId");
-        if (temp != null)
-            userId = temp;
-
         try {
-            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
-            results = DBconn.getResults();
-            JSONArray json;
-            try {
-                json = new JSONArray(results);
-                int n = json.length();
-                userNameView.setText(json.getJSONObject(n-1).getString("First_Name")+" "+json.getJSONObject(n-1).getString("Last_Name"));
-                profilePictureView.setProfileId(json.getJSONObject(n-1).getString("Facebook_Id"));
-                about_me.setText(json.getJSONObject(n-1).getString("About_Me"));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
+            Intent i = getIntent();
+            String temp = i.getStringExtra("userId");
+
+            QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            if (temp != null) {
+                userId = temp;
+                DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
+                results = DBconn.getResults();
+            }else{
+                results = global.getUserJSON();
             }
-        }catch(GathrException e){
-            Log.i("Exception", e.error);
+            QueryDB DBconn2 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+
+            DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id");
+            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " ORDER BY Date DESC LIMIT 15");
+
+            TextView userNameView = (TextView) findViewById(R.id.user_name);
+            ProfilePictureView profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
+            profilePictureView.setCropped(true);
+            TextView about_me =(TextView)findViewById(R.id.about_me);
+
+
+            JSONArray json = new JSONArray(results);
+            JSONObject elem1 = json.getJSONObject(0);
+            userNameView.setText(elem1.getString("First_Name")+" "+elem1.getString("Last_Name"));
+            profilePictureView.setProfileId(elem1.getString("Facebook_Id"));
+            about_me.setText(elem1.getString("About_Me"));
+            inst = elem1.getString("Instagram");
+            fb = elem1.getString("Facebook");
+            tw = elem1.getString("Twitter");
+            if(!inst.equals("")) {
+                ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.insta);
+                ((ImageButton) findViewById(R.id.insta)).setVisibility(View.VISIBLE);
+            }
+            if(!fb.equals("")) {
+                ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.facebook);
+                ((ImageButton) findViewById(R.id.face)).setVisibility(View.VISIBLE);
+            }
+            if(!tw.equals("")) {
+                ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.twit);
+                ((ImageButton) findViewById(R.id.twit)).setVisibility(View.VISIBLE);
+            }
+
+            TextView past_events = (TextView) findViewById(R.id.past_events);
+            TextView my_interests = (TextView) findViewById(R.id.my_interests);
+            results = DBconn2.getResults();
+            json = new JSONArray(results);
+
+            for (int j = 0; j < json.length(); j++) {
+                interests = interests + json.getJSONObject(j).getString("Name") + ", ";
+                categoryId = categoryId + json.getJSONObject(j).getString("Category_Id")+",";
+            }
+            interests = interests.substring(0, interests.length() - 1);
+            my_interests.setText(interests);
+
+            results = DBconn3.getResults();
+            String events="";
+            json = new JSONArray(results);
+
+            for (int j = 0; j < json.length(); j++)
+                events = events + json.getJSONObject(j).getString("Name") + ", ";
+            events = events.substring(0, events.length() - 1);
+            past_events.setText(events);
+
+        }catch(Exception e){
+            global.errorHandler(e);
         }
-
-       try {
-           DBconn.executeQuery("SELECT Category_Id, Name FROM USER_INTERESTS JOIN CATEGORIES ON CATEGORIES.Id = USER_INTERESTS.Category_Id WHERE User_Id = " + userId + ";");
-           results = DBconn.getResults();
-           JSONArray json1;
-           try {
-               json1 = new JSONArray(results);
-               int n = json1.length();
-               for (int j = 0; j < n; j++) {
-                   interests = interests + json1.getJSONObject(j).getString("Name") + ",";
-                   categoryId = categoryId + json1.getJSONObject(j).getString("Category_Id")+",";
-               }
-               interests = interests.substring(0, interests.length() - 1);
-               my_interests.setText(interests);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-       }catch(GathrException e){
-           Log.i ("Exception", e.error);
-       }
-
-       try {
-           DBconn.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + ";");
-           results = DBconn.getResults();
-           JSONArray json;
-           try {
-               String events="";
-               json = new JSONArray(results);
-               int n = json.length();
-               for (int j = 0; j < n; j++)
-                   events = events + json.getJSONObject(j).getString("Name") + ",";
-               events = events.substring(0, events.length() - 1);
-               past_events.setText(events);
-           } catch (JSONException e) {
-               e.printStackTrace();
-           }
-       }catch(GathrException e){
-           Log.i ("Exception", e.error);
-       }
     }
     public void goToInsta (View view ) {
-        goToUrl ("https://instagram.com/p/");
+        goToUrl ("https://instagram.com/_u/"+inst);
     }
-
     public void goToFace (View view) {
-        goToUrl ( "fb://profile/");
+        goToUrl ( "fb://profile/"+fb);
     }
-
     public void goToTwit (View view) {
-        goToUrl ( "http://twitter.com/");
+        goToUrl ( "http://twitter.com/"+tw);
     }
     private void goToUrl (String url) {
         Uri uriUrl = Uri.parse(url);
@@ -140,19 +137,15 @@ public class Profile extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_block) {
-
             return true;
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_follow) {
-
             return true;
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit_profile) {
             Intent i = new Intent(this, EditProfile.class);
-            //Log.i(PR, "USER FROM: " + AuthUser.user_id);
-            //i.putExtra("userId", AuthUser.user_id);
             i.putExtra("category",interests);
             i.putExtra("categoryId",categoryId);
             startActivity(i);

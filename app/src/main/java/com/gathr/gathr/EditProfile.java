@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,52 +25,43 @@ public class EditProfile extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
     QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
 
-    public String userId, category, categoryId;
+    public String userId = AuthUser.user_id, category, categoryId;
     String results;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        try {
 
-        global.checkInternet();
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+            userNameView = (TextView) findViewById(R.id.user_name);
+            profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+            profilePictureView.setCropped(true);
+            about_me = (EditText) findViewById(R.id.about_me);
 
-        userNameView = (TextView) findViewById(R.id.user_name);
-        profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-        profilePictureView.setCropped(true);
-        about_me = (EditText) findViewById(R.id.about_me);
+            final EditText instagram = (EditText) findViewById(R.id.instagram);
+            final EditText twitter = (EditText) findViewById(R.id.twitter);
+            final EditText facebook = (EditText) findViewById(R.id.facebook);
+            final EditText my_interests = (EditText) findViewById(R.id.my_interests);
 
-        final EditText instagram = (EditText) findViewById(R.id.instagram);
-        final EditText twitter = (EditText) findViewById(R.id.twitter);
-        final EditText facebook = (EditText) findViewById(R.id.facebook);
-        final EditText my_interests = (EditText) findViewById(R.id.my_interests);
-
-        Intent i = getIntent();
-        userId = AuthUser.user_id;
-        category = i.getStringExtra("category");
-        categoryId = i.getStringExtra("categoryId");
-        my_interests.setText(category);
-        try{
-            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
-            results = DBconn.getResults();
-        }catch(GathrException e){
-            Log.i("Exception: ", e.error);
-        }
-        if (!results.contains("ERROR")) {
-            JSONArray json;
-            try {
-                json = new JSONArray(results);
-                int n = json.length();
-                userNameView.setText(json.getJSONObject(n - 1).getString("First_Name") + " " + json.getJSONObject(n - 1).getString("Last_Name"));
-                profilePictureView.setProfileId(json.getJSONObject(n - 1).getString("Facebook_Id"));
-                about_me.setText(json.getJSONObject(n - 1).getString("About_Me"));
-                instagram.setText(json.getJSONObject(n - 1).getString("Instagram"));
-                facebook.setText(json.getJSONObject(n - 1).getString("Facebook"));
-                twitter.setText(json.getJSONObject(n - 1).getString("Twitter"));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            Intent i = getIntent();
+            category = i.getStringExtra("category");
+            categoryId = i.getStringExtra("categoryId");
+            my_interests.setText(category);
+            //DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
+            results = global.getUserJSON();//DBconn.getResults();
+            if (!results.contains("ERROR")) {
+                JSONArray json = new JSONArray(results);
+                //int n = json.length();
+                userNameView.setText(json.getJSONObject(0).getString("First_Name") + " " + json.getJSONObject(0).getString("Last_Name"));
+                profilePictureView.setProfileId(json.getJSONObject(0).getString("Facebook_Id"));
+                about_me.setText(json.getJSONObject(0).getString("About_Me"));
+                instagram.setText(json.getJSONObject(0).getString("Instagram"));
+                facebook.setText(json.getJSONObject(0).getString("Facebook"));
+                twitter.setText(json.getJSONObject(0).getString("Twitter"));
             }
-
+        }  catch(Exception e){
+            global.errorHandler(e);
         }
     }
 
@@ -83,7 +75,7 @@ public class EditProfile extends ActionBarActivity {
 
     public void saveChanges (View view) {
         String about_me = DBconn.escapeString(getElementText(R.id.about_me));
-        String my_interests = DBconn.escapeString(getElementText(R.id.my_interests));
+        //String my_interests = DBconn.escapeString(getElementText(R.id.my_interests));
         String instagram = DBconn.escapeString(getElementText(R.id.instagram));
         String twitter = DBconn.escapeString(getElementText(R.id.twitter));
         String facebook =DBconn.escapeString(getElementText(R.id.facebook));
@@ -92,10 +84,13 @@ public class EditProfile extends ActionBarActivity {
                     "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+
                     "where `Id` ="+userId+";");
             DBconn.getResults();
+
+            global.getUserJSON(1);
+
             DBconn.executeQuery("ADD INTERESTS " +categoryId+" FOR "+userId);
-            DBconn.getResults();
-        }catch(GathrException e){
-            Log.i("Exception: ", e.error);
+            //DBconn.getResults(); We dont really need to wait
+        }catch(Exception e){
+            global.errorHandler(e);
         }
         Intent i = new Intent(this, Profile.class);
         startActivity(i);
