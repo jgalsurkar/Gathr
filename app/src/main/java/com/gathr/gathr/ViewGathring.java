@@ -1,5 +1,6 @@
 package com.gathr.gathr;
 
+import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONArray;
 import android.content.Intent;
 import android.widget.Toast;
+
+import com.facebook.android.Facebook;
 
 public class ViewGathring extends ActionBarActivity {
 
@@ -28,6 +31,14 @@ public class ViewGathring extends ActionBarActivity {
         setContentView(R.layout.activity_view_gathring);
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+/*
+        Facebook fb = new Facebook(R.string.facebook_app_id);
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .build();
+        ShareButton shareButton = (ShareButton)findViewById(R.id.fb_share_button);
+        shareButton.setShareContent(content);
+*/
         try{
             String event_organizer;
             Bundle extras = getIntent().getExtras();

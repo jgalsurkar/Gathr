@@ -13,7 +13,7 @@ public class GathringArrayAdapter extends ArrayAdapter<String> {
     private final String[] descriptions;
 
     public GathringArrayAdapter(Context context, String[] values, String[] descriptions) {
-        super(context, R.layout.activity_gathrings_list, values);
+        super(context, R.layout.fragment_gathrings_list, values);
         this.context = context;
         this.values = values;
         this.descriptions = descriptions;
@@ -24,7 +24,7 @@ public class GathringArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.activity_gathrings_list, parent, false);
+        View rowView = inflater.inflate(R.layout.fragment_gathrings_list, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.gathring_list_item);
         textView.setText(values[position]);
 

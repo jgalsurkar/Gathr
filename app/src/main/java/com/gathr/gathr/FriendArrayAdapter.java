@@ -16,7 +16,7 @@ public class FriendArrayAdapter extends ArrayAdapter<String> {
     private final String[] images;
 
     public FriendArrayAdapter(Context context, String[] names, String[] images) {
-        super(context, R.layout.friend_list, names);
+        super(context, R.layout.fragment_following_list, names);
         this.context = context;
         this.names = names;
         this.images = images;
@@ -27,12 +27,12 @@ public class FriendArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.friend_list, parent, false);
+        View rowView = inflater.inflate(R.layout.fragment_following_list, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.friend_list_name);
         textView.setText(names[position]);
 
         ProfilePictureView imgView = (ProfilePictureView) rowView.findViewById(R.id.friend_profile_pic);
-        new MyGlobals(context).tip(images[position]);
+        //new MyGlobals(context).tip(images[position]);
         imgView.setCropped(true);
         imgView.setProfileId(images[position]);
 

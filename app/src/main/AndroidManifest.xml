@@ -96,10 +96,17 @@
             android:name=".ConnectionError"
             android:label="@string/title_activity_connection_error" >
         </activity>
-
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".GathringsListActivity"
+            android:label="@string/title_activity_gathrings_list" >
+        </activity>
+        <activity
+            android:name=".FollowingList"
+            android:label="@string/title_activity_following_list" >
         </activity>
     </application>
 
