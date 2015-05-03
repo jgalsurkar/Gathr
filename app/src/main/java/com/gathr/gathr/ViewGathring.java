@@ -138,7 +138,7 @@ public class ViewGathring extends ActionBarActivity {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this event on Gathr: http://www.gathr.com/viewEvent/"+ eventId +" !" );
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this event on Gathr: http://www.wegathr.tk/viewEvent/"+ eventId +" !" );
             startActivity(Intent.createChooser(shareIntent, "Share this event"));
 
             return true;

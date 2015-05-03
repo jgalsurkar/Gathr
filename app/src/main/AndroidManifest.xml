@@ -74,7 +74,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="www.gathr.com" android:pathPrefix="/viewEvent" />
+                <data android:scheme="http" android:host="www.wegathr.tk" android:pathPrefix="/viewEvent" />
                 <data android:scheme="gathr" android:host="viewEvent" />
             </intent-filter>
 
