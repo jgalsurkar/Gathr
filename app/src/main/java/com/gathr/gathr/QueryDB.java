@@ -21,22 +21,34 @@ public class QueryDB {
     protected String result = null;
     protected String user_id = "0";
     protected String fb_id = "0";
+    String link;
+    boolean custom = false;
+
     MyGlobals global;
     QueryDB(Context c, String _fb_id){
         fb_id = _fb_id;
         global = new MyGlobals(c);
+        link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
+
+    }
+    QueryDB(Context c, String path, boolean _custom){
+        custom = true;
+        global = new MyGlobals(c);
+        link = "http://aarshv.siteground.net/" + path;
+
     }
     QueryDB(Context c, String _fb_id, String _user_id){
         global = new MyGlobals(c);
         fb_id = _fb_id;
         user_id = _user_id;
+        link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
+
     }
 
     private class innerQueryDB extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String[] arg0) {
             try {
-                String link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
 
                 byte[] encoded = Base64.encode(arg0[0].getBytes("CP1252"), Base64.DEFAULT);
                 String str = new String(encoded, "CP1252");
@@ -73,7 +85,7 @@ public class QueryDB {
 
     public void executeQuery(String query) throws GathrException{
         global.checkInternet();
-        if(fb_id == "0"){
+        if(!custom && fb_id.equals("0")){
             throw new GathrException("NO FID - PERMISSION DENIED");
         }else {
             result = null;

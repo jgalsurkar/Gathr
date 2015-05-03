@@ -32,7 +32,7 @@ public class MyGlobals {
     MyGlobals(){  }
 
     public void loadUser(){
-        if(AuthUser.user_id == null || AuthUser.user_id == ""){
+        if(AuthUser.user_id == null || AuthUser.user_id.equals("")){
             try {
                 SharedPreferences settings = c.getSharedPreferences("AuthUser", 0);
                 AuthUser.user_id = settings.getString("userid", "");
