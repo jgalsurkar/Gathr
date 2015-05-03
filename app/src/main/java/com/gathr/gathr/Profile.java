@@ -28,7 +28,7 @@ public class Profile extends ActionBarActivity {
             inst,
             fb,
             tw;
-
+    TextView past_events;
     MyGlobals global = new MyGlobals(this);
 
     @Override
@@ -49,18 +49,24 @@ public class Profile extends ActionBarActivity {
             }else{
                 results = global.getUserJSON();
             }
+        }
+        catch(Exception e) {
+            if (e.getMessage().equals("NO RESULTS")) {
+
+            } else {
+                global.errorHandler(e);
+
+            }
+        }
+        try{
             QueryDB DBconn2 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-            QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
 
             DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id");
-            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " ORDER BY Date DESC LIMIT 15");
 
             TextView userNameView = (TextView) findViewById(R.id.user_name);
             ProfilePictureView profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
             profilePictureView.setCropped(true);
             TextView about_me =(TextView)findViewById(R.id.about_me);
-
-
             JSONArray json = new JSONArray(results);
             JSONObject elem1 = json.getJSONObject(0);
             userNameView.setText(elem1.getString("First_Name")+" "+elem1.getString("Last_Name"));
@@ -82,29 +88,49 @@ public class Profile extends ActionBarActivity {
                 ((ImageButton) findViewById(R.id.twit)).setVisibility(View.VISIBLE);
             }
 
-            TextView past_events = (TextView) findViewById(R.id.past_events);
+            past_events = (TextView) findViewById(R.id.past_events);
             TextView my_interests = (TextView) findViewById(R.id.my_interests);
             results = DBconn2.getResults();
-            json = new JSONArray(results);
+            if (!results.equals(""))
+            {json = new JSONArray(results);
 
-            for (int j = 0; j < json.length(); j++) {
-                interests = interests + json.getJSONObject(j).getString("Name") + ", ";
-                categoryId = categoryId + json.getJSONObject(j).getString("Category_Id")+",";
+                for (int j = 0; j < json.length(); j++) {
+                    interests = interests + json.getJSONObject(j).getString("Name") + ", ";
+                    categoryId = categoryId + json.getJSONObject(j).getString("Category_Id")+",";
+                }
+                interests = interests.substring(0, interests.length() - 2);
+                my_interests.setText(interests);}
+            else my_interests.setText("");
+
+        }catch(Exception e) {
+            if (e.getMessage().equals("NO RESULTS")) {
+
+            } else {
+                global.errorHandler(e);
+
             }
-            interests = interests.substring(0, interests.length() - 1);
-            my_interests.setText(interests);
-
+        }
+        try{
+            QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " ORDER BY Date DESC LIMIT 15");
             results = DBconn3.getResults();
             String events="";
-            json = new JSONArray(results);
+            if (!results.equals(""))
+            {
+                JSONArray  json = new JSONArray(results);
+                for (int j = 0; j < json.length(); j++)
+                    events = events + json.getJSONObject(j).getString("Name") + ", ";
+                events = events.substring(0, events.length() - 1);
+                past_events.setText(events);
+            }
+        }
+        catch(Exception e) {
+            if (e.getMessage().equals("NO RESULTS")) {
 
-            for (int j = 0; j < json.length(); j++)
-                events = events + json.getJSONObject(j).getString("Name") + ", ";
-            events = events.substring(0, events.length() - 1);
-            past_events.setText(events);
+            } else {
+                global.errorHandler(e);
 
-        }catch(Exception e){
-            global.errorHandler(e);
+            }
         }
     }
     public void goToInsta (View view ) {

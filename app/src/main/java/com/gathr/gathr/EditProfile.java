@@ -27,6 +27,7 @@ public class EditProfile extends ActionBarActivity {
 
     public String userId = AuthUser.user_id, category, categoryId;
     String results;
+    EditText my_interests;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -42,7 +43,7 @@ public class EditProfile extends ActionBarActivity {
             final EditText instagram = (EditText) findViewById(R.id.instagram);
             final EditText twitter = (EditText) findViewById(R.id.twitter);
             final EditText facebook = (EditText) findViewById(R.id.facebook);
-            final EditText my_interests = (EditText) findViewById(R.id.my_interests);
+            my_interests = (EditText) findViewById(R.id.my_interests);
 
             Intent i = getIntent();
             category = i.getStringExtra("category");
@@ -69,10 +70,21 @@ public class EditProfile extends ActionBarActivity {
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
         //i.putExtra("userId", AuthUser.user_id);
         i.putExtra("categoryId",categoryId);
-        startActivity(i);
-        finish();
+        i.putExtra("from","edit");
+        startActivityForResult(i,0);
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 0) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                category = data.getStringExtra("category");
+                categoryId = data.getStringExtra("categoryId");
+                my_interests.setText(category);
+            }
+        }
+    }
     public void saveChanges (View view) {
         String about_me = DBconn.escapeString(getElementText(R.id.about_me));
         //String my_interests = DBconn.escapeString(getElementText(R.id.my_interests));

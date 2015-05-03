@@ -91,6 +91,7 @@ public class FollowingList extends ActionBarActivity {
                 if(e.getMessage().equals("NO RESULTS")) {
                     friendNames = new String[]{"No friends to show"};
                     friendIds = new String[]{"-1"};
+                    images = new String[]{"-1"};
                 }else{
                     global.errorHandler(e);
                 }

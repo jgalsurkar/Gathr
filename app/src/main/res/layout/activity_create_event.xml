@@ -18,16 +18,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             >
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/create_event_text"
-                android:text="Create a Gathring!"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:layout_margin="12dp"
-                android:textAlignment="center"/>
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -48,6 +38,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <EditText
                     android:layout_width="213dp"
                     android:layout_height="wrap_content"
@@ -55,10 +46,7 @@
                     android:textStyle="bold"
                     android:inputType="textPostalAddress"
                     android:hint="City"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="12dp" />
+                    android:layout_margin="12dp"/>
 
                 <EditText
                     android:layout_width="115dp"
@@ -69,11 +57,39 @@
                     android:hint="State"
                     android:layout_gravity="right"
                     android:maxLength="2"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="12dp" />
+                    android:layout_toRightOf="@+id/gathring_city"
+                    android:layout_toEndOf="@+id/gathring_city"
+                    android:layout_alignTop="@+id/gathring_city"
+                    android:layout_alignBottom="@+id/gathring_city" />
+
+                <EditText
+                    android:layout_width="268dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_category"
+                    android:hint="Category"
+                    android:inputType="text"
+                    android:textStyle="bold"
+                    android:layout_margin="12dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/gathring_city"
+                    />
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:id="@+id/select_category"
+                    android:clickable="true"
+                    android:linksClickable="true"
+                    android:onClick="openCategory"
+                    android:layout_alignBottom="@+id/gathring_category"
+                    android:layout_alignRight="@+id/gathring_state"
+                    android:layout_alignEnd="@+id/gathring_state" />
             </RelativeLayout>
+
+
+
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

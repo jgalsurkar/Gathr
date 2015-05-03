@@ -1,5 +1,6 @@
 package com.gathr.gathr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,52 +22,56 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     Button button;
     ListView listView;
     ArrayAdapter<String> adapter;
+
     QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+    MyGlobals global = new MyGlobals(this);
+
     public String userId = AuthUser.user_id, output="", results, checkedId="";
     public String[] categoryName;
     public String[] categoryId;
+    String from="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_multiple_selection);
         findViewsById();
-
-        Intent i = getIntent();
-        String userCategoryId = i.getStringExtra("categoryId");
-
-        String[] selectedCategoryId = userCategoryId.split(",");
         try {
+            Intent i = getIntent();
+            from = i.getStringExtra("from");
+
+            String[] selectedCategoryId;
+            String userCategoryId = i.getStringExtra("categoryId");
+
+            if (userCategoryId != null)
+                selectedCategoryId=userCategoryId.split(",");
+            else{
+                selectedCategoryId= new String[1];
+                selectedCategoryId[0]="";}
             DBconn.executeQuery("SELECT Id,Name FROM CATEGORIES;");
             results = DBconn.getResults();
             JSONArray json;
-            try {
-                json = new JSONArray(results);
-                int n = json.length();
-                categoryId = new String[n];
-                categoryName = new String[n];
-                for(int j=0;j<n;j++)
-                {
-                    categoryId[j] = json.getJSONObject(j).getString("Id");
-                    categoryName[j] = json.getJSONObject(j).getString("Name");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }catch(GathrException e){
-            Log.i("Exception", e.error);
-        }
-
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, categoryName);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        listView.setAdapter(adapter);
-        if(selectedCategoryId[0]!="" )
-        {
-            for(int j=0;j<selectedCategoryId.length;j++)
+            json = new JSONArray(results);
+            int n = json.length();
+            categoryId = new String[n];
+            categoryName = new String[n];
+            for(int j=0;j<n;j++)
             {
-                listView.setItemChecked(Integer.valueOf(selectedCategoryId[j])-1,true);
+                categoryId[j] = json.getJSONObject(j).getString("Id");
+                categoryName[j] = json.getJSONObject(j).getString("Name");
             }
-            adapter.notifyDataSetChanged();
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, categoryName);
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            listView.setAdapter(adapter);
+            if(selectedCategoryId[0]!="")
+            {
+                for(int j=0;j<selectedCategoryId.length;j++)
+                {
+                    listView.setItemChecked(Integer.valueOf(selectedCategoryId[j])-1,true);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }catch(Exception e){
+            global.errorHandler(e);
         }
 
     }
@@ -78,7 +83,6 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
 
     public void onSubmit(View v) {
         SparseBooleanArray checked = listView.getCheckedItemPositions();
-        //ArrayList<String> selectedItems = new ArrayList<String>();
         for (int i = 0; i < checked.size(); i++)
         {
             // Item position in adapter
@@ -87,19 +91,26 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
             // Add sport if it is checked i.e.) == TRUE!
             if (checked.valueAt(i))
             {
-               // selectedItems.add(adapter.getItem(position));
-                output = output+ adapter.getItem(position) + ", ";//selectedItems.get(i)+", ";
+                // selectedItems.add(adapter.getItem(position));
+                output = output+ adapter.getItem(position) + ", ";
                 checkedId = checkedId+categoryId[position]+",";
             }
         }
-        output = output.substring(0, output.length()-2);
-//        checkedId = checkedId.substring(0, checkedId.length()-1);
-        Log.i("Check:","Checked: "+checkedId);
-        Intent intent = new Intent(getApplicationContext(), EditProfile.class);
+        if (!output.equals(""))
+            output = output.substring(0, output.length()-2);
+        else output="";
+        Intent intent;
+        String to;
+        if(from.equals("edit"))
+            intent= new Intent(getApplicationContext(),EditProfile.class );
+        else if(from.equals("event"))
+            intent= new Intent(getApplicationContext(),CreateEvent.class );
+        else  intent= new Intent(getApplicationContext(),MapsActivity.class );
         intent.putExtra("categoryId",checkedId);
         intent.putExtra("category",output);
         // start the ResultActivity
-        startActivity(intent);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
