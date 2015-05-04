@@ -28,141 +28,238 @@ public class Profile extends ActionBarActivity {
             inst,
             fb,
             tw;
-    TextView past_events;
+    TextView past_events,
+            followers,
+            events_created,
+            events_attended;
     Boolean following = false,
             blocking = false;
     MyGlobals global = new MyGlobals(this);
+
+    class getUser implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setProfileInfo(results);
+                }
+            });
+        }
+    }
+    class getCategory implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setCategory(results);
+                }
+            });
+        }
+    }
+    class getEventsAttended implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setEventsAttended(results);
+                }
+            });
+        }
+    }
+    class getFollowers implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setFollowers(results);
+                }
+            });
+        }
+    }
+    class getEventsCreated implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setEventsCreated(results);
+                }
+            });
+        }
+    }
+    class getPastEvent implements DatabaseCallback {
+        public void onTaskCompleted(final String results){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setPastEvents(results);
+                }
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
         try {
             new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
             Intent i = getIntent();
             String temp = i.getStringExtra("userId");
-
-            QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
             if (temp != null) {
                 userId = temp;
-                DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
-                results = DBconn.getResults();
+                DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";", new getUser());
             }else{
-                results = global.getUserJSON();
+                setProfileInfo(global.getUserJSON());
             }
-        }
-        catch(Exception e) {
-            if (e.getMessage().equals("NO RESULTS")) {
-
-            } else {
-                global.errorHandler(e);
-            }
-        }
-        try{
             QueryDB DBconn2 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-
-            DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id");
-
-            TextView userNameView = (TextView) findViewById(R.id.user_name);
-            ProfilePictureView profilePictureView = (ProfilePictureView)findViewById(R.id.selection_profile_pic);
-            profilePictureView.setCropped(true);
-            TextView about_me =(TextView)findViewById(R.id.about_me);
-            JSONArray json = new JSONArray(results);
-            JSONObject elem1 = json.getJSONObject(0);
-            userNameView.setText(elem1.getString("First_Name")+" "+elem1.getString("Last_Name"));
-            profilePictureView.setProfileId(elem1.getString("Facebook_Id"));
-            about_me.setText(elem1.getString("About_Me"));
-            inst = elem1.getString("Instagram");
-            fb = elem1.getString("Facebook");
-            tw = elem1.getString("Twitter");
-            if(!inst.equals("")) {
-                ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.insta);
-                ((ImageButton) findViewById(R.id.insta)).setVisibility(View.VISIBLE);
-                ((ImageButton) findViewById(R.id.insta)).setClickable(true);
-            }
-            else {
-                ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.inst_g);
-                ((ImageButton) findViewById(R.id.insta)).setClickable(false);
-            }
-            if(!fb.equals("")) {
-                ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.facebook);
-                ((ImageButton) findViewById(R.id.face)).setVisibility(View.VISIBLE);
-                ((ImageButton) findViewById(R.id.face)).setClickable(true);
-            }
-            else{
-                ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.fb_g);
-                ((ImageButton) findViewById(R.id.face)).setClickable(false);
-            }
-            if(!tw.equals("")) {
-                ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.twit);
-                ((ImageButton) findViewById(R.id.twit)).setVisibility(View.VISIBLE);
-                ((ImageButton) findViewById(R.id.twit)).setClickable(true);
-            }
-            else {
-                ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.tw_g);
-                ((ImageButton) findViewById(R.id.twit)).setClickable(false);
-            }
-
-            past_events = (TextView) findViewById(R.id.past_events);
-            TextView my_interests = (TextView) findViewById(R.id.my_interests);
-            results = DBconn2.getResults();
-            if (!results.equals(""))
-            {json = new JSONArray(results);
-
-                for (int j = 0; j < json.length(); j++) {
-                    interests = interests + json.getJSONObject(j).getString("Name") + ", ";
-                    categoryId = categoryId + json.getJSONObject(j).getString("Category_Id")+",";
-                }
-                interests = interests.substring(0, interests.length() - 2);
-                my_interests.setText(interests);}
-            else my_interests.setText("");
-
-        }catch(Exception e) {
-            if (e.getMessage().equals("NO RESULTS")) {
-
-            } else {
-                global.errorHandler(e);
-
-            }
-        }
-        try{
+            DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id",new getCategory());
+            QueryDB DBconn5 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            DBconn5.executeQuery("SELECT Count(Event_Id) as Count FROM JOINED_EVENTS WHERE User_Id= " + userId+";",new getEventsAttended());
             QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " and Date < DATE(NOW()) ORDER BY Date DESC LIMIT 15");
-            results = DBconn3.getResults();
-            String events="";
-            if (!results.equals(""))
-            {
-                JSONArray  json = new JSONArray(results);
-                for (int j = 0; j < json.length(); j++)
-                    events = events + json.getJSONObject(j).getString("Name") + ", ";
-                events = events.substring(0, events.length() - 1);
-                past_events.setText(events);
+            DBconn3.executeQuery("SELECT Count(User_Id) as Count FROM FRIENDS WHERE Friend_User_Id= " + userId+";",new getFollowers());
+            QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            DBconn4.executeQuery("SELECT Count(Id) as Count FROM EVENTS WHERE Organizer= " + userId+";", new getEventsCreated());
+            QueryDB DBconn6 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            DBconn6.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " and Date < DATE(NOW()) ORDER BY Date DESC LIMIT 15", new getPastEvent());
+        }
+        catch(Exception e) {
+            global.errorHandler(e);
+        }
+    }
+
+
+    public void setFollowers(String r){
+        try{
+            followers = (TextView) findViewById(R.id.followers);
+            JSONArray json = new JSONArray(r);
+            if (!r.contains("ERROR")) {
+                String count = json.getJSONObject(0).getString("Count").trim();
+                followers.append(count);
             }
         }
         catch(Exception e) {
-            if (e.getMessage().equals("NO RESULTS")) {
+            global.errorHandler(e);
+        }
+    }
 
-            } else {
-                global.errorHandler(e);
 
+    public void setEventsAttended(String r)
+    {
+        try{
+            events_attended = (TextView) findViewById(R.id.events_attended);
+            if (!r.contains("ERROR")) {
+                JSONArray json = new JSONArray(r);
+                String count = json.getJSONObject(0).getString("Count").trim();
+                events_attended.append(count);
             }
+        }
+        catch(Exception e) {
+            global.errorHandler(e);
+        }
+    }
+    public void setProfileInfo(String r)
+    {
+        try {
+            TextView userNameView = (TextView) findViewById(R.id.user_name);
+            ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+            profilePictureView.setCropped(true);
+            TextView about_me = (TextView) findViewById(R.id.about_me);
+            if(!r.contains("ERROR")) {
+                JSONArray json = new JSONArray(r);
+                JSONObject elem1 = json.getJSONObject(0);
+                userNameView.setText(elem1.getString("First_Name") + " " + elem1.getString("Last_Name"));
+                profilePictureView.setProfileId(elem1.getString("Facebook_Id"));
+                about_me.setText(elem1.getString("About_Me"));
+                inst = elem1.getString("Instagram");
+                fb = elem1.getString("Facebook");
+                tw = elem1.getString("Twitter");
+                setImages(inst, R.id.insta, R.drawable.insta, R.drawable.inst_g);
+                setImages(fb, R.id.face, R.drawable.facebook, R.drawable.fb_g);
+                setImages(tw, R.id.twit, R.drawable.twit, R.drawable.tw_g);
+            }
+        }catch(Exception e){
+            global.errorHandler(e);
+        }
+    }
+    public void setCategory(String r){
+        try{
+            TextView my_interests = (TextView) findViewById(R.id.my_interests);
+            if(!r.contains("ERROR")) {
+                if (!r.equals("")) {
+                    JSONArray json = new JSONArray(r);
+                    for (int j = 0; j < json.length(); j++) {
+                        interests = interests + json.getJSONObject(j).getString("Name") + ", ";
+                        categoryId = categoryId + json.getJSONObject(j).getString("Category_Id") + ",";
+                    }
+                    interests = interests.substring(0, interests.length() - 2);
+                    my_interests.setText(interests);
+                } else my_interests.setText("");
+            }
+        }
+        catch(Exception e) {
+            global.errorHandler(e);
+        }
+
+    }
+    public void setEventsCreated(String r)
+    {
+        try {
+            events_created = (TextView) findViewById(R.id.events_created);
+            if (!r.contains("ERROR")) {
+                JSONArray json = new JSONArray(r);
+                String count = json.getJSONObject(0).getString("Count").trim();
+                events_created.append(count);
+            }
+        } catch (Exception e) {
+            global.errorHandler(e);
+        }
+    }
+    public void setPastEvents(String r)
+    {
+        try{
+            past_events = (TextView) findViewById(R.id.past_events);
+            String events="";
+            if(!r.contains("ERROR")) {
+                if (!r.equals("")) {
+                    JSONArray json = new JSONArray(r);
+                    for (int j = 0; j < json.length(); j++)
+                        events = events + json.getJSONObject(j).getString("Name") + ", ";
+                    events = events.substring(0, events.length() - 2);
+                    past_events.setText(events);
+                }
+            }
+        }
+        catch(Exception e) {
+            global.errorHandler(e);
+        }
+    }
+    public void setImages(String sid,int vid, int dr_id,int gdr_id)
+    {
+        if (!sid.equals("")) {
+            ((ImageButton) findViewById(vid)).setBackgroundResource(dr_id);
+            ((ImageButton) findViewById(vid)).setVisibility(View.VISIBLE);
+            ((ImageButton) findViewById(vid)).setClickable(true);
+        } else {
+            ((ImageButton) findViewById(vid)).setBackgroundResource(gdr_id);
+            ((ImageButton) findViewById(vid)).setClickable(false);
         }
     }
     public void goToInsta (View view ) {
-        if (inst.charAt(0)=='@')
-            inst = inst.substring(1, inst.length());
-        goToUrl ("https://instagram.com/_u/"+inst);
+        goToUrl ("https://instagram.com/_u/"+ parseUN(inst));
     }
     public void goToFace (View view) {
-        if (fb.charAt(0)=='@')
-            fb = fb.substring(1, fb.length());
         goToUrl ( "fb://profile/"+fb);
     }
     public void goToTwit (View view) {
-        if (tw.charAt(0)=='@')
-            tw = tw.substring(1,tw.length());
-        goToUrl ( "http://twitter.com/"+tw);
+        goToUrl ( "http://twitter.com/"+ parseUN(tw));
+    }
+    public String parseUN(String u)
+    {
+        if (u.charAt(0)=='@')
+            u = u.substring(1, u.length());
+        return u;
     }
     private void goToUrl (String url) {
         Uri uriUrl = Uri.parse(url);
@@ -182,66 +279,67 @@ public class Profile extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        QueryDB DBconn7 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn8= new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_block) {
-            if (blocking == false) {
+            if (!blocking) {
                 try {
-                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                    DBconn4.executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`)" +
+                    DBconn7.executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`)" +
                             " VALUES " +
                             "('" + AuthUser.user_id + "', '" + userId + "');");
-                    results = DBconn4.getResults();
+                    // results = DBconn4.getResults();
                     blocking = true;
                 } catch (Exception e) {
-                    if (e.getMessage().equals("NO RESULTS")) {} else {
+                    if (!e.getMessage().equals("NO RESULTS")) {
                         global.errorHandler(e);}
                 }
             } else {
                 try {
-                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                    DBconn4.executeQuery("DELETE FROM BLOCKED_USERS " +
+                    DBconn8.executeQuery("DELETE FROM BLOCKED_USERS " +
                             " WHERE " +
                             "Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.user_id + " ;");
-                    results = DBconn4.getResults();
+                    //results = DBconn4.getResults();
                     blocking = false;
-                } catch (Exception e) { if (e.getMessage().equals("NO RESULTS")) {}
-                else {global.errorHandler(e);}
+                } catch (Exception e) {
+                    if (!e.getMessage().equals("NO RESULTS")) {
+                        global.errorHandler(e);}
                 }
             }
 
             return true;
         }
         //noinspection SimplifiableIfStatement
+        QueryDB DBconn9 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn10 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
         if (id == R.id.action_follow) {
-            if (following==false) {
+            if (!following) {
                 try {
-                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                    DBconn4.executeQuery("INSERT INTO FRIENDS (`User_Id`, `Friend_User_Id`)" +
+                    DBconn9.executeQuery("INSERT INTO FRIENDS (`User_Id`, `Friend_User_Id`)" +
                             " VALUES " +
                             "('" + AuthUser.user_id + "', '" + userId + "');");
-                    results = DBconn4.getResults();
-                    //  global.getFollowersJSON(1);
+                    String [] text = followers.getText().toString().split(" ");
+                    Integer count = Integer.valueOf(text[1])+1;
+                    followers.setText("Followers: " + count);
                     following = true;
                 } catch (Exception e) {
-                    if (e.getMessage().equals("NO RESULTS")) {}
-                    else {
+                    if (!e.getMessage().equals("NO RESULTS")) {
                         global.errorHandler(e);
                     }
                 }
             }
             else {
                 try {
-                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                    DBconn4.executeQuery("DELETE FROM FRIENDS " +
+                    DBconn10.executeQuery("DELETE FROM FRIENDS " +
                             " WHERE " +
                             "Friend_User_Id = "+userId + " AND User_Id = "+AuthUser.user_id+" ;");
-                    results = DBconn4.getResults();
+                    //results = DBconn4.getResults();
+                    String [] text = followers.getText().toString().split(" ");
+                    Integer count = Integer.valueOf(text[1])-1;
+                    followers.setText("Followers: "+count);
                     following = false;
-                } catch (Exception e)
-                {
-                    if (e.getMessage().equals("NO RESULTS")) {}
-                    else {global.errorHandler(e);}
+                } catch (Exception e){
+                    if (!e.getMessage().equals("NO RESULTS")) {global.errorHandler(e);}
                 }
             }
             return true;
@@ -257,49 +355,74 @@ public class Profile extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public boolean onPrepareOptionsMenu(final Menu menu)
     {
-        QueryDB DBConn5 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+
+        class getFollowing implements DatabaseCallback {
+            public void onTaskCompleted(final String results){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            if (!results.contains("ERROR")) {
+                                JSONArray json = new JSONArray(results);
+                                String count = json.getJSONObject(0).getString("Count").trim();
+                                if (count.equals("0")) {
+                                    menu.findItem(R.id.action_follow).setTitle("Follow");
+                                    following = false;
+                                } else {
+                                    menu.findItem(R.id.action_follow).setTitle("Unfollow");
+                                    following = true;
+                                }
+                                menu.findItem(R.id.action_follow).setVisible(true);
+                            }
+                        }catch(Exception e) {
+                            if (!e.getMessage().equals("NO RESULTS")) {
+                                global.errorHandler(e);}
+                        }
+                    }
+                });
+            }
+        }
+        class getBlocking implements DatabaseCallback {
+            public void onTaskCompleted(final String results){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            if (!results.contains("ERROR")) {
+                                JSONArray json = new JSONArray(results);
+                                String count = json.getJSONObject(0).getString("Count").trim();
+                                if (count.equals("0")) {
+                                    menu.findItem(R.id.action_block).setTitle("Block");
+                                    blocking = false;
+                                } else {
+                                    menu.findItem(R.id.action_block).setTitle("Unblock");
+                                    blocking = true;
+                                }
+                                menu.findItem(R.id.action_block).setVisible(true);
+                            }
+                        }catch(Exception e) {
+                            if (!e.getMessage().equals("NO RESULTS")) {
+                                global.errorHandler(e);}
+                        }
+                    }
+                });
+            }
+        }
+
         if(!(AuthUser.user_id.equals(userId))){
-            try{
-                DBConn5.executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " AND Friend_User_Id = " + userId + ";");
-                results = DBConn5.getResults();
-                JSONArray json = new JSONArray(results);
-                String count = json.getJSONObject(0).getString("Count").trim();
-                if (count.equals("0")) {
-                    menu.findItem(R.id.action_follow).setTitle("Follow");
-                    following = false;
-                } else {
-                    menu.findItem(R.id.action_follow).setTitle("Unfollow");
-                    following = true;
-                }
-            }catch(Exception e) {
-                if (e.getMessage().equals("NO RESULTS")) {
+            try {
+                QueryDB DBConn11 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                DBConn11.executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " AND Friend_User_Id = " + userId + ";", new getFollowing());
 
-                } else {
-                    global.errorHandler(e);}
+                QueryDB DBConn12 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                DBConn12.executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS  WHERE User_Id = " + AuthUser.user_id + " AND Blocked_User_Id = " + userId + ";", new getBlocking());
+            }catch(Exception e){
+                global.errorHandler(e);
             }
-            try{
-                DBConn5.executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS" +
-                        " WHERE User_Id = " + AuthUser.user_id + " AND Blocked_User_Id = " + userId + ";");
-                results = DBConn5.getResults();
-                JSONArray json = new JSONArray(results);
-                String count = json.getJSONObject(0).getString("Count").trim();
-                if (count.equals("0")) {
-                    menu.findItem(R.id.action_block).setTitle("Block");
-                    blocking = false;
-                } else {
-                    menu.findItem(R.id.action_block).setTitle("Unblock");
-                    blocking = true;
-                }
-            }catch(Exception e) {
-                if (e.getMessage().equals("NO RESULTS")) {
 
-                } else {
-                    global.errorHandler(e);}
-            }
-            menu.findItem(R.id.action_follow).setVisible(true);
-            menu.findItem(R.id.action_block).setVisible(true);
+
         }else{
             menu.findItem(R.id.action_edit_profile).setVisible(true);
         }

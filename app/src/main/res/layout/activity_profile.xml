@@ -8,203 +8,237 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.gathr.gathr.Profile">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.gathr.gathr.Profile">
 
-        <com.facebook.widget.ProfilePictureView
-            android:id="@+id/selection_profile_pic"
-            android:layout_width="117dp"
-            android:layout_height="wrap_content"
-            android:layoutMode="clipBounds"
-            android:textAlignment="inherit"
-            android:layout_alignTop="@+id/user_name"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearance"
+                android:id="@+id/user_name"
+                android:textSize="14pt"
+                android:textAlignment="inherit"
+                android:fontFamily="Times New Roman"
+                android:textStyle = "bold"
+                android:gravity="center"
+                />
+            <Space
+                android:layout_width = "fill_parent"
+                android:layout_height="3pt"
+                android:id="@+id/space5"
+                android:layout_below="@+id/user_name"
+                />
+            <com.facebook.widget.ProfilePictureView
+                android:id="@+id/selection_profile_pic"
+                android:layout_width="117dp"
+                android:layout_height="wrap_content"
+                android:layoutMode="clipBounds"
+                android:textAlignment="inherit"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/space5"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearance"
-            android:id="@+id/user_name"
-            android:textSize="10pt"
-            android:textAlignment="inherit"
-            android:fontFamily="Times New Roman"
-            android:textStyle = "italic|bold"
-            android:layout_toRightOf="@+id/selection_profile_pic"
+            <Space
+                android:layout_width = "fill_parent"
+                android:layout_height="3pt"
+                android:id="@+id/space2"
+                android:layout_below="@+id/user_name"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/insta"
+                android:layout_below="@+id/space2"
+                android:linksClickable="true"
+                android:autoLink="web"
+                android:clickable="true"
+                android:onClick="goToInsta"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <Space
+                android:layout_width = "3pt"
+                android:layout_height="fill_parent"
+                android:id="@+id/space3"
+                android:layout_below="@+id/space2"
+                android:layout_toRightOf="@+id/insta"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/face"
+                android:layout_below="@+id/space2"
+                android:layout_toRightOf="@+id/space3"
+                android:linksClickable="true"
+                android:autoLink="web"
+                android:clickable="true"
+                android:onClick="goToFace"/>
+
+            <Space
+                android:layout_width = "3pt"
+                android:layout_height="fill_parent"
+                android:id="@+id/space4"
+                android:layout_below="@+id/space2"
+                android:layout_toRightOf="@+id/face"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/twit"
+                android:layout_below="@+id/space2"
+                android:layout_toRightOf="@+id/space4"
+                android:linksClickable="true"
+                android:autoLink="web"
+                android:clickable="true"
+                android:onClick="goToTwit"/>
+
+            <TextView
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:id ="@+id/followers"
+                android:text = "Followers: "
+                android:layout_below="@+id/twit"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <Space
+                android:layout_width = "5pt"
+                android:layout_height="fill_parent"
+                android:id="@+id/space7"
+                android:layout_below="@+id/followers"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <TextView
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:id ="@+id/events_created"
+                android:text = "Events Created: "
+                android:layout_below="@+id/space7"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <Space
+                android:layout_width = "5pt"
+                android:layout_height="fill_parent"
+                android:id="@+id/space10"
+                android:layout_below="@+id/events_created"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <TextView
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:id ="@+id/events_attended"
+                android:text = "Events Attended: "
+                android:layout_below="@+id/space10"
+                android:layout_toRightOf="@+id/selection_profile_pic"/>
+
+            <Space
+                android:layout_width = "fill_parent"
+                android:layout_height="3pt"
+                android:id="@+id/space6"
+                android:layout_below="@+id/selection_profile_pic"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Me"
+                android:id="@+id/about_me_label"
+                android:fontFamily="Times New Roman"
+                android:textStyle = "bold"
+                android:textSize="10pt"
+                android:linksClickable="false"
+                android:layout_below="@+id/space6"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/about_me"
+                android:layout_below="@+id/about_me_label"
+                android:fontFamily="Times New Roman"
+                android:textSize="9pt"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:linksClickable="false"
+                />
+            <Space
+                android:layout_width = "fill_parent"
+                android:layout_height="3pt"
+                android:id="@+id/space11"
+                android:layout_below="@+id/about_me"
+                android:background="#ff010001"
+                android:backgroundTint="#feffffff"
+                android:padding="5dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Interests"
+                android:id="@+id/my_interests_label"
+                android:layout_below="@+id/space11"
+                android:fontFamily="Times New Roman"
+                android:textStyle = "bold"
+                android:textSize="10pt"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:linksClickable="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/my_interests"
+                android:layout_below="@+id/my_interests_label"
+                android:fontFamily="Times New Roman"
+                android:textSize="9pt"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:linksClickable="false" />
+
+
+            <Space
+                android:layout_width = "fill_parent"
+                android:layout_height="3pt"
+                android:id="@+id/space8"
+                android:layout_below="@+id/my_interests"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Past Events"
+                android:id="@+id/past_events_label"
+                android:layout_below="@+id/space8"
+                android:fontFamily="Times New Roman"
+                android:textStyle = "bold"
+                android:textSize="10pt"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:linksClickable="false" />
             />
-
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space2"
-            android:layout_below="@+id/user_name"
-            android:layout_toRightOf="@+id/selection_profile_pic"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/insta"
-            android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/selection_profile_pic"
-            android:linksClickable="true"
-            android:autoLink="web"
-            android:clickable="true"
-            android:onClick="goToInsta"/>
-
-        <Space
-            android:layout_width = "3pt"
-            android:layout_height="fill_parent"
-            android:id="@+id/space3"
-            android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/insta"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/face"
-            android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/space3"
-            android:linksClickable="true"
-            android:autoLink="web"
-            android:clickable="true"
-            android:onClick="goToFace"/>
-
-        <Space
-            android:layout_width = "3pt"
-            android:layout_height="fill_parent"
-            android:id="@+id/space4"
-            android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/face"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/twit"
-            android:layout_below="@+id/space2"
-            android:layout_toRightOf="@+id/space4"
-            android:linksClickable="true"
-            android:autoLink="web"
-            android:clickable="true"
-            android:onClick="goToTwit"/>
-
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space5"
-            android:layout_below="@+id/face"
-            android:layout_toRightOf="@+id/selection_profile_pic"/>
-
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space6"
-            android:layout_below="@+id/selection_profile_pic"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About Me"
-            android:id="@+id/about_me_label"
-            android:layout_below="@+id/space6"
-            android:fontFamily="Times New Roman"
-            android:textStyle = "bold"
-            android:textSize="10pt"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:linksClickable="false" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/about_me"
-            android:layout_below="@+id/about_me_label"
-            android:fontFamily="Times New Roman"
-            android:textSize="9pt"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:linksClickable="false"
-            />
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space11"
-            android:layout_below="@+id/about_me"
-            android:background="#ff010001"
-            android:backgroundTint="#feffffff"
-            android:padding="5dp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Interests"
-            android:id="@+id/my_interests_label"
-            android:layout_below="@+id/space11"
-            android:fontFamily="Times New Roman"
-            android:textStyle = "bold"
-            android:textSize="10pt"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:linksClickable="false" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_interests"
-            android:layout_below="@+id/my_interests_label"
-            android:fontFamily="Times New Roman"
-            android:textSize="9pt"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:linksClickable="false" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/past_events"
+                android:fontFamily="Times New Roman"
+                android:textSize="9pt"
+                android:linksClickable="false"
+                android:layout_below="@+id/past_events_label"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                />
 
 
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space8"
-            android:layout_below="@+id/my_interests"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Past Events"
-            android:id="@+id/past_events_label"
-            android:layout_below="@+id/space8"
-            android:fontFamily="Times New Roman"
-            android:textStyle = "bold"
-            android:textSize="10pt"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:linksClickable="false" />
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/past_events"
-        android:fontFamily="Times New Roman"
-        android:textSize="9pt"
-        android:linksClickable="false"
-        android:layout_below="@+id/past_events_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"/>
-
-
-    </RelativeLayout>
+        </RelativeLayout>
     </ScrollView>
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
