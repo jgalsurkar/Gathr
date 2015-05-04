@@ -41,16 +41,18 @@ public class EditProfile extends ActionBarActivity {
             about_me = (EditText) findViewById(R.id.about_me);
 
             final EditText instagram = (EditText) findViewById(R.id.instagram);
+            instagram.setHint("@username");
             final EditText twitter = (EditText) findViewById(R.id.twitter);
+            twitter.setHint("@username");
             final EditText facebook = (EditText) findViewById(R.id.facebook);
+            facebook.setHint("@username");
             my_interests = (EditText) findViewById(R.id.my_interests);
 
             Intent i = getIntent();
             category = i.getStringExtra("category");
             categoryId = i.getStringExtra("categoryId");
             my_interests.setText(category);
-            //DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";");
-            results = global.getUserJSON();//DBconn.getResults();
+            results = global.getUserJSON();
             if (!results.contains("ERROR")) {
                 JSONArray json = new JSONArray(results);
                 //int n = json.length();
@@ -87,10 +89,15 @@ public class EditProfile extends ActionBarActivity {
     }
     public void saveChanges (View view) {
         String about_me = DBconn.escapeString(getElementText(R.id.about_me));
-        //String my_interests = DBconn.escapeString(getElementText(R.id.my_interests));
         String instagram = DBconn.escapeString(getElementText(R.id.instagram));
+        if (instagram.charAt(0)!='@')
+            instagram = "@"+ instagram;
         String twitter = DBconn.escapeString(getElementText(R.id.twitter));
+        if (twitter.charAt(0)!='@')
+            twitter = "@"+ twitter;
         String facebook =DBconn.escapeString(getElementText(R.id.facebook));
+        if (facebook.charAt(0)!='@')
+            facebook = "@"+ facebook;
         try{
             DBconn.executeQuery("UPDATE USERS " +
                     "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+

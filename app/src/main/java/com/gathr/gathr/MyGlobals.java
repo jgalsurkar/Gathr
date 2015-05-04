@@ -40,8 +40,8 @@ public class MyGlobals {
                 AuthUser.user_fname = settings.getString("fname", "");
                 AuthUser.user_lname = settings.getString("lname", "");
 
-                if (AuthUser.user_id.equals(""))
-                    c.startActivity(new Intent(c, MainActivity.class));
+                // if (AuthUser.user_id.equals(""))
+                //   c.startActivity(new Intent(c, MainActivity.class));
 
             }catch(Exception e){
                 //Intent intent = new Intent(c, MainActivity.class); // Send them back to login page
@@ -124,14 +124,47 @@ public class MyGlobals {
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
     }
 
-    public String getUserJSON(){
+
+
+
+    public String getUserJSON() { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";", false); }
+    public String getUserJSON(int x) { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";", true); }
+    public String getFollowersJSON() { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.user_id+" )  AS JOINED) WHERE Id = Friend_User_Id", false); }
+    public String getFollowersJSON(int x) { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.user_id+" )  AS JOINED) WHERE Id = Friend_User_Id", true); }
+
+    public void setJSON(String fileName, String JSON){
+        FileOutputStream outputStream;
+        try {
+            outputStream = c.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(JSON.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            errorHandler(e);
+        }
+
+    }
+    public boolean fileExists( String filename) {
+        File file = c.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
+    }
+    public String getJSON(String fileName, String query, boolean force){
         String JSON = "";
         FileInputStream inputStream;
         try {
-            if(!fileExists("UserFile")){
-                JSON = getUserJSON(1);
+            if(!fileExists(fileName) || force){
+                try {
+                    QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
+                    DBconn.executeQuery(query);
+                    JSON = DBconn.getResults();
+                    setJSON( fileName, JSON);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }else{
-                inputStream = c.openFileInput("UserFile");
+                inputStream = c.openFileInput(fileName);
 
                 InputStreamReader in = new InputStreamReader(inputStream);
                 BufferedReader br = new BufferedReader(in);
@@ -143,38 +176,7 @@ public class MyGlobals {
             e.printStackTrace();
         }
         return JSON;
-    }
-    public String getUserJSON(int x){
-        String JSON = "";
-        FileInputStream inputStream;
-        try {
-            QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
-            DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";");
-            JSON = DBconn.getResults();
-            setUserJSON(JSON);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return JSON;
-    }
 
-    public void setUserJSON(String JSON){
-        FileOutputStream outputStream;
-        try {
-            outputStream = c.openFileOutput("UserFile", Context.MODE_PRIVATE);
-            outputStream.write(JSON.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            errorHandler(e);
-        }
 
-    }
-
-    public boolean fileExists( String filename) {
-        File file = c.getFileStreamPath(filename);
-        if(file == null || !file.exists()) {
-            return false;
-        }
-        return true;
     }
 }

@@ -29,6 +29,8 @@ public class Profile extends ActionBarActivity {
             fb,
             tw;
     TextView past_events;
+    Boolean following = false,
+            blocking = false;
     MyGlobals global = new MyGlobals(this);
 
     @Override
@@ -55,7 +57,6 @@ public class Profile extends ActionBarActivity {
 
             } else {
                 global.errorHandler(e);
-
             }
         }
         try{
@@ -78,14 +79,29 @@ public class Profile extends ActionBarActivity {
             if(!inst.equals("")) {
                 ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.insta);
                 ((ImageButton) findViewById(R.id.insta)).setVisibility(View.VISIBLE);
+                ((ImageButton) findViewById(R.id.insta)).setClickable(true);
+            }
+            else {
+                ((ImageButton) findViewById(R.id.insta)).setBackgroundResource(R.drawable.inst_g);
+                ((ImageButton) findViewById(R.id.insta)).setClickable(false);
             }
             if(!fb.equals("")) {
                 ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.facebook);
                 ((ImageButton) findViewById(R.id.face)).setVisibility(View.VISIBLE);
+                ((ImageButton) findViewById(R.id.face)).setClickable(true);
+            }
+            else{
+                ((ImageButton) findViewById(R.id.face)).setBackgroundResource(R.drawable.fb_g);
+                ((ImageButton) findViewById(R.id.face)).setClickable(false);
             }
             if(!tw.equals("")) {
                 ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.twit);
                 ((ImageButton) findViewById(R.id.twit)).setVisibility(View.VISIBLE);
+                ((ImageButton) findViewById(R.id.twit)).setClickable(true);
+            }
+            else {
+                ((ImageButton) findViewById(R.id.twit)).setBackgroundResource(R.drawable.tw_g);
+                ((ImageButton) findViewById(R.id.twit)).setClickable(false);
             }
 
             past_events = (TextView) findViewById(R.id.past_events);
@@ -112,7 +128,7 @@ public class Profile extends ActionBarActivity {
         }
         try{
             QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " ORDER BY Date DESC LIMIT 15");
+            DBconn3.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " and Date < DATE(NOW()) ORDER BY Date DESC LIMIT 15");
             results = DBconn3.getResults();
             String events="";
             if (!results.equals(""))
@@ -134,12 +150,18 @@ public class Profile extends ActionBarActivity {
         }
     }
     public void goToInsta (View view ) {
+        if (inst.charAt(0)=='@')
+            inst = inst.substring(1, inst.length());
         goToUrl ("https://instagram.com/_u/"+inst);
     }
     public void goToFace (View view) {
+        if (fb.charAt(0)=='@')
+            fb = fb.substring(1, fb.length());
         goToUrl ( "fb://profile/"+fb);
     }
     public void goToTwit (View view) {
+        if (tw.charAt(0)=='@')
+            tw = tw.substring(1,tw.length());
         goToUrl ( "http://twitter.com/"+tw);
     }
     private void goToUrl (String url) {
@@ -163,10 +185,65 @@ public class Profile extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_block) {
+            if (blocking == false) {
+                try {
+                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                    DBconn4.executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`)" +
+                            " VALUES " +
+                            "('" + AuthUser.user_id + "', '" + userId + "');");
+                    results = DBconn4.getResults();
+                    blocking = true;
+                } catch (Exception e) {
+                    if (e.getMessage().equals("NO RESULTS")) {} else {
+                        global.errorHandler(e);}
+                }
+            } else {
+                try {
+                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                    DBconn4.executeQuery("DELETE FROM BLOCKED_USERS " +
+                            " WHERE " +
+                            "Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.user_id + " ;");
+                    results = DBconn4.getResults();
+                    blocking = false;
+                } catch (Exception e) { if (e.getMessage().equals("NO RESULTS")) {}
+                else {global.errorHandler(e);}
+                }
+            }
+
             return true;
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_follow) {
+            if (following==false) {
+                try {
+                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                    DBconn4.executeQuery("INSERT INTO FRIENDS (`User_Id`, `Friend_User_Id`)" +
+                            " VALUES " +
+                            "('" + AuthUser.user_id + "', '" + userId + "');");
+                    results = DBconn4.getResults();
+                    //  global.getFollowersJSON(1);
+                    following = true;
+                } catch (Exception e) {
+                    if (e.getMessage().equals("NO RESULTS")) {}
+                    else {
+                        global.errorHandler(e);
+                    }
+                }
+            }
+            else {
+                try {
+                    QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+                    DBconn4.executeQuery("DELETE FROM FRIENDS " +
+                            " WHERE " +
+                            "Friend_User_Id = "+userId + " AND User_Id = "+AuthUser.user_id+" ;");
+                    results = DBconn4.getResults();
+                    following = false;
+                } catch (Exception e)
+                {
+                    if (e.getMessage().equals("NO RESULTS")) {}
+                    else {global.errorHandler(e);}
+                }
+            }
             return true;
         }
         //noinspection SimplifiableIfStatement
@@ -182,9 +259,47 @@ public class Profile extends ActionBarActivity {
     }
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        if(AuthUser.user_id != userId){
-            menu.findItem(R.id.action_block).setVisible(true);
+        QueryDB DBConn5 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        if(!(AuthUser.user_id.equals(userId))){
+            try{
+                DBConn5.executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " AND Friend_User_Id = " + userId + ";");
+                results = DBConn5.getResults();
+                JSONArray json = new JSONArray(results);
+                String count = json.getJSONObject(0).getString("Count").trim();
+                if (count.equals("0")) {
+                    menu.findItem(R.id.action_follow).setTitle("Follow");
+                    following = false;
+                } else {
+                    menu.findItem(R.id.action_follow).setTitle("Unfollow");
+                    following = true;
+                }
+            }catch(Exception e) {
+                if (e.getMessage().equals("NO RESULTS")) {
+
+                } else {
+                    global.errorHandler(e);}
+            }
+            try{
+                DBConn5.executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS" +
+                        " WHERE User_Id = " + AuthUser.user_id + " AND Blocked_User_Id = " + userId + ";");
+                results = DBConn5.getResults();
+                JSONArray json = new JSONArray(results);
+                String count = json.getJSONObject(0).getString("Count").trim();
+                if (count.equals("0")) {
+                    menu.findItem(R.id.action_block).setTitle("Block");
+                    blocking = false;
+                } else {
+                    menu.findItem(R.id.action_block).setTitle("Unblock");
+                    blocking = true;
+                }
+            }catch(Exception e) {
+                if (e.getMessage().equals("NO RESULTS")) {
+
+                } else {
+                    global.errorHandler(e);}
+            }
             menu.findItem(R.id.action_follow).setVisible(true);
+            menu.findItem(R.id.action_block).setVisible(true);
         }else{
             menu.findItem(R.id.action_edit_profile).setVisible(true);
         }
