@@ -34,7 +34,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         notification = new NotificationCompat.Builder(c);
         notification.setAutoCancel(true); //This is to make the notification go away when you get to the proper intent screen
-        notification.setSmallIcon(R.mipmap.ic_launcher); //Used to set picture or logo of app for the notification
+        notification.setSmallIcon(R.mipmap.notification); //Used to set picture or logo of app for the notification
         notification.setTicker(tickerText); //Notification Text
         notification.setWhen(System.currentTimeMillis()); // Notification Time
         notification.setContentTitle(nTitle);
