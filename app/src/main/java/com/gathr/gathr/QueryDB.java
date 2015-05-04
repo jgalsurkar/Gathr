@@ -45,7 +45,13 @@ public class QueryDB {
 
     }
 
-    private class innerQueryDB extends AsyncTask<String, Void, String> {
+    private class innerQueryDB extends AsyncTask<String, Object, String> {
+        DatabaseCallback listener;
+
+        innerQueryDB(DatabaseCallback _listener){
+            listener = _listener;
+        }
+
         @Override
         protected String doInBackground(String[] arg0) {
             try {
@@ -73,7 +79,9 @@ public class QueryDB {
                     sb.append(line + "\n");
 
                 byte[] decoded = Base64.decode(sb.toString().getBytes("CP1252"), Base64.DEFAULT);
-                result = new String(decoded,"CP1252");
+                //result = new String(decoded,"CP1252");
+
+                listener.onTaskCompleted( new String(decoded,"CP1252"));
 
                 return result;
             } catch (Exception e) {
@@ -83,15 +91,31 @@ public class QueryDB {
         }
     }
 
-    public void executeQuery(String query) throws GathrException{
+    public void executeQuery(String query, DatabaseCallback callback) throws GathrException{
         global.checkInternet();
         if(!custom && fb_id.equals("0")){
             throw new GathrException("NO FID - PERMISSION DENIED");
         }else {
             result = null;
-            new innerQueryDB().execute(query);
+            new innerQueryDB(callback).execute(query);
         }
     }
+
+    public void executeQuery(String query) throws GathrException{
+       /* global.checkInternet();
+        if(!custom && fb_id.equals("0")){
+            throw new GathrException("NO FID - PERMISSION DENIED");
+        }else {
+            result = null;*/
+        class dothis implements DatabaseCallback{
+            public void onTaskCompleted(String results){
+                result = results;
+            }
+        }
+        executeQuery(query, new dothis());
+        // }
+    }
+
 
     public String getResults() throws GathrException{
         global.checkInternet();

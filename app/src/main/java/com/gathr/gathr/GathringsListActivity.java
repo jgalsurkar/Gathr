@@ -20,8 +20,6 @@ import org.json.JSONArray;
 
 public class GathringsListActivity extends ActionBarActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,24 +41,7 @@ public class GathringsListActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends ListFragment {
 
         String[] eventNames;
@@ -72,43 +53,45 @@ public class GathringsListActivity extends ActionBarActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            //super(this, R.layout.fragment_gathr_list_view, values);
-
-            // View rootView = inflater.inflate(R.layout.fragment_gathr_list_view, container, false);
             QueryDB DBConn = new QueryDB(getActivity(), AuthUser.fb_id, AuthUser.user_id);
-            MyGlobals global = new MyGlobals(getActivity());
+            final MyGlobals global = new MyGlobals(getActivity());
 
             try {
+                class load implements DatabaseCallback {
+                    public void onTaskCompleted(String results) {
+                        if(results.contains("ERROR")){
+                            eventNames = new String[]{"Sorry"};
+                            eventDescriptions = new String[]{"You are not part of any events"};
+                            eventIds = new String[]{"-1"};
 
-                String results;
-                DBConn.executeQuery("SELECT DISTINCT Id, `Name`, `Desc`  FROM (EVENTS JOIN (SELECT Event_Id FROM JOINED_EVENTS WHERE JOINED_EVENTS.User_Id = " + AuthUser.user_id + ") AS JOINED) WHERE ((EVENTS.Id = JOINED.Event_Id) AND (EVENTS.Date > DATE(NOW()) OR (EVENTS.Date = DATE(NOW()) AND EVENTS.TIME >= time(NOW()))))");
-                results = DBConn.getResults();
-                JSONArray json = new JSONArray(results);
-
-                int numEvents = json.length();
-
-                eventNames = new String[numEvents];
-                eventDescriptions = new String[numEvents];
-                eventIds = new String[numEvents];
-                for (int i = 0; i < json.length(); i++) {
-                    eventIds[i] = json.getJSONObject(i).getString("Id");
-                    eventNames[i] = json.getJSONObject(i).getString("Name");
-                    eventDescriptions[i] = json.getJSONObject(i).getString("Desc");
+                        }else {
+                            try {
+                                JSONArray json = new JSONArray(results);
+                                int numEvents = json.length();
+                                eventNames = new String[numEvents];
+                                eventDescriptions = new String[numEvents];
+                                eventIds = new String[numEvents];
+                                for (int i = 0; i < numEvents; i++) {
+                                    eventIds[i] = json.getJSONObject(i).getString("Id");
+                                    eventNames[i] = json.getJSONObject(i).getString("Name");
+                                    eventDescriptions[i] = json.getJSONObject(i).getString("Desc");
+                                }
+                            } catch (Exception e) {
+                                global.errorHandler(e);
+                            }
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setListAdapter(new GathringArrayAdapter(getActivity(), eventNames, eventDescriptions));
+                            }
+                        });
+                    }
                 }
-
+                DBConn.executeQuery("SELECT DISTINCT Id, `Name`, `Desc`  FROM (EVENTS JOIN (SELECT Event_Id FROM JOINED_EVENTS WHERE JOINED_EVENTS.User_Id = " + AuthUser.user_id + ") AS JOINED) WHERE ((EVENTS.Id = JOINED.Event_Id) AND (EVENTS.Date > DATE(NOW()) OR (EVENTS.Date = DATE(NOW()) AND EVENTS.TIME >= time(NOW()))))", new load());
             } catch (Exception e) {
-                if (e.getMessage().equals("NO RESULTS")) {
-                    eventNames = new String[]{"Sorry"};
-                    eventDescriptions = new String[]{"You are not part of any events"};
-                    eventIds = new String[]{"-1"};
-                } else {
-                    global.errorHandler(e);
-                }
+                global.errorHandler(e);
             }
-
-            setListAdapter(new GathringArrayAdapter(getActivity(), eventNames, eventDescriptions));
-
-            // return rootView;
         }
 
         @Override

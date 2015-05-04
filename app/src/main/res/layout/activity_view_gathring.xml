@@ -4,15 +4,20 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            >
+            android:orientation="vertical">
+
+
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -23,29 +28,51 @@
                 android:textSize="30dp"
                 android:layout_margin="5dp"
                 android:textAlignment="center"/>
+
             <TextView
                 android:textSize="23dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/gathring_description_text"
                 android:textStyle="italic"
-                android:layout_margin="5dp"
+                android:layout_margin="12dp"
                 android:text="No Input"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20px">
-                <TextView
-                    android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10px">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/gathring_address_header"
-                    android:textStyle="bold"
-                    android:text="Address: "
-                    android:layout_margin="10dp"
-                    android:textSize="23dp"
-                    android:layout_gravity="center"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gathring_address_header"
+                        android:textStyle="bold"
+                        android:text="Location"
+                        android:layout_margin="10dp"
+                        android:textSize="23dp"
+                        android:layout_gravity="left"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View On Map"
+                        android:id="@+id/button"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:onClick="showOnMap"
+                        android:nestedScrollingEnabled="true" />
+
+                </RelativeLayout>
+
+
                 <TextView
                     android:textSize="23dp"
                     android:layout_width="wrap_content"
@@ -53,56 +80,32 @@
                     android:id="@+id/gathring_address_text"
                     android:textStyle="italic"
                     android:layout_margin="10dp"
-                    android:text="No Input"/>
+                    android:text="No Input" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:textSize="23dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gathring_city_text"
+                        android:textStyle="italic"
+                        android:layout_margin="10dp"
+                        android:text="No Input"/>
+
+                    <TextView
+                        android:textSize="23dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gathring_state_text"
+                        android:textStyle="italic"
+                        android:layout_margin="10dp"
+                        android:text="No Input"/>
+                </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20px">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gathring_city_header"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"
-                    android:text="Gathring City: "
-                    android:textSize="23dp"/>
-                <TextView
-                    android:textSize="23dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gathring_city_text"
-                    android:textStyle="italic"
-                    android:layout_margin="10dp"
-                    android:text="No Input"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20px">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gathring_state_header"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"
-                    android:text="Gathring State: "
-                    android:textSize="23dp"/>
-                <TextView
-                    android:textSize="23dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gathring_state_text"
-                    android:textStyle="italic"
-                    android:layout_margin="10dp"
-                    android:text="No Input"/>
-            </LinearLayout>
-
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -114,8 +117,17 @@
                     android:id="@+id/gathring_time_header"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
-                    android:text="Gathring Time: "
+                    android:text="Time"
                     android:textSize="23dp"/>
+
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_date_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input" />
                 <TextView
                     android:textSize="23dp"
                     android:layout_width="wrap_content"
@@ -137,7 +149,7 @@
                     android:id="@+id/gathring_limit_header"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
-                    android:text="Gathring Limit: "
+                    android:text="Attendees"
                     android:textSize="23dp"/>
                 <TextView
                     android:textSize="23dp"
@@ -147,7 +159,22 @@
                     android:textStyle="italic"
                     android:layout_margin="10dp"
                     android:text="No Input"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Attendees"
+                    android:id="@+id/va_button"
+                    android:onClick="viewMembers"
+                    android:gravity="right" />
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="30dp"
+                android:id="@+id/space" />
 
             <Button
                 android:layout_width="80dp"
@@ -162,8 +189,11 @@
                 android:onClick="joinOrLeave"/>
 
 
+
+
         </LinearLayout>
     </ScrollView>
+
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"

@@ -19,13 +19,18 @@ import org.json.JSONArray;
 
 
 public class FollowingList extends ActionBarActivity {
-
+    static String eid = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_list);
         MyGlobals global = new MyGlobals();
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
+        Intent i = getIntent();
+        eid = i.getStringExtra("EventId");
+        if(eid != null)
+            getSupportActionBar().setTitle("Attendee List");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment())
@@ -41,24 +46,6 @@ public class FollowingList extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends ListFragment {
         static String[] friendNames;
         static String[]    images;
@@ -70,35 +57,52 @@ public class FollowingList extends ActionBarActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             QueryDB DBConn = new QueryDB(getActivity(), AuthUser.fb_id, AuthUser.user_id);
-            MyGlobals global = new MyGlobals(getActivity());
+            final MyGlobals global = new MyGlobals(getActivity());
 
-            String results = "";
             try{
-                DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.user_id+" )  AS JOINED) WHERE Id = Friend_User_Id");
-                results = DBConn.getResults();
-                JSONArray json = new JSONArray(results);
-                int numFriends = json.length();
-                friendNames = new String[numFriends];
-                images = new String[numFriends];
-                friendIds = new String[numFriends];
+                class load implements DatabaseCallback{
+                    public void onTaskCompleted(String results){
+                        if(results.contains("ERROR")){
+                            friendNames = new String[]{"No friends to show"};
+                            friendIds = new String[]{"-1"};
+                            images = new String[]{"-1"};
 
-                for (int i = 0; i < json.length(); i++) {
-                    friendIds[i] = json.getJSONObject(i).getString("Id");
-                    friendNames[i] = json.getJSONObject(i).getString("First_Name") + " " + json.getJSONObject(i).getString("Last_Name");
-                    images[i] =    json.getJSONObject(i).getString("Facebook_Id");
+                        }else{
+                            try {
+                                JSONArray json = new JSONArray(results);
+                                int numFriends = json.length();
+                                friendNames = new String[numFriends];
+                                images = new String[numFriends];
+                                friendIds = new String[numFriends];
+
+                                for (int i = 0; i < json.length(); i++) {
+                                    friendIds[i] = json.getJSONObject(i).getString("Id");
+                                    friendNames[i] = json.getJSONObject(i).getString("First_Name") + " " + json.getJSONObject(i).getString("Last_Name");
+                                    images[i] = json.getJSONObject(i).getString("Facebook_Id");
+                                }
+                            }catch(Exception e){
+                                global.errorHandler(e);
+                            }
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                setListAdapter(new FriendArrayAdapter(getActivity(), friendNames, images));
+                            }
+                        });
+                    }
+                }
+
+
+                if(eid == null) {
+                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
+                }else{
+                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eid + " )  AS JOINED) WHERE Id = User_Id", new load());
                 }
             }catch(Exception e){
-                if(e.getMessage().equals("NO RESULTS")) {
-                    friendNames = new String[]{"No friends to show"};
-                    friendIds = new String[]{"-1"};
-                    images = new String[]{"-1"};
-                }else{
-                    global.errorHandler(e);
-                }
+                global.errorHandler(e);
             }
-
-            setListAdapter(new FriendArrayAdapter(getActivity(), friendNames, images));
         }
+
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             String friendID = friendIds[position];
