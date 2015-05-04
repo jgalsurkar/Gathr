@@ -1,11 +1,13 @@
 package com.gathr.gathr;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -21,6 +23,8 @@ public class NotificationReceiver extends BroadcastReceiver {
        //Toast.makeText(context,"Heres a notification",Toast.LENGTH_SHORT).show();
 
         PushNotification(132142, "We made it", "yayyy", "Bro events brah", MapsActivity.class, context);
+        //Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        //vibrator.vibrate(2000);
 
     }
 
@@ -35,6 +39,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         notification.setWhen(System.currentTimeMillis()); // Notification Time
         notification.setContentTitle(nTitle);
         notification.setContentText(nText);
+        notification.setDefaults(Notification.DEFAULT_VIBRATE);
+        notification.setDefaults(Notification.DEFAULT_SOUND);
 
         //send them back to screen (in this case MainActivity
         Intent intent = new Intent(c, cls);
