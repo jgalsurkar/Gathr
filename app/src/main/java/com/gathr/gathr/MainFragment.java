@@ -14,13 +14,15 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.Arrays;
 
 public class MainFragment extends Fragment{
 
-    String results;
+    // String results;
     String id;
 
     @Override
@@ -38,36 +40,51 @@ public class MainFragment extends Fragment{
             @Override
             public void onUserInfoFetched(GraphUser user) {
                 if (user != null) {
-                    String user_fid = user.getId();
-                    String user_email = user.asMap().get("email").toString();
-                    String user_gender = user.getProperty("gender").toString();
-                    String user_fname = user.getFirstName();
-                    String user_lname = user.getLastName();
-                    String user_dob = user.getBirthday();
+                    final String user_fid = user.getId();
+                    final String user_email = user.asMap().get("email").toString();
+                    final String user_gender = user.getProperty("gender").toString();
+                    final String user_fname = user.getFirstName();
+                    final String user_lname = user.getLastName();
+                    final String user_dob = user.getBirthday();
+                    // user_loc = user.getLocation();
 
-                    QueryDB DBconn = new QueryDB(getActivity(), user_fid);
+                    QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid, true );//user_fid);
                     try {
-                        DBconn.executeQuery("INSERT USER('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "')");
-                        results = DBconn.getResults();
-                        AuthUser.user_id = results;
-                        AuthUser.fb_id = user_fid;
-                        AuthUser.user_fname = user_fname;
-                        AuthUser.user_lname = user_lname;
+                        class login implements DatabaseCallback {
+                            public void onTaskCompleted(String results) {
+                                Intent i;
+                                if(results.charAt(0) == 'N'){
+                                    i = new Intent(getActivity().getApplicationContext(), EditProfile.class);
+                                }else{
+                                    i = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
+                                }
 
-                        SharedPreferences settings = getActivity().getSharedPreferences("AuthUser", 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("userid", AuthUser.user_id);
-                        editor.putString("fbid",  AuthUser.fb_id);
-                        editor.putString("fname", AuthUser.user_fname);
-                        editor.putString("lname", AuthUser.user_lname);
-                        editor.commit();
+                                AuthUser.user_id = results.substring(1);
+                                AuthUser.fb_id = user_fid;
+                                AuthUser.user_fname = user_fname;
+                                AuthUser.user_lname = user_lname;
+
+                                SharedPreferences settings = getActivity().getSharedPreferences("AuthUser", 0);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString("userid", AuthUser.user_id);
+                                editor.putString("fbid",  AuthUser.fb_id);
+                                editor.putString("fname", AuthUser.user_fname);
+                                editor.putString("lname", AuthUser.user_lname);
+                                editor.commit();
+
+                                startActivity(i);
+                            }
+                        }
+                        DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "')", new login());
+
+                        //results = DBconn.getResults();
+
 
                     }catch(GathrException e){
                         Log.i("Exception", e.error);
                     }
 
-                    Intent i = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
-                    startActivity(i);
+
                 }
             }
 

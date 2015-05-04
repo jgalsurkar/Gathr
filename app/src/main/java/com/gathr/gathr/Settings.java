@@ -1,5 +1,7 @@
 package com.gathr.gathr;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.Session;
@@ -21,6 +24,9 @@ public class Settings extends ActionBarActivity {
 
     MyGlobals global = new MyGlobals(this);
     Context context = this;
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
 
     @Override
@@ -39,7 +45,19 @@ public class Settings extends ActionBarActivity {
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
+        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent,0);
 
+        getNotifications();
+
+    }
+
+    public void getNotifications(){
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        int interval = 10000;
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
+        Toast.makeText(this, "WE GOT THIS SON", Toast.LENGTH_SHORT).show();
     }
 
     public void onToggleClicked(View view) {
@@ -69,6 +87,7 @@ public class Settings extends ActionBarActivity {
                 global.tip("You are now logged out!");
 
                 Intent i = new Intent(context, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
 
