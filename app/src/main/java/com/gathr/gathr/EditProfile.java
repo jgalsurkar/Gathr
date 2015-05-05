@@ -29,17 +29,16 @@ public class EditProfile extends ActionBarActivity {
     String results;
     EditText my_interests;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         try {
-
             userNameView = (TextView) findViewById(R.id.user_name);
             profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
             profilePictureView.setCropped(true);
             about_me = (EditText) findViewById(R.id.about_me);
-
             final EditText instagram = (EditText) findViewById(R.id.instagram);
             instagram.setHint("@username");
             final EditText twitter = (EditText) findViewById(R.id.twitter);
@@ -54,7 +53,6 @@ public class EditProfile extends ActionBarActivity {
             results = global.getUserJSON();
             if (!results.contains("ERROR")) {
                 JSONArray json = new JSONArray(results);
-                //int n = json.length();
                 userNameView.setText(json.getJSONObject(0).getString("First_Name") + " " + json.getJSONObject(0).getString("Last_Name"));
                 profilePictureView.setProfileId(json.getJSONObject(0).getString("Facebook_Id"));
                 about_me.setText(json.getJSONObject(0).getString("About_Me"));
@@ -69,7 +67,6 @@ public class EditProfile extends ActionBarActivity {
 
     public void openCategory(View view){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
-        //i.putExtra("userId", AuthUser.user_id);
         i.putExtra("categoryId",categoryId);
         i.putExtra("from","edit");
         startActivityForResult(i,0);
@@ -101,21 +98,22 @@ public class EditProfile extends ActionBarActivity {
         }
         String facebook =DBconn.escapeString(getElementText(R.id.facebook));
         try{
+            final Intent i = new Intent(this, Profile.class);
+            class UpdateUser implements DatabaseCallback {
+                public void onTaskCompleted(final String results) {
+                    startActivity(i);
+                    finish();
+                }
+            }
             DBconn.executeQuery("UPDATE USERS " +
                     "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+
-                    "where `Id` ="+userId+";");
-            DBconn.getResults();
-
+                    "where `Id` ="+userId+";",new UpdateUser());
             global.getUserJSON(1);
-
             DBconn.executeQuery("ADD INTERESTS " +categoryId+" FOR "+userId);
-            //DBconn.getResults(); We dont really need to wait
+            // We dont really need to wait
         }catch(Exception e){
             global.errorHandler(e);
         }
-        Intent i = new Intent(this, Profile.class);
-        startActivity(i);
-        finish();
     }
     public String getElementText(int viewId){
         return ((EditText)findViewById(viewId)).getText().toString();
@@ -125,20 +123,5 @@ public class EditProfile extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
