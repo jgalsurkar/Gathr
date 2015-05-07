@@ -17,23 +17,57 @@ import android.widget.ToggleButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.plus.model.people.Person;
 
+import org.json.JSONArray;
+
 import java.util.jar.Attributes;
 
 public class CreateEvent extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
     QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-    String date = "CURDATE()"; //Default date if they do not select anything
-    public String userId, category, categoryId;
+    String date = "CURDATE() + INTERVAL 1 DAY"; //Default date if they do not select anything
+    public String userId = AuthUser.user_id, category, categoryId;
     EditText my_interests;
+    Boolean update = false;
+    String eventId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
         my_interests = (EditText) findViewById(R.id.gathring_category);
         Intent i = getIntent();
-        userId = AuthUser.user_id;
+        String prefillJson = i.getStringExtra("prefill");
+        if(prefillJson != null){
+            try {
+                update = true;
+
+                JSONArray json = new JSONArray(prefillJson);
+                eventId = json.getJSONObject(0).getString("Id").trim();
+                final String eventName = json.getJSONObject(0).getString("Name");
+                final String description = json.getJSONObject(0).getString("Desc");
+                final String address = json.getJSONObject(0).getString("Address");
+                final String city = json.getJSONObject(0).getString("City");
+                final String state = json.getJSONObject(0).getString("State");
+                final String time = json.getJSONObject(0).getString("Time");
+                final String date = json.getJSONObject(0).getString("Date");
+                final String capacity = json.getJSONObject(0).getString("Capacity");
+
+                ((TextView) findViewById(R.id.gathring_name)).setText(eventName);
+                ((TextView) findViewById(R.id.gathring_description)).setText(description);
+                ((TextView) findViewById(R.id.gathring_address)).setText(address);
+                ((TextView) findViewById(R.id.gathring_city)).setText(city);
+                ((TextView) findViewById(R.id.gathring_state)).setText(state);
+                ((TextView) findViewById(R.id.gathring_limit)).setText(capacity);
+                ((TextView) findViewById(R.id.gathring_time)).setText(global.normalTime(time));
+                //((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(date));
+
+            }catch(Exception e){
+                global.errorHandler(e);
+            }
+
+        }
     }
 
     public void viewGathring(View view){
@@ -69,24 +103,25 @@ public class CreateEvent extends ActionBarActivity {
             String capacity = DBconn.escapeString(getElementText(R.id.gathring_limit));
 
             //Run the Query to add the event
-            String results;
 
-            DBconn.executeQuery("INSERT INTO EVENTS " +
-                    "(`Name`, `Desc`, `Address`, `City`, `State`, `Time`, `Date`, `Capacity`, `Population`, `Status`, `Organizer`, `Latitude`, `Longitude`)" +
-                    " VALUES " +
-                    "('" + name + "', '" + desc + "', '" + address + "', '" + city + "','" + state + "', '" + time + "', " + date + ",'" + capacity + "', '1', 'OPEN', " + AuthUser.user_id + ", '" + x.latitude + "', '" + x.longitude + "');");
-            results = DBconn.getResults();
-            global.tip(results);
-            QueryDB DBconn2 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-            DBconn2.executeQuery("ADD CATEGORIES " +categoryId+" FOR "+results);
-            DBconn2.getResults();
-            global.tip(DBconn2.getResults());
 
-            //Go to the event page that we just created
-            Intent i = new Intent(this, ViewGathring.class);
-            i.putExtra("eventId", results);
-            startActivity(i);
-            finish();
+            final Intent i = new Intent(this, ViewGathring.class);
+            class createEvent implements DatabaseCallback {
+                public void onTaskCompleted(String r){
+                    i.putExtra("eventId", r);
+                    startActivity(i);
+                    finish();
+                }
+            }
+
+            if(!update) {
+                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.fb_id + "&uid=" + AuthUser.user_id, true);
+                DBconn2.executeQuery("('" + name + "', '" + desc + "', '" + address + "', '" + city + "','" + state + "', '" + time + "', " + date + ",'" + capacity + "', '1', 'OPEN', " + AuthUser.user_id + ", '" + x.latitude + "', '" + x.longitude + "'); CATEGORIES " + categoryId, new createEvent());
+            }else{
+                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.fb_id + "&uid=" + AuthUser.user_id + "&eid=" + eventId, true);
+                DBconn2.executeQuery("`Name` = '" + name + "', `Desc` = '" + desc + "', `Address` = '" + address + "', `City` = '"+city+"', `State` = '"+state+"', `Time` = '"+ time +"', `Date` = " + date + ", `Capacity`  = '"+capacity+"', `Latitude` = '"+ x.latitude +"', `Longitude` = '"+ x.longitude + "' CATEGORIES " + categoryId, new createEvent());
+            }
+
 
         }catch(Exception e){
             global.errorHandler(e);
