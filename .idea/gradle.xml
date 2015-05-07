@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libraries" />
             <option value="$PROJECT_DIR$/libraries/facebook" />
+            <option value="$PROJECT_DIR$/pull-to-refresh" />
           </set>
         </option>
       </GradleProjectSettings>

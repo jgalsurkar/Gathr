@@ -21,11 +21,13 @@ import android.net.NetworkInfo;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.gathr.gathr.chat.ui.activities.SplashActivity;
+
 import static android.support.v4.app.ActivityCompat.startActivity;
 
 public class MyGlobals {
     String[] titles = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
-    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsListActivity.class, FollowingList.class, Settings.class};
+    Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsListActivity.class, FollowingList.class, SplashActivity.class};
     Context c;
 
     MyGlobals(Context _c){ c = _c; loadUser();}

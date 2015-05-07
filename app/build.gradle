@@ -23,7 +23,10 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
+   // configurations{all*.exclude group:'com.android.support.annotation',module:'StyleableRes'}
+   // configurations{all*.exclude group:'quickblox-android-sdk-chat-2.2.1',module:'AnimRes'}
     buildTypes {
         release {
             minifyEnabled false
@@ -39,10 +42,15 @@ android {
 repositories{mavenCentral()}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.android.gms:play-services:6.5.87'
     //compile 'com.facebook.android:facebook-android-sdk:3.21.1'
     compile 'com.parse.bolts:bolts-android:1.1.4'
-    compile 'com.google.android.gms:play-services:6.1.71'
+    //compile 'com.google.android.gms:play-services:6.1.71'
     compile project(':libraries:facebook')
+    compile project(':pull-to-refresh')
+    compile files('../jars/quickblox-android-sdk-core-2.2.2.jar');
+    compile files('../jars/quickblox-android-sdk-chat-2.2.2.jar');
+    compile 'com.android.support:appcompat-v7:+'
+    compile project(':pull-to-refresh')
 }
+
