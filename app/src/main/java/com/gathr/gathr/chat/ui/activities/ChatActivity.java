@@ -47,7 +47,7 @@ public class ChatActivity extends Activity {
     private Button sendButton;
     private ProgressBar progressBar;
 
-    private Mode mode = Mode.PRIVATE;
+    private Mode mode = Mode.GROUP;
     private ChatManager chat;
     private ChatAdapter adapter;
     private QBDialog dialog;
@@ -93,35 +93,30 @@ public class ChatActivity extends Activity {
         //
         dialog = (QBDialog) intent.getSerializableExtra(EXTRA_DIALOG);
 
-        mode = (Mode) intent.getSerializableExtra(EXTRA_MODE);
-        switch (mode) {
-            case GROUP:
-                chat = new GroupChatManagerImpl(this);
-                container.removeView(meLabel);
-                container.removeView(companionLabel);
+        //mode = GROUP; //(Mode) intent.getSerializableExtra(EXTRA_MODE);
+        chat = new GroupChatManagerImpl(this);
+        container.removeView(meLabel);
+        container.removeView(companionLabel);
 
-                // Join group chat
+        // Join group chat
+        //
+        progressBar.setVisibility(View.VISIBLE);
+        //
+        ((GroupChatManagerImpl) chat).joinGroupChat(dialog, new QBEntityCallbackImpl() {
+            @Override
+            public void onSuccess() {
+
+                // Load Chat history
                 //
-                progressBar.setVisibility(View.VISIBLE);
-                //
-                ((GroupChatManagerImpl) chat).joinGroupChat(dialog, new QBEntityCallbackImpl() {
-                    @Override
-                    public void onSuccess() {
+                loadChatHistory();
+            }
 
-                        // Load Chat history
-                        //
-                        loadChatHistory();
-                    }
-
-                    @Override
-                    public void onError(List list) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivity.this);
-                        dialog.setMessage("error when join group chat: " + list.toString()).create().show();
-                    }
-                });
-
-                break;
-                  }
+            @Override
+            public void onError(List list) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivity.this);
+                dialog.setMessage("error when join group chat: " + list.toString()).create().show();
+            }
+        });
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +152,7 @@ public class ChatActivity extends Activity {
     }
 
 
-        public void getUser(final int userID) {
+    public void getUser(final int userID) {
         QBUsers.getUser(userID, new QBEntityCallbackImpl<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle args) {

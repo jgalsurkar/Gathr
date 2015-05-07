@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.gathr.gathr.AuthUser;
 import com.gathr.gathr.chat.ApplicationSingleton;
@@ -60,7 +61,7 @@ public class SplashActivity extends Activity {
         QBAuth.createSession(user, new QBEntityCallbackImpl<QBSession>() {
             @Override
             public void onSuccess(QBSession session, Bundle args) {
-
+                Log.i("Testing", "Successfully created new session");
                 // save current user
                 //
                 user.setId(session.getUserId());
@@ -68,6 +69,7 @@ public class SplashActivity extends Activity {
 
                 // login to Chat
                 //
+                Log.i("Testing","Logging in to chat now");
                 loginToChat(user);
             }
 
@@ -75,25 +77,22 @@ public class SplashActivity extends Activity {
             public void onError(List<String> errors) {
                 //AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
                 //dialog.setMessage("create session errors: " + errors).create().show();
-                signUp();
+                Log.i("Testing","No existing user in the server, calling signUp function now");
+                signUp(user);
             }
         });
     }
 
-    private void signUp(){
-        final  QBUser user = new QBUser();
-        user.setLogin(AuthUser.user_fname + AuthUser.user_id);
-        user.setPassword(AuthUser.fb_id);
-        user.setFullName(AuthUser.user_fname + " " + AuthUser.user_lname);
+    private void signUp(final QBUser user){
 
         QBUsers.signUp(user, new QBEntityCallbackImpl<QBUser>() {
             @Override
             public void onSuccess(final QBUser user, Bundle args) {
-
+                Log.i("Testing","Successfully created a new user, creating new session now");
                 QBAuth.createSession(user, new QBEntityCallbackImpl<QBSession>(){
                     @Override
                     public void onSuccess(QBSession session, Bundle args) {
-
+                        Log.i("Testing","Successfully created a new session with a new user");
                         // save current user
                         //
                         user.setId(session.getUserId());
@@ -101,14 +100,15 @@ public class SplashActivity extends Activity {
 
                         // login to Chat
                         //
+                        Log.i("Testing","Logging in with the new user account");
                         loginToChat(user);
                     }
 
                     @Override
                     public void onError(List<String> errors) {
-                        //AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                        //dialog.setMessage("create session errors: " + errors).create().show();
-                        signUp();
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
+                        dialog.setMessage("create session errors: " + errors).create().show();
+
                     }
                 });
 
@@ -138,6 +138,7 @@ public class SplashActivity extends Activity {
 
                 // go to Dialogs screen
                 //
+                Log.i("Testing","Going to dialogs now");
                 Intent intent = new Intent(SplashActivity.this, DialogsActivity.class);
                 startActivity(intent);
                 finish();
