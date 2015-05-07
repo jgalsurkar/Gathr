@@ -44,7 +44,7 @@ public class EditProfile extends ActionBarActivity {
             final EditText twitter = (EditText) findViewById(R.id.twitter);
             twitter.setHint("@username");
             final EditText facebook = (EditText) findViewById(R.id.facebook);
-            twitter.setHint("username");
+            facebook.setHint("username");
             my_interests = (EditText) findViewById(R.id.my_interests);
             Intent i = getIntent();
             category = i.getStringExtra("category");

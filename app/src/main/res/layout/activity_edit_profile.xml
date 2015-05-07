@@ -52,10 +52,10 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40pt"
             android:id="@+id/about_me"
-
             android:fontFamily="Times New Roman"
+            android:hint = "Tell us more about yourself"
             android:textSize="9pt"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
