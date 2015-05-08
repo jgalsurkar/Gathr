@@ -7,19 +7,20 @@ import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
 
 public class MainActivity extends FragmentActivity{
-     @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new MyGlobals().checkInternet(this);
 
         Facebook fb = new Facebook(getString(R.string.facebook_app_id));
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
-        String access_token = sp.getString("access_token", null);
-        long expires = sp.getLong("access_expires",0);
-        if(access_token!= null)
-            fb.setAccessToken(access_token);
-        if (expires!=0)
-            fb.setAccessExpires(expires);
+        fb.setAccessToken(null);
+        fb.setAccessExpires(0);
+        //SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        //String access_token = sp.getString("access_token", null);
+        //long expires = sp.getLong("access_expires",0);
+        //if(access_token!= null)
+
+        //if (expires!=0)
+
 
          /*
         // Add code to print out the key hash
@@ -32,19 +33,15 @@ public class MainActivity extends FragmentActivity{
             }
         } catch (Exception e) { }
         */
-        SharedPreferences settings = getSharedPreferences("AuthUser", 0);
-        AuthUser.user_id = settings.getString("userid", "");
-        AuthUser.fb_id = settings.getString("fbid", "");
-        AuthUser.user_fname = settings.getString("fname", "");
-        AuthUser.user_lname = settings.getString("lname", "");
+        AuthUser.loadUser(this);
         if(AuthUser.user_id.equals("")){
-          //  if (savedInstanceState == null) {
-          getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment()).commit();
+            //  if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment()).commit();
             //} else {
 
-                // Or set the fragment from restored state info
-              //  mainFragment = (com.gathr.gathr.MainFragment) getSupportFragmentManager()
-              //          .findFragmentById(android.R.id.content);
+            // Or set the fragment from restored state info
+            //  mainFragment = (com.gathr.gathr.MainFragment) getSupportFragmentManager()
+            //          .findFragmentById(android.R.id.content);
             //}
         }else{
             Intent i = new Intent(this, MapsActivity.class);

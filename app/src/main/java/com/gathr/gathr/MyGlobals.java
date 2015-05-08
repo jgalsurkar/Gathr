@@ -30,27 +30,8 @@ public class MyGlobals {
     Class<?>[] links = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsListActivity.class, FollowingList.class, SplashActivity.class};
     Context c;
 
-    MyGlobals(Context _c){ c = _c; loadUser();}
+    MyGlobals(Context _c){ c = _c; }
     MyGlobals(){  }
-
-    public void loadUser(){
-        if(AuthUser.user_id == null || AuthUser.user_id.equals("")){
-            try {
-                SharedPreferences settings = c.getSharedPreferences("AuthUser", 0);
-                AuthUser.user_id = settings.getString("userid", "");
-                AuthUser.fb_id = settings.getString("fbid", "");
-                AuthUser.user_fname = settings.getString("fname", "");
-                AuthUser.user_lname = settings.getString("lname", "");
-
-                // if (AuthUser.user_id.equals(""))
-                //   c.startActivity(new Intent(c, MainActivity.class));
-
-            }catch(Exception e){
-                //Intent intent = new Intent(c, MainActivity.class); // Send them back to login page
-                //c.startActivity(intent);
-            }
-        }
-    }
 
     public void checkInternet(){
         if(!isNetworkAvailable(c))
@@ -92,30 +73,7 @@ public class MyGlobals {
         }
         return "";
     }
-    public void PushNotification(int uniqueID, String tickerText, String nTitle, String nText, Class<?> cls,  Context c){
-        //Lets you build new notification
-        NotificationCompat.Builder notification;
 
-        notification = new NotificationCompat.Builder(c);
-        notification.setAutoCancel(true); //This is to make the notification go away when you get to the proper intent screen
-        notification.setSmallIcon(R.mipmap.ic_launcher); //Used to set picture or logo of app for the notification
-        notification.setTicker(tickerText); //Notification Text
-        notification.setWhen(System.currentTimeMillis()); // Notification Time
-        notification.setContentTitle(nTitle);
-        notification.setContentText(nText);
-
-        //send them back to screen (in this case MainActivity
-        Intent intent = new Intent(c, cls);
-        //Gives device access to all intents in the app
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(c, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        notification.setContentIntent(pendingIntent);
-
-        //Builds the notification and issues it
-        NotificationManager nm = (NotificationManager) c.getSystemService(c.NOTIFICATION_SERVICE);
-        nm.notify(uniqueID, notification.build());
-
-    }
     public void errorHandler(Exception e){
         e.printStackTrace();
         tip(e.getClass() + ": " + e.getMessage());
@@ -152,16 +110,22 @@ public class MyGlobals {
         }
         return true;
     }
-    public String getJSON(String fileName, String query, boolean force){
+    public String getJSON(final String fileName, String query, boolean force){
         String JSON = "";
         FileInputStream inputStream;
         try {
             if(!fileExists(fileName) || force){
                 try {
                     QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
-                    DBconn.executeQuery(query);
-                    JSON = DBconn.getResults();
-                    setJSON( fileName, JSON);
+
+                    class get implements DatabaseCallback{
+                        public void onTaskCompleted(String JSON) {
+                            setJSON(fileName, JSON);
+                        }
+                    }
+
+                    DBconn.executeQuery(query, new get());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

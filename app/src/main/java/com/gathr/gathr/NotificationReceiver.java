@@ -51,10 +51,6 @@ public class NotificationReceiver extends BroadcastReceiver {
             global = new MyGlobals(context);
             global.errorHandler(e);
         }
-
-
-
-
     }
 
     public void PushNotification(int uniqueID, String tickerText, String nTitle, String nText, Class<?> cls,  Context c){
