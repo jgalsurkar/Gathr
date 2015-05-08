@@ -9,9 +9,15 @@ import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphLocation;
+import com.facebook.model.GraphObject;
+import com.facebook.model.GraphPlace;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,8 +27,6 @@ import org.json.JSONException;
 import java.util.Arrays;
 
 public class MainFragment extends Fragment{
-
-    // String results;
     String id;
 
     @Override
@@ -35,7 +39,6 @@ public class MainFragment extends Fragment{
         authButton.setFragment(this);
         authButton.setReadPermissions(Arrays.asList("user_about_me","email","user_birthday","user_friends"));
 
-
         authButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -43,48 +46,38 @@ public class MainFragment extends Fragment{
                     final String user_fid = user.getId();
                     final String user_email = user.asMap().get("email").toString();
                     final String user_gender = user.getProperty("gender").toString();
+                    final String user_dob = user.getBirthday();
+
                     final String user_fname = user.getFirstName();
                     final String user_lname = user.getLastName();
-                    final String user_dob = user.getBirthday();
-                    // user_loc = user.getLocation();
+                    // final Object user_loc = user.getProperty("current_location");
 
-                    QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid, true );//user_fid);
-                    try {
-                        class login implements DatabaseCallback {
-                            public void onTaskCompleted(String results) {
-                                Intent i;
-                                if(results.charAt(0) == 'N'){
-                                    i = new Intent(getActivity().getApplicationContext(), EditProfile.class);
-                                }else{
-                                    i = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
-                                }
+                    //user_loc.get
+                    //  Log.i("tesT",user_loc.toString()).getLocation();
+                    final String latitude = "-1";//Double.toString(user.getLocatgetProperty(""));
+                    final String longitude = "0";//Double.toString(user_loc.getLongitude());
 
-                                AuthUser.user_id = results.substring(1);
-                                AuthUser.fb_id = user_fid;
-                                AuthUser.user_fname = user_fname;
-                                AuthUser.user_lname = user_lname;
+                    QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid, true );
 
-                                SharedPreferences settings = getActivity().getSharedPreferences("AuthUser", 0);
-                                SharedPreferences.Editor editor = settings.edit();
-                                editor.putString("userid", AuthUser.user_id);
-                                editor.putString("fbid",  AuthUser.fb_id);
-                                editor.putString("fname", AuthUser.user_fname);
-                                editor.putString("lname", AuthUser.user_lname);
-                                editor.commit();
-
-                                startActivity(i);
+                    class login implements DatabaseCallback {
+                        public void onTaskCompleted(String results) {
+                            Intent i;
+                            if(results.charAt(0) == 'N'){
+                                i = new Intent(getActivity().getApplicationContext(), EditProfile.class); //New User
+                            }else{
+                                i = new Intent(getActivity().getApplicationContext(), MapsActivity.class); //Existing User
                             }
+                            AuthUser.setUser(getActivity(), results.substring(1), user_fid, user_fname, user_lname, latitude, longitude);
+                            startActivity(i);
+                            getActivity().finish();
                         }
-                        DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "')", new login());
-
-                        //results = DBconn.getResults();
-
-
-                    }catch(GathrException e){
-                        Log.i("Exception", e.error);
                     }
 
-
+                    try {
+                        DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "', '" + latitude + "', '" + longitude + "')", new login());
+                    }catch(Exception e){
+                        Log.i("Exception", e.getMessage());
+                    }
                 }
             }
 
@@ -105,12 +98,14 @@ public class MainFragment extends Fragment{
         private void onClickLogin() {
             Session session = Session.getActiveSession();
             if (!session.isOpened() && !session.isClosed()) {
+
                 session.openForRead(new Session.OpenRequest(getActivity())
-                        .setPermissions(Arrays.asList("user_about_me","email","user_birthday","user_friends"))
+                        .setPermissions(Arrays.asList("user_about_me", "email", "user_birthday", "user_friends", "user_location"))
                         .setCallback(callback));
 
             } else {
-                Session.openActiveSession(getActivity(),true,callback);
+                Session.openActiveSession(getActivity(), true, callback);
+
             }
         }
         @Override
@@ -120,8 +115,7 @@ public class MainFragment extends Fragment{
             // session is not null, the session state change notification
             // may not be triggered. Trigger it if it's open/closed.
             //Session session = Session.getActiveSession();
-            if (session != null &&
-                    (session.isOpened() || session.isClosed()) ) {
+            if (session != null && (session.isOpened() || session.isClosed()) ) {
                 onSessionStateChange(session, session.getState(), null);
             }
 
@@ -153,6 +147,7 @@ public class MainFragment extends Fragment{
     }
     @Override
     public void onDestroy() {
+
         super.onDestroy();
         uiHelper.onDestroy();
     }

@@ -23,7 +23,7 @@ public class SidebarGenerator {
         ArrayAdapter<String> adapter;
         adapter = new ArrayAdapter<String>(_c, resource, menu);
         dList.setAdapter(adapter);
-        dList.setSelector(android.R.color.holo_blue_dark);
+        dList.setSelector(android.R.color.darker_gray);
         dList.setOnItemClickListener(new OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long id) {

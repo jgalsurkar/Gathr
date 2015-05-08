@@ -3,9 +3,11 @@ package com.gathr.gathr;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.facebook.widget.ProfilePictureView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
 public class Profile extends ActionBarActivity {
@@ -101,9 +104,12 @@ public class Profile extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        setActionBar();
         QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
         try {
-            new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
 
             Intent i = getIntent();
             String temp = i.getStringExtra("userId");
@@ -129,7 +135,23 @@ public class Profile extends ActionBarActivity {
         }
     }
 
-
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_profile);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+    public void openSideBar(View view)
+    {
+        // DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.left_drawer);
+        //sidebar.openDrawer(Gravity.LEFT);
+        global.tip("Open Category");
+    }
     public void setFollowers(String r){
         try{
             followers = (TextView) findViewById(R.id.followers);

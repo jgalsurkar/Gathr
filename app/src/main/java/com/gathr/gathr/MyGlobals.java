@@ -110,8 +110,9 @@ public class MyGlobals {
         }
         return true;
     }
+    private String JSON = "";
     public String getJSON(final String fileName, String query, boolean force){
-        String JSON = "";
+        JSON = "";
         FileInputStream inputStream;
         try {
             if(!fileExists(fileName) || force){
@@ -119,8 +120,8 @@ public class MyGlobals {
                     QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
 
                     class get implements DatabaseCallback{
-                        public void onTaskCompleted(String JSON) {
-                            setJSON(fileName, JSON);
+                        public void onTaskCompleted(String j) {
+                            JSON = j; setJSON(fileName, j);
                         }
                     }
 
@@ -141,6 +142,7 @@ public class MyGlobals {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        while(JSON.equals(""));
         return JSON;
 
 
