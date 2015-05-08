@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity{
         } catch (Exception e) { }
         */
         AuthUser.loadUser(this);
-        if(AuthUser.user_id.equals("")){
+        if(AuthUser.getUserId(this).equals("")){
             //  if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(android.R.id.content, new MainFragment()).commit();
             //} else {

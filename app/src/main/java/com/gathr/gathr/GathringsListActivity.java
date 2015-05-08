@@ -71,7 +71,7 @@ public class GathringsListActivity extends ActionBarActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            QueryDB DBConn = new QueryDB(getActivity(), AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBConn = new QueryDB(getActivity());
             final MyGlobals global = new MyGlobals(getActivity());
 
             try {
@@ -106,7 +106,7 @@ public class GathringsListActivity extends ActionBarActivity {
                         });
                     }
                 }
-                DBConn.executeQuery("SELECT DISTINCT Id, `Name`, `Desc`  FROM (EVENTS JOIN (SELECT Event_Id FROM JOINED_EVENTS WHERE JOINED_EVENTS.User_Id = " + AuthUser.user_id + ") AS JOINED) WHERE ((EVENTS.Id = JOINED.Event_Id) AND (EVENTS.Date > DATE(NOW()) OR (EVENTS.Date = DATE(NOW()) AND EVENTS.TIME >= time(NOW()))))", new load());
+                DBConn.executeQuery("SELECT DISTINCT Id, `Name`, `Desc`  FROM (EVENTS JOIN (SELECT Event_Id FROM JOINED_EVENTS WHERE JOINED_EVENTS.User_Id = " + AuthUser.getUserId(getActivity()) + ") AS JOINED) WHERE ((EVENTS.Id = JOINED.Event_Id) AND (EVENTS.Date > DATE(NOW()) OR (EVENTS.Date = DATE(NOW()) AND EVENTS.TIME >= time(NOW()))))", new load());
             } catch (Exception e) {
                 global.errorHandler(e);
             }

@@ -57,7 +57,7 @@ public class MainFragment extends Fragment{
                     final String latitude = "-1";//Double.toString(user.getLocatgetProperty(""));
                     final String longitude = "0";//Double.toString(user_loc.getLongitude());
 
-                    QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid, true );
+                    QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid );
 
                     class login implements DatabaseCallback {
                         public void onTaskCompleted(String results) {

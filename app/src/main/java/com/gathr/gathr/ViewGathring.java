@@ -22,13 +22,14 @@ import android.content.Intent;
 public class ViewGathring extends ActionBarActivity {
 
     private boolean partOf = false;
-    private QueryDB DBConn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+    private QueryDB DBConn = new QueryDB(this);
     private String eventId = "1";
     private MyGlobals global = new MyGlobals(this);
     private boolean loggedin = false;
     private String event_json = "";
     String eventOrganizer;
     private boolean cancelled = false;
+    String userId = AuthUser.getUserId(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +49,7 @@ public class ViewGathring extends ActionBarActivity {
                 eventId = url[(url.length - 1)];
             }
 
-            if(AuthUser.user_id != null){
+            if(AuthUser.getUserId(this) != null){
                 loggedin = true;
                 new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
             }else{
@@ -58,7 +59,7 @@ public class ViewGathring extends ActionBarActivity {
                 loggedin = false;
             }
 
-            QueryDB getEvent = new QueryDB(this,"getEvent.php",true);
+            QueryDB getEvent = new QueryDB(this,"getEvent.php");
             class loadEvent implements DatabaseCallback{
                 public void onTaskCompleted(String results){
                     try {
@@ -100,7 +101,7 @@ public class ViewGathring extends ActionBarActivity {
                                     va.setVisibility(View.GONE);
                                 }
                             });
-                        } else if (!event_organizer.equals(AuthUser.user_id)) {
+                        } else if (!event_organizer.equals(userId)) {
                             class getCount implements DatabaseCallback{
                                 public void onTaskCompleted(String results) {
                                     try {
@@ -132,7 +133,7 @@ public class ViewGathring extends ActionBarActivity {
                                     }
                                 }
                             }
-                            DBConn.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = " + AuthUser.user_id + " AND Event_Id = " + eventId + ";", new getCount());
+                            DBConn.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = " + userId + " AND Event_Id = " + eventId + ";", new getCount());
                         } else {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -199,13 +200,13 @@ public class ViewGathring extends ActionBarActivity {
                 String[] pAndC = ((TextView) findViewById(R.id.gathring_limit_text)).getText().toString().split("/");
 
                 if (!partOf) {
-                    DBConn.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES (" + AuthUser.user_id + "," + eventId + ");");
+                    DBConn.executeQuery("INSERT INTO JOINED_EVENTS(User_Id, Event_Id) VALUES (" + userId + "," + eventId + ");");
                     global.tip("Welcome to the Gathring");
                     partOf = true;
                     buttonText.setText("Leave");
                     ((TextView) findViewById(R.id.gathring_limit_text)).setText(Integer.parseInt(pAndC[0]) + 1 + "/" + pAndC[1]);
                 } else {
-                    DBConn.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id = " + AuthUser.user_id + " and Event_Id = " + eventId + ";");
+                    DBConn.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id = " + userId + " and Event_Id = " + eventId + ";");
                     global.tip("You have left the Gathring");
                     partOf = false;
                     buttonText.setText("Join");
@@ -236,7 +237,7 @@ public class ViewGathring extends ActionBarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
-        if(!cancelled && AuthUser.user_id.equals(eventOrganizer)){
+        if(!cancelled && userId.equals(eventOrganizer)){
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_cancel).setVisible(true);
             menu.findItem(R.id.action_transfer).setVisible(true);

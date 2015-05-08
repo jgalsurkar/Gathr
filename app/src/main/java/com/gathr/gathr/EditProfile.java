@@ -24,9 +24,9 @@ public class EditProfile extends ActionBarActivity {
     private EditText about_me;
 
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this);
 
-    public String userId = AuthUser.user_id, category, categoryId;
+    public String userId = AuthUser.getUserId(this), category, categoryId;
     String results;
     EditText my_interests;
 

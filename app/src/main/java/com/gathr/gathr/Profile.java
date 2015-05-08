@@ -24,7 +24,7 @@ import org.w3c.dom.Text;
 
 
 public class Profile extends ActionBarActivity {
-    public String userId = AuthUser.user_id,
+    public String userId = AuthUser.getUserId(this),
             interests = "",
             categoryId = "",
             results = "",
@@ -105,7 +105,7 @@ public class Profile extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         setActionBar();
-        QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn = new QueryDB(this);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         try {
@@ -119,15 +119,15 @@ public class Profile extends ActionBarActivity {
             }else{
                 setProfileInfo(global.getUserJSON());
             }
-            QueryDB DBconn2 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn2 = new QueryDB(this);
             DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id",new getCategory());
-            QueryDB DBconn5 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn5 = new QueryDB(this);
             DBconn5.executeQuery("SELECT Count(Event_Id) as Count FROM JOINED_EVENTS WHERE User_Id= " + userId+";",new getEventsAttended());
-            QueryDB DBconn3 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn3 = new QueryDB(this);
             DBconn3.executeQuery("SELECT Count(User_Id) as Count FROM FRIENDS WHERE Friend_User_Id= " + userId+";",new getFollowers());
-            QueryDB DBconn4 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn4 = new QueryDB(this);
             DBconn4.executeQuery("SELECT Count(Id) as Count FROM EVENTS WHERE Organizer= " + userId+";", new getEventsCreated());
-            QueryDB DBconn6 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBconn6 = new QueryDB(this);
             DBconn6.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " and Date < DATE(NOW()) ORDER BY Date DESC LIMIT 15", new getPastEvent());
         }
         catch(Exception e) {
@@ -148,8 +148,8 @@ public class Profile extends ActionBarActivity {
     }
     public void openSideBar(View view)
     {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
+            DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+            sidebar.openDrawer(Gravity.LEFT);
     }
     public void setFollowers(String r){
         try{
@@ -300,15 +300,15 @@ public class Profile extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        QueryDB DBconn7 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-        QueryDB DBconn8= new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn7 = new QueryDB(this);
+        QueryDB DBconn8= new QueryDB(this);
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_block) {
             if (!blocking) {
                 try {
                     DBconn7.executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`)" +
                             " VALUES " +
-                            "('" + AuthUser.user_id + "', '" + userId + "');");
+                            "('" + AuthUser.getUserId(this) + "', '" + userId + "');");
                     // results = DBconn4.getResults();
                     blocking = true;
                 } catch (Exception e) {
@@ -319,7 +319,7 @@ public class Profile extends ActionBarActivity {
                 try {
                     DBconn8.executeQuery("DELETE FROM BLOCKED_USERS " +
                             " WHERE " +
-                            "Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.user_id + " ;");
+                            "Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.getUserId(this) + " ;");
                     //results = DBconn4.getResults();
                     blocking = false;
                 } catch (Exception e) {
@@ -331,14 +331,14 @@ public class Profile extends ActionBarActivity {
             return true;
         }
         //noinspection SimplifiableIfStatement
-        QueryDB DBconn9 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-        QueryDB DBconn10 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn9 = new QueryDB(this);
+        QueryDB DBconn10 = new QueryDB(this);
         if (id == R.id.action_follow) {
             if (!following) {
                 try {
                     DBconn9.executeQuery("INSERT INTO FRIENDS (`User_Id`, `Friend_User_Id`)" +
                             " VALUES " +
-                            "('" + AuthUser.user_id + "', '" + userId + "');");
+                            "('" + AuthUser.getUserId(this) + "', '" + userId + "');");
                     String [] text = followers.getText().toString().split(" ");
                     Integer count = Integer.valueOf(text[1])+1;
                     followers.setText("Followers: " + count);
@@ -353,7 +353,7 @@ public class Profile extends ActionBarActivity {
                 try {
                     DBconn10.executeQuery("DELETE FROM FRIENDS " +
                             " WHERE " +
-                            "Friend_User_Id = "+userId + " AND User_Id = "+AuthUser.user_id+" ;");
+                            "Friend_User_Id = "+userId + " AND User_Id = "+ AuthUser.getUserId(this) +" ;");
                     //results = DBconn4.getResults();
                     String [] text = followers.getText().toString().split(" ");
                     Integer count = Integer.valueOf(text[1])-1;
@@ -432,13 +432,13 @@ public class Profile extends ActionBarActivity {
             }
         }
 
-        if(!(AuthUser.user_id.equals(userId))){
+        if(!(AuthUser.getUserId(this).equals(userId))){
             try {
-                QueryDB DBConn11 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                DBConn11.executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " AND Friend_User_Id = " + userId + ";", new getFollowing());
+                QueryDB DBConn11 = new QueryDB(this);
+                DBConn11.executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(this) + " AND Friend_User_Id = " + userId + ";", new getFollowing());
 
-                QueryDB DBConn12 = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
-                DBConn12.executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS  WHERE User_Id = " + AuthUser.user_id + " AND Blocked_User_Id = " + userId + ";", new getBlocking());
+                QueryDB DBConn12 = new QueryDB(this);
+                DBConn12.executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS  WHERE User_Id = " + AuthUser.getUserId(this) + " AND Blocked_User_Id = " + userId + ";", new getBlocking());
             }catch(Exception e){
                 global.errorHandler(e);
             }

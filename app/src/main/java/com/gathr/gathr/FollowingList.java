@@ -74,7 +74,7 @@ public class FollowingList extends ActionBarActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            QueryDB DBConn = new QueryDB(getActivity(), AuthUser.fb_id, AuthUser.user_id);
+            QueryDB DBConn = new QueryDB(getActivity());
             final MyGlobals global = new MyGlobals(getActivity());
 
             try{
@@ -112,7 +112,7 @@ public class FollowingList extends ActionBarActivity {
 
 
                 if(eid == null) {
-                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.user_id + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
+                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(getActivity()) + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
                 }else{
                     DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eid + " )  AS JOINED) WHERE Id = User_Id", new load());
                 }

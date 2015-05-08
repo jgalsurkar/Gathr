@@ -87,10 +87,10 @@ public class MyGlobals {
 
 
 
-    public String getUserJSON() { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";", false); }
-    public String getUserJSON(int x) { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.user_id + ";", true); }
-    public String getFollowersJSON() { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.user_id+" )  AS JOINED) WHERE Id = Friend_User_Id", false); }
-    public String getFollowersJSON(int x) { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.user_id+" )  AS JOINED) WHERE Id = Friend_User_Id", true); }
+    public String getUserJSON() { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", false); }
+    public String getUserJSON(int x) { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", true); }
+    public String getFollowersJSON() { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.getUserId(c)+" )  AS JOINED) WHERE Id = Friend_User_Id", false); }
+    public String getFollowersJSON(int x) { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.getUserId(c)+" )  AS JOINED) WHERE Id = Friend_User_Id", true); }
 
     public void setJSON(String fileName, String JSON){
         FileOutputStream outputStream;
@@ -117,7 +117,7 @@ public class MyGlobals {
         try {
             if(!fileExists(fileName) || force){
                 try {
-                    QueryDB DBconn = new QueryDB(c, AuthUser.fb_id, AuthUser.user_id);
+                    QueryDB DBconn = new QueryDB(c);
 
                     class get implements DatabaseCallback{
                         public void onTaskCompleted(String j) {

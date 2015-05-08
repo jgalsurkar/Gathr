@@ -25,9 +25,9 @@ import java.util.jar.Attributes;
 
 public class CreateEvent extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
-    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this);
     String date = "CURDATE() + INTERVAL 1 DAY"; //Default date if they do not select anything
-    public String userId = AuthUser.user_id, category, categoryId;
+    public String category, categoryId;
     EditText my_interests;
     Boolean update = false;
     String eventId;
@@ -133,10 +133,10 @@ public class CreateEvent extends ActionBarActivity {
             }
 
             if(!update) {
-                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.fb_id + "&uid=" + AuthUser.user_id, true);
-                DBconn2.executeQuery("('" + name + "', '" + desc + "', '" + address + "', '" + city + "','" + state + "', '" + time + "', " + date + ",'" + capacity + "', '1', 'OPEN', " + AuthUser.user_id + ", '" + x.latitude + "', '" + x.longitude + "'); CATEGORIES " + categoryId, new createEvent());
+                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.getFBId(this) + "&uid=" + AuthUser.getUserId(this));
+                DBconn2.executeQuery("('" + name + "', '" + desc + "', '" + address + "', '" + city + "','" + state + "', '" + time + "', " + date + ",'" + capacity + "', '1', 'OPEN', " + AuthUser.getUserId(this) + ", '" + x.latitude + "', '" + x.longitude + "'); CATEGORIES " + categoryId, new createEvent());
             }else{
-                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.fb_id + "&uid=" + AuthUser.user_id + "&eid=" + eventId, true);
+                QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.getFBId(this) + "&uid=" + AuthUser.getUserId(this) + "&eid=" + eventId);
                 DBconn2.executeQuery("`Name` = '" + name + "', `Desc` = '" + desc + "', `Address` = '" + address + "', `City` = '"+city+"', `State` = '"+state+"', `Time` = '"+ time +"', `Date` = " + date + ", `Capacity`  = '"+capacity+"', `Latitude` = '"+ x.latitude +"', `Longitude` = '"+ x.longitude + "' CATEGORIES " + categoryId, new createEvent());
             }
 

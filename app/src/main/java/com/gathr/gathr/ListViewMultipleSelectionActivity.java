@@ -26,10 +26,10 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     ListView listView;
     ArrayAdapter<String> adapter;
 
-    QueryDB DBconn = new QueryDB(this, AuthUser.fb_id, AuthUser.user_id);
+    QueryDB DBconn = new QueryDB(this);
     MyGlobals global = new MyGlobals(this);
 
-    public String userId = AuthUser.user_id, output="", results, checkedId="";
+    public String output="", results, checkedId="";
     public String[] categoryName;
     public String[] categoryId;
     String from="";

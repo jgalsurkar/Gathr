@@ -20,7 +20,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        QueryDB DBconn = new QueryDB(context, AuthUser.fb_id, AuthUser.user_id);
+        QueryDB DBconn = new QueryDB(context);
         class getEvent implements DatabaseCallback {
             public void onTaskCompleted(String results) {
                 if (results.contains("ERROR")) {

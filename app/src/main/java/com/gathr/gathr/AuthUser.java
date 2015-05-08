@@ -4,12 +4,28 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class AuthUser {
-    public static String user_id = null;
-    public static String fb_id = null;
-    public static String user_fname = null;
-    public static String user_lname = null;
-    public static String latitude = null;
-    public static String longitude = null;
+
+    private static String user_id = null;
+    private static String fb_id = null;
+
+    //These arent really used
+    private static String user_fname = null;
+    private static String user_lname = null;
+    private static String latitude = null;
+    private static String longitude = null;
+
+    public static String getUserId(Context c){
+        if(user_id == null)
+            loadUser(c);
+
+        return user_id;
+    }
+    public static String getFBId(Context c){
+        if(fb_id == null)
+            loadUser(c);
+
+        return fb_id;
+    }
 
     public static void setUser(Context c, String _uid, String _fbid, String _fname, String _lname, String _lat, String _lon){
         user_id = _uid;

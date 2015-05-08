@@ -18,23 +18,29 @@ import static java.sql.DriverManager.println;
 
 public class QueryDB {
 
-    protected String result = null;
-    protected String user_id = "0";
-    protected String fb_id = "0";
-    String link;
-    boolean custom = false;
-
+    //protected String result = null;
+    //protected String user_id = "0";
+    //protected String fb_id = "0";
     MyGlobals global;
-    QueryDB(Context c, String _fb_id){
+    String link;
+    //boolean custom = false;
+
+
+
+    QueryDB(Context c){
+        global = new MyGlobals(c);
+        link = "http://aarshv.siteground.net/webservice.php?fid=" + AuthUser.getFBId(c) + "&uid=" + AuthUser.getUserId(c);
+    }
+    QueryDB(Context c, String path){
+        //custom = true;
+        global = new MyGlobals(c);
+        link = "http://aarshv.siteground.net/" + path;
+    }
+
+    /*QueryDB(Context c, String _fb_id){
         fb_id = _fb_id;
         global = new MyGlobals(c);
         link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
-
-    }
-    QueryDB(Context c, String path, boolean _custom){
-        custom = true;
-        global = new MyGlobals(c);
-        link = "http://aarshv.siteground.net/" + path;
 
     }
     QueryDB(Context c, String _fb_id, String _user_id){
@@ -42,12 +48,11 @@ public class QueryDB {
         fb_id = _fb_id;
         user_id = _user_id;
         link = "http://aarshv.siteground.net/webservice.php?fid=" + fb_id + "&uid=" + user_id;
-
     }
+    */
 
     private class innerQueryDB extends AsyncTask<String, Object, String> {
         DatabaseCallback listener;
-
         innerQueryDB(DatabaseCallback _listener){
             listener = _listener;
         }
@@ -73,15 +78,16 @@ public class QueryDB {
                 //Read Encoded JSON from Server
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder sb = new StringBuilder();
-                String line = null;
+                String line;
 
                 while ((line = reader.readLine()) != null)
-                    sb.append(line + "\n");
+                    sb.append(line).append("\n");
 
                 byte[] decoded = Base64.decode(sb.toString().getBytes("CP1252"), Base64.DEFAULT);
                 //result = new String(decoded,"CP1252");
 
-                listener.onTaskCompleted( new String(decoded,"CP1252"));
+                String result = new String(decoded,"CP1252");
+                listener.onTaskCompleted( result );
 
                 return result;
             } catch (Exception e) {
@@ -93,12 +99,12 @@ public class QueryDB {
 
     public void executeQuery(String query, DatabaseCallback callback) throws GathrException{
         global.checkInternet();
-        if(!custom && fb_id.equals("0")){
-            throw new GathrException("NO FID - PERMISSION DENIED");
-        }else {
-            result = null;
+        //if(!custom && fb_id.equals("0")){
+        //    throw new GathrException("NO FID - PERMISSION DENIED");
+        //}else {
+        //    result = null;
             new innerQueryDB(callback).execute(query);
-        }
+        //}
     }
 
     public void executeQuery(String query) throws GathrException{
@@ -109,14 +115,14 @@ public class QueryDB {
             result = null;*/
         class dothis implements DatabaseCallback{
             public void onTaskCompleted(String results){
-                result = results;
+                //They do not care about the result
             }
         }
         executeQuery(query, new dothis());
         // }
     }
 
-
+/*
     public String getResults() throws GathrException{
         global.checkInternet();
         while(result == null){
@@ -129,8 +135,8 @@ public class QueryDB {
 
         return result;
     }
-
-    public String escapeString(String escapeThis){
+*/
+  public String escapeString(String escapeThis){
         escapeThis = escapeThis.replace("\\","\\\\");
         escapeThis = escapeThis.replace("'","\\'");
         escapeThis = escapeThis.replace("\"","\\\"");
