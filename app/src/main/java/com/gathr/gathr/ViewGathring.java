@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -171,6 +173,22 @@ public class ViewGathring extends ActionBarActivity {
         }
     }
 
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_view_gathring);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+    public void openSideBar(View view)
+    {
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
+    }
     public void joinOrLeave(View view){
         try {
             TextView buttonText = (TextView) findViewById(R.id.join_leave_button);

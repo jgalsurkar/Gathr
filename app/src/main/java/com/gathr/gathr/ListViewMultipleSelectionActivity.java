@@ -3,9 +3,12 @@ package com.gathr.gathr;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +37,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_multiple_selection);
+        setActionBar();
         listView = (ListView) findViewById(R.id.list);
         button = (Button) findViewById(R.id.testbutton);
         final Context c = this;
@@ -87,6 +92,22 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
 
     }
 
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_list_view_multiple_selection);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+    public void openSideBar(View view)
+    {
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
+    }
 
     public void onSubmit(View v) {
         SparseBooleanArray checked = listView.getCheckedItemPositions();

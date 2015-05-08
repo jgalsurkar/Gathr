@@ -98,16 +98,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".EditProfile"
-            android:label="@string/title_activity_edit_profile"></activity>
+            android:label="@string/title_activity_edit_profile"/>
         <activity
             android:name=".ConnectionError"
-            android:label="@string/title_activity_connection_error"></activity>
+            android:label="@string/title_activity_connection_error"/>
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"/>
         <activity
             android:name=".GathringsListActivity"
-            android:label="@string/title_activity_gathrings_list"></activity>
+            android:label="@string/title_activity_gathrings_list"/>
         <activity
             android:name=".FollowingList"
             android:label="@string/title_activity_following_list" />

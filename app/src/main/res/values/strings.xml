@@ -3,15 +3,13 @@
     <string name="title_activity_maps">Map</string>
     <string name="facebook_app_id">1406139246357321</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="title_action_settings">Settings</string>
     <string name="title_activity_create_event">Create Gathring</string>
     <string name="title_activity_view_gathring">View Gathring</string>
     <string name="title_activity_profile">My Profile</string>
-    <string name="action_edit_profile">Edit Profile</string>
     <string name="action_follow">Follow</string>
     <string name="action_block">Block</string>
     <string name="title_facebook_login"></string>
-    <string name="result_activity">Result Activity</string>
     <string name="title_activity_list_view_multiple_selection">Pick The Category</string>
     <string name="submit">Submit</string>
     <string name="title_activity_gathrings_list">Gathring List</string>

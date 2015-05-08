@@ -148,9 +148,8 @@ public class Profile extends ActionBarActivity {
     }
     public void openSideBar(View view)
     {
-        // DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.left_drawer);
-        //sidebar.openDrawer(Gravity.LEFT);
-        global.tip("Open Category");
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
     }
     public void setFollowers(String r){
         try{

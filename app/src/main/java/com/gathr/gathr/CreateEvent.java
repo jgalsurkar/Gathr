@@ -2,8 +2,10 @@ package com.gathr.gathr;
 
 import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.content.Intent;
 import android.view.View;
@@ -34,6 +36,7 @@ public class CreateEvent extends ActionBarActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        setActionBar();
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
 
         my_interests = (EditText) findViewById(R.id.gathring_category);
@@ -69,7 +72,22 @@ public class CreateEvent extends ActionBarActivity {
 
         }
     }
-
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_create_event);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+    public void openSideBar(View view)
+    {
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
+    }
     public void viewGathring(View view){
         try {
             //Error Checking

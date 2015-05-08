@@ -2,6 +2,7 @@ package com.gathr.gathr;
 
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class EditProfile extends ActionBarActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        setActionBar();
         try {
             userNameView = (TextView) findViewById(R.id.user_name);
             profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
@@ -70,6 +72,17 @@ public class EditProfile extends ActionBarActivity {
         i.putExtra("categoryId",categoryId);
         i.putExtra("from","edit");
         startActivityForResult(i,0);
+    }
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_edit_profile);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
