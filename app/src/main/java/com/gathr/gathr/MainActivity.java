@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : MainActivity.java
+ Author : Gathr Team
+ Purpose : AMain Activity which ensures successful login
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;

@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : Settings.java
+ Author : Gathr Team
+ Purpose : Settings activity, allowing the user the log out and turn notifications on/off
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.AlarmManager;

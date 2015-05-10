@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : ListViewMultipleSelectionActivity.java
+ Author : Gathr Team
+ Purpose : List View of categories for the user to select and add/remove
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.Activity;

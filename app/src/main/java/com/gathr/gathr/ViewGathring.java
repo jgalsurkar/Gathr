@@ -1,3 +1,11 @@
+/**************************************************************************************************
+ Title : ViewGathring.java
+ Author : Gathr Team
+ Purpose : Activity which represents a Gathring and all information associated with it. This
+           infomration is loaded from the databse based on the Gathring id. Button functionality
+           to share the gathring, join/leave, and enter the chatroom are found here as well.
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.AlertDialog;
@@ -92,15 +100,12 @@ private Context c = this;
                 eventId = url[(url.length - 1)];
             }
 
-                DBConn.executeQuery("SELECT Facebook_Id, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eventId + " )  AS JOINED) WHERE Id = User_Id", new load());
+            DBConn.executeQuery("SELECT Facebook_Id, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eventId + " )  AS JOINED) WHERE Id = User_Id", new load());
 
             if(AuthUser.getUserId(this) != null){
                 loggedin = true;
                 new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
             }else{
-                //String[] title = {"Login"};
-                //Class<?>[] link = {MainActivity.class};
-                //new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, title, link );
                 loggedin = false;
             }
 
@@ -324,11 +329,8 @@ private Context c = this;
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                     }
-                })
-        ;
-
+                });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -358,7 +360,6 @@ private Context c = this;
             imgView.setCropped(true);
             imgView.setProfileId(attendees[position]);
 
-
             imgView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
@@ -372,8 +373,5 @@ private Context c = this;
 
             return retval;
         }
-
     };
-
-
 }

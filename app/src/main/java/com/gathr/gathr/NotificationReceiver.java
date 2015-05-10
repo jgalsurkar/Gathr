@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : NotificationReceiver.java
+ Author : Gathr Team
+ Purpose : Broadcast reciever used to send out notifications for events that may be interesting
+           to the user
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.Notification;
@@ -17,8 +24,6 @@ import org.json.JSONArray;
 
 public class NotificationReceiver extends BroadcastReceiver {
     private MyGlobals global;
-    //private String event_json;
-
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -29,7 +34,6 @@ public class NotificationReceiver extends BroadcastReceiver {
                     PushNotification(342342, "NO GATHRINGS FOR YOU LOSER!", "PLZ WORK", "IM SUEPR DUPER SRS", MapsActivity.class, context);
                 } else {
                     try {
-                       // event_json = results;
                         JSONArray json = new JSONArray(results);
                         final String eventName = json.getJSONObject(0).getString("Name");
                         final String eventId = json.getJSONObject(0).getString("Id");

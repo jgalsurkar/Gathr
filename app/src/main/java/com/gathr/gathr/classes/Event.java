@@ -1,3 +1,8 @@
+/**************************************************************************************************
+ Title : Event.java
+ Author : Gathr Team
+ Purpose : Class representing a Gathring. Used to instantiate a Gathring through a JSON object
+ *************************************************************************************************/
 package com.gathr.gathr.classes;
 
 import org.json.JSONArray;

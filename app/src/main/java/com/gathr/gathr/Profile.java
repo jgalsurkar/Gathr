@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : Profile.java
+ Author : Gathr Team
+ Purpose : Activity which shows a user profile and all fields associated with it
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;
@@ -21,7 +27,6 @@ import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 public class Profile extends ActionBarActivity {
     public String userId = AuthUser.getUserId(this), interests = "", categoryId = "", results = "", inst, fb, tw;
@@ -117,8 +122,6 @@ public class Profile extends ActionBarActivity {
             global.errorHandler(e);
         }
     }
-
-
 
     public void setImages(String sid,int vid, int dr_id,int gdr_id)
     {

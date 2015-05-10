@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : SplashActivity.java
+ Author : Gathr Team
+ Purpose : Initializes the chatroom i.e. Determines where they go, logs the user in, etc.
+ *************************************************************************************************/
+
 package com.gathr.gathr.chat.ui.activities;
 
 import android.app.Activity;
@@ -56,7 +62,6 @@ public class SplashActivity extends Activity {
                 chatService.login(user);
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
 
             try {
@@ -97,7 +102,6 @@ public class SplashActivity extends Activity {
             } catch (QBResponseException e) {
                 e.printStackTrace();
             }
-
             return true;
         }
     }
@@ -124,7 +128,5 @@ public class SplashActivity extends Activity {
 
         setupChat x = new setupChat();
         x.execute();
-
-
     }
 }

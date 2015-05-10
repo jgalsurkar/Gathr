@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : GathringArrayAdapter.java
+ Author : Gathr Team
+ Purpose : Custom array adapter to set up the "Gathring" list items to properly display them
+ *************************************************************************************************/
+
 package com.gathr.gathr.adapters;
 
 import android.content.Context;

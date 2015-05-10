@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : QueryDB.java
+ Author : Gathr Team
+ Purpose : Class that accesses the webservice for Gathr, providing all database functionality
+ *************************************************************************************************/
+
 package com.gathr.gathr.database;
 
 import java.io.BufferedReader;
@@ -6,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
@@ -23,8 +28,8 @@ public class QueryDB {
         global = new MyGlobals(c);
         link = "http://aarshv.siteground.net/webservice.php?fid=" + AuthUser.getFBId(c) + "&uid=" + AuthUser.getUserId(c);
     }
+
     public QueryDB(Context c, String path){
-        //custom = true;
         global = new MyGlobals(c);
         link = "http://aarshv.siteground.net/" + path;
     }
@@ -38,7 +43,6 @@ public class QueryDB {
         @Override
         protected String doInBackground(String[] arg0) {
             try {
-
                 byte[] encoded = Base64.encode(arg0[0].getBytes("CP1252"), Base64.DEFAULT);
                 String str = new String(encoded, "CP1252");
                 String data = URLEncoder.encode("query", "UTF-8") + "=" + URLEncoder.encode(str, "UTF-8");
@@ -62,7 +66,6 @@ public class QueryDB {
                     sb.append(line).append("\n");
 
                 byte[] decoded = Base64.decode(sb.toString().getBytes("CP1252"), Base64.DEFAULT);
-                //result = new String(decoded,"CP1252");
 
                 String result = new String(decoded,"CP1252");
                 listener.onTaskCompleted( result );
@@ -71,7 +74,6 @@ public class QueryDB {
             } catch (Exception e) {
                 return "Exception: " + e.getMessage();
             }
-
         }
     }
 

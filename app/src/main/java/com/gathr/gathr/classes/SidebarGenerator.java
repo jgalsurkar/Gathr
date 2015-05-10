@@ -1,3 +1,11 @@
+/**************************************************************************************************
+ Title : SidebarGenerator.java
+ Author : Gathr Team
+ Purpose : Class to represent the app's sidebar, which is on each of the main activities, as well as
+           starting the intent to go to the proper activities when the correct sidebar option is
+           clicked
+ *************************************************************************************************/
+
 package com.gathr.gathr.classes;
 
 import android.content.Context;
@@ -19,16 +27,13 @@ import com.gathr.gathr.Profile;
 import com.gathr.gathr.Settings;
 
 public class SidebarGenerator {
-    private String[] menu = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Friends","Settings"};
+    private String[] menu = new String[]{"Map","Create Gathring", "My Profile","My Gathrings","Following","Settings"};
     private Class<?>[] classesArray = { MapsActivity.class, CreateEvent.class, Profile.class, GathringsListActivity.class, FollowingList.class, Settings.class};
 
-//    Class<?>[] classesArray;
     Context c;
 
     public SidebarGenerator(final DrawerLayout dLayout, final ListView dList, int resource, Context _c) { //
-        c = _c; //this
-        //classesArray = cls;
-        //menu = _menu;
+        c = _c;
 
         ArrayAdapter<String> adapter;
         adapter = new ArrayAdapter<String>(_c, resource, menu);

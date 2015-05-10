@@ -1,3 +1,11 @@
+/**************************************************************************************************
+ Title : CreateEvent.java
+ Author : Gathr Team
+ Purpose : Activity used to create a Gathring with all necessary information such as name, time,
+           description, etc. Validation is done as well
+           as well
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.support.v4.widget.DrawerLayout;
@@ -56,7 +64,6 @@ public class CreateEvent extends ActionBarActivity {
                 final String city = json.getJSONObject(0).getString("City");
                 final String state = json.getJSONObject(0).getString("State");
                 final String time = json.getJSONObject(0).getString("Time");
-                final String date = json.getJSONObject(0).getString("Date");
                 final String capacity = json.getJSONObject(0).getString("Capacity");
 
                 ((TextView) findViewById(R.id.gathring_name)).setText(eventName);
@@ -66,12 +73,10 @@ public class CreateEvent extends ActionBarActivity {
                 ((TextView) findViewById(R.id.gathring_state)).setText(state);
                 ((TextView) findViewById(R.id.gathring_limit)).setText(capacity);
                 ((TextView) findViewById(R.id.gathring_time)).setText(global.normalTime(time));
-                //((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(date));
 
             }catch(Exception e){
                 global.errorHandler(e);
             }
-
         }
     }
     public void setActionBar()
@@ -124,7 +129,6 @@ public class CreateEvent extends ActionBarActivity {
 
             //Run the Query to add the event
 
-
             final Intent i = new Intent(this, ViewGathring.class);
             class createEvent implements DatabaseCallback {
                 public void onTaskCompleted(String r){
@@ -141,7 +145,6 @@ public class CreateEvent extends ActionBarActivity {
                 QueryDB DBconn2 = new QueryDB(this, "createEvent.php?fid=" + AuthUser.getFBId(this) + "&uid=" + AuthUser.getUserId(this) + "&eid=" + eventId);
                 DBconn2.executeQuery("`Name` = '" + name + "', `Desc` = '" + desc + "', `Address` = '" + address + "', `City` = '"+city+"', `State` = '"+state+"', `Time` = '"+ time +"', `Date` = " + date + ", `Capacity`  = '"+capacity+"', `Latitude` = '"+ x.latitude +"', `Longitude` = '"+ x.longitude + "' CATEGORIES " + categoryId, new createEvent());
             }
-
 
         }catch(Exception e){
             global.errorHandler(e);

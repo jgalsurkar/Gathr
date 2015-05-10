@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : GathringListActivity.java
+ Author : Gathr Team
+ Purpose : Activity which represents a list view of the user's gathrings. Clicking on any
+ of list items, brings the user to the appropriate gathring activity (ViewGathring)
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;
@@ -21,7 +28,6 @@ import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 
-
 public class GathringsListActivity extends ActionBarActivity {
 
     @Override
@@ -29,7 +35,6 @@ public class GathringsListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gathrings_list_activity);
         setActionBar();
-        MyGlobals global = new MyGlobals();
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
         if (savedInstanceState == null) {
@@ -37,7 +42,6 @@ public class GathringsListActivity extends ActionBarActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,3 +1,11 @@
+/**************************************************************************************************
+ Title : ConnectionError.java
+ Author : Gathr Team
+ Purpose : Activity that is started when the user has no internet connection. A button is present
+           for the user to try testing the connection again, which will send them to the
+           MainActivity if it is successful
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;

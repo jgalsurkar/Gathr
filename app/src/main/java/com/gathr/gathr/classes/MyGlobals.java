@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : MyGlobals.java
+ Author : Gathr Team
+ Purpose : Class that provides general functionality used across the app such as testing
+           network connectivity, handling errors, getting JSON objects from a database query, etc.
+ *************************************************************************************************/
+
 package com.gathr.gathr.classes;
 
 import java.io.BufferedReader;
@@ -16,7 +23,6 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import com.gathr.gathr.ConnectionError;
-import com.gathr.gathr.classes.AuthUser;
 import com.gathr.gathr.database.DatabaseCallback;
 import com.gathr.gathr.database.QueryDB;
 
@@ -77,9 +83,6 @@ public class MyGlobals {
     public void tip(String message){
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
     }
-
-
-
 
     public String getUserJSON() { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", false); }
     public String getUserJSON(int x) { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", true); }

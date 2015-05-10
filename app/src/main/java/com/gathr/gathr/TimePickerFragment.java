@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : TimePickerFragment.java
+ Author : Gathr Team
+ Purpose : Picker used when creating gathrings to properly and nicely assess the time
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.Dialog;
@@ -15,11 +21,10 @@ import java.util.Calendar;
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
-
     TextView v;
     MyGlobals global = new MyGlobals();
     public TimePickerFragment(){
-       //
+
     }
     public TimePickerFragment(TextView _v){
         v = _v;
@@ -43,7 +48,4 @@ public class TimePickerFragment extends DialogFragment
         time.setText(global.normalTime(hourOfDay + ":" + minute + ":00"));
 
     }
-
-
-
 }

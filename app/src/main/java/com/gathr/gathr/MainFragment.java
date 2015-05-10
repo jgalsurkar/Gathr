@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : MainFragment.java
+ Author : Gathr Team
+ Purpose : Ensures successful login and proper information is pulled from facebook during initial
+           "account creation"
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 import android.app.AlarmManager;
 import android.app.PendingIntent;

@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : ChatActivity.java
+ Author : Gathr Team
+ Purpose : The actual chatroom, displaying and sending messages
+ *************************************************************************************************/
+
 package com.gathr.gathr.chat.ui.activities;
 
 import android.app.AlertDialog;
@@ -118,9 +124,7 @@ public class ChatActivity extends ActionBarActivity {
         ((GroupChatManagerImpl) chat).joinGroupChat(dialog, new QBEntityCallbackImpl() {
             @Override
             public void onSuccess() {
-
                 // Load Chat history
-                //
                 loadChatHistory();
             }
 
@@ -140,8 +144,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
 
                 // Send chat message
-                //
-
                 QBChatMessage chatMessage = new QBChatMessage();
                 chatMessage.setBody(messageText);
                 chatMessage.setProperty(PROPERTY_SAVE_TO_HISTORY, "1");

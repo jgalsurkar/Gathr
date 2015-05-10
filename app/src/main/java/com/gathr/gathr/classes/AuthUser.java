@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : AuthUser.java
+ Author : Gathr Team
+ Purpose : Class used for instantiating/loading a user and retrieving some of their information
+ *************************************************************************************************/
+
 package com.gathr.gathr.classes;
 
 import android.content.Context;

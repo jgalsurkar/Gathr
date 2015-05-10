@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : FollowingList.java
+ Author : Gathr Team
+ Purpose : Activity which represents a list view of who the user is following. Clicking on any
+           of list items, brings the user to the appropriate profile page
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;
@@ -37,7 +44,6 @@ public class FollowingList extends ActionBarActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

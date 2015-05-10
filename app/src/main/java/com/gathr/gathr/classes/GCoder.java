@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : GCoder.java
+ Author : Gathr Team
+ Purpose : Given an address, returns the corresponding geo coordinates
+ *************************************************************************************************/
+
 package com.gathr.gathr.classes;
 
 import android.content.Context;

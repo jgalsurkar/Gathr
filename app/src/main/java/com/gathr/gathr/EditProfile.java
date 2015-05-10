@@ -1,3 +1,10 @@
+/**************************************************************************************************
+ Title : EditProfile.java
+ Author : Gathr Team
+ Purpose : Activity which allows the user to edit aspects of their profile such as their interests,
+           description, and social network links
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.content.Intent;
