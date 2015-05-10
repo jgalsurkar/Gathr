@@ -7,10 +7,7 @@
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
         <item name="android:background"  tools:ignore="NewApi">#50B4C8</item>
         <item name="background">@color/bg</item>
-        <item name="android:actionOverflowButtonStyle">@style/OverflowMenuButton</item>
-
-
-        <!-- Support library compatibility -->
+     <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/TitleTextStyle</item>
     </style>
 
@@ -32,9 +29,7 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_menu_moreoverflow_normal_holo_light</item>
-    </style>
+
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme"
         parent="@style/Theme.AppCompat.Light">

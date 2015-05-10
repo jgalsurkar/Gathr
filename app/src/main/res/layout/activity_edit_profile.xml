@@ -2,7 +2,8 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="#fff">
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -21,6 +22,7 @@
             android:fontFamily="Times New Roman"
             android:textStyle = "bold"
             android:gravity="center"
+
             />
 
 
@@ -48,7 +50,8 @@
             android:textStyle="bold"
             android:layout_below="@+id/selection_profile_pic"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textColor="@color/bg"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -78,7 +81,8 @@
             android:text="My Interests"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@id/space8" />
+            android:layout_below="@id/space8"
+            android:textColor="@color/bg"/>
         <ImageButton
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
@@ -90,7 +94,8 @@
             android:layout_below="@+id/my_interests_label"
             android:layout_above="@+id/space9"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:background="@color/bg"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -118,7 +123,8 @@
             android:text="Twitter Account"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/space9" />
+            android:layout_below="@+id/space9"
+            android:textColor="@color/bg"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,7 +143,8 @@
             android:text="Instagram Account"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/twitter" />
+            android:layout_below="@+id/twitter"
+            android:textColor="@color/bg"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -155,7 +162,8 @@
             android:text="Facebook Account"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/instagram"/>
+            android:layout_below="@+id/instagram"
+            android:textColor="@color/bg"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,12 +179,17 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/save_button"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
             android:layout_above="@+id/space2"
             android:layout_toRightOf="@+id/selection_profile_pic"
-            android:layout_toEndOf="@+id/selection_profile_pic"
             android:clickable="true"
             android:linksClickable="true"
-            android:onClick="saveChanges"/>
+            android:background="@drawable/mybutton"
+            android:onClick="saveChanges"
+            android:layout_alignRight="@+id/my_interests"
+            android:layout_alignEnd="@+id/my_interests" />
 
 
 

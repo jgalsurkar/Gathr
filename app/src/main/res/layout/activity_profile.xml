@@ -28,7 +28,8 @@
                 android:textAlignment="inherit"
                 android:textAppearance="?android:attr/textAppearance"
                 android:textSize="14pt"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <Space
                 android:id="@+id/space5"
@@ -105,7 +106,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/twit"
                 android:layout_toRightOf="@+id/selection_profile_pic"
-                android:text="Followers: " />
+                android:text="Followers: "
+                android:textColor="#000000"/>
 
             <Space
                 android:id="@+id/space7"
@@ -120,7 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/space7"
                 android:layout_toRightOf="@+id/selection_profile_pic"
-                android:text="Events Created: " />
+                android:text="Events Created: "
+                android:textColor="#000000"/>
 
             <Space
                 android:id="@+id/space10"
@@ -135,7 +138,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/space10"
                 android:layout_toRightOf="@+id/selection_profile_pic"
-                android:text="Events Attended: " />
+                android:text="Events Attended: "
+                android:textColor="#000000"/>
 
             <Space
                 android:id="@+id/space6"
@@ -154,12 +158,13 @@
                 android:linksClickable="false"
                 android:text="About Me"
                 android:textSize="10pt"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/bg"/>
 
             <TextView
                 android:id="@+id/about_me"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
@@ -167,7 +172,8 @@
                 android:layout_below="@+id/about_me_label"
                 android:fontFamily="Times New Roman"
                 android:linksClickable="false"
-                android:textSize="9pt" />
+                android:textSize="9pt"
+                android:background="#DCDCDC"/>
 
             <Space
                 android:id="@+id/space11"
@@ -191,12 +197,13 @@
                 android:linksClickable="false"
                 android:text="My Interests"
                 android:textSize="10pt"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/bg"/>
 
             <TextView
                 android:id="@+id/my_interests"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
@@ -204,7 +211,8 @@
                 android:layout_below="@+id/my_interests_label"
                 android:fontFamily="Times New Roman"
                 android:linksClickable="false"
-                android:textSize="9pt" />
+                android:textSize="9pt"
+                android:background="#DCDCDC"/>
 
 
             <Space
@@ -226,19 +234,23 @@
                 android:linksClickable="false"
                 android:text="Past Events"
                 android:textSize="10pt"
-                android:textStyle="bold" />
-            />
+                android:textStyle="bold"
+                android:textColor="@color/bg"/>
+
 
             <TextView
                 android:id="@+id/past_events"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/past_events_label"
                 android:fontFamily="Times New Roman"
                 android:linksClickable="false"
-                android:textSize="9pt" />
+                android:textSize="9pt"
+                android:background="#DCDCDC"
+                android:layout_height="50dp"
+                android:layout_alignRight="@+id/past_events_label"
+                android:layout_alignEnd="@+id/past_events_label" />
 
 
         </RelativeLayout>

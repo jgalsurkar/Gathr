@@ -4,14 +4,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!--<FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" > -->
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
@@ -64,11 +61,12 @@
 
                 <EditText
                     android:layout_width="268dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:id="@+id/gathring_category"
                     android:hint="Category"
                     android:inputType="text"
                     android:textStyle="bold"
+                    android:editable="false"
                     android:layout_margin="12dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -76,14 +74,14 @@
                     />
                 <ImageButton
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:id="@+id/select_category"
                     android:clickable="true"
                     android:linksClickable="true"
                     android:onClick="openCategory"
+                    android:src="@drawable/create_contact"
                     android:layout_alignBottom="@+id/gathring_category"
-                    android:layout_alignTop="@+id/gathring_category"
                     android:layout_alignRight="@+id/gathring_state"
                     android:layout_alignEnd="@+id/gathring_state" />
             </RelativeLayout>
@@ -102,30 +100,34 @@
 
             <EditText
                 android:layout_width="fill_parent"
-                android:layout_height="92dp"
+                android:layout_height="70dp"
                 android:id="@+id/gathring_description"
                 android:hint="Description"
                 android:inputType="textMultiLine"
                 android:textStyle="bold"
                 android:layout_margin="12dp"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="124dp"
                 android:orientation="horizontal">
 
                 <ToggleButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton"
                     android:checked="false"
                     android:textOn="    Today    "
                     android:textOff="Tomorrow"
+                    android:textAllCaps="false"
                     android:elegantTextHeight="false"
-                    android:layout_margin="12dp"
                     android:onClick="onToggleClicked"
-                    />
+                    android:background="@drawable/mybutton"
+                    android:textColor="#FFFFFF"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -133,53 +135,52 @@
                     android:id="@+id/gathring_time"
                     android:textStyle="bold"
                     android:textSize="20dp"
-                    android:layout_margin="12dp"
                     android:text="12:00 PM"
                     android:autoText="false"
-                    android:layout_gravity="center|left" />
+                    android:textColor="#ff50b4c8"
+                    android:layout_centerHorizontal="true" />
 
                 <Button
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:text="Pick Time"
                     android:id="@+id/time_picker_button"
                     android:gravity="center"
                     android:textSize="15dp"
                     android:textAlignment="center"
+                    android:textAllCaps="false"
                     android:onClick="showTimePickerDialog"
-                    android:layout_margin="12dp" />
+                    android:background="@drawable/mybutton"
+                    android:layout_alignParentRight="true"
+                    android:textColor="#FFFFFF"
+                    android:layout_alignParentTop="true" />
+                <Space
+                    android:layout_width = "fill_parent"
+                    android:layout_height="20pt"
+                    android:id="@+id/space"
+                    android:layout_above="@+id/toggleButton"
+                    android:layout_below="@+id/toggleButton" />
 
-            </LinearLayout>
-
-
-            <!--    <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select Category"
-                    android:id="@+id/button"
-                    android:clickable="true"
-                    android:linksClickable="true"
-                    android:onClick="openCategory"
-                    android:layout_below="@+id/my_interests_label"
-                    android:layout_alignRight="@+id/space8"
-                    android:layout_alignEnd="@+id/space8"
-                    android:layout_gravity="center_horizontal" /> -->
-
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Create"
-                android:id="@+id/create_event_button"
-                android:layout_marginLeft="140dp"
-                android:gravity="center"
-                android:textSize="20dp"
-                android:textAlignment="center"
-                android:onClick="viewGathring"/>
-
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:text="Create"
+                    android:textAllCaps="false"
+                    android:id="@+id/create_event_button"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:onClick="viewGathring"
+                    android:background="@drawable/mybutton"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerVertical="true"
+                    android:layout_alignLeft="@+id/gathring_time"
+                    android:layout_alignStart="@+id/gathring_time"
+                    android:layout_alignRight="@+id/gathring_time"
+                    android:layout_alignEnd="@+id/gathring_time" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
-    <!--</FrameLayout> -->
+
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
