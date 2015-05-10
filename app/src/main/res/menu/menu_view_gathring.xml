@@ -1,8 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.gathr.gathr.ViewGathring" android:id="@+id/vg_menu">
-    <item android:id="@+id/action_share" android:title="Share Event"
-        android:orderInCategory="100" app:showAsAction="never" />
+
     <item android:id="@+id/action_edit" android:title="Edit Event"
         android:orderInCategory="100" app:showAsAction="never" android:visible="false" />
     <item android:id="@+id/action_cancel" android:title="Cancel Event"

@@ -1,7 +1,6 @@
 package com.gathr.gathr;
 
 import android.app.AlertDialog;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -9,32 +8,76 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.json.JSONArray;
 import android.content.Intent;
 
+import com.devsmart.android.ui.HorizontalListView;
+import com.facebook.widget.ProfilePictureView;
+import com.gathr.gathr.chat.ui.activities.SplashActivity;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.Event;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
+
 public class ViewGathring extends ActionBarActivity {
 
-    private boolean partOf = false;
+private Context c = this;
+    private String[] attendees, attendeeIds;
+    private boolean partOf = false, loggedin = false, cancelled = false;
     private QueryDB DBConn = new QueryDB(this);
-    private String eventId = "1";
+    private String eventId = "1", event_json = "", eventOrganizer, userId = AuthUser.getUserId(this);
     private MyGlobals global = new MyGlobals(this);
-    private boolean loggedin = false;
-    private String event_json = "";
-    String eventOrganizer;
-    private boolean cancelled = false;
-    String userId = AuthUser.getUserId(this);
+    private Event event;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
-        try{
+        setActionBar();
+
+        final HorizontalListView listview = (HorizontalListView) findViewById(R.id.listview);
+
+        class load implements DatabaseCallback {
+            public void onTaskCompleted(String results) {
+                if (results.contains("ERROR")) {
+                    attendees = new String[]{};
+                    attendeeIds = new String[]{};
+
+                } else {
+                    try {
+                        JSONArray json = new JSONArray(results);
+                        int numFriends = json.length();
+                        attendeeIds = new String[numFriends];
+                        attendees = new String[numFriends];
+
+                        for (int i = 0; i < json.length(); i++) {
+                            attendeeIds[i] = json.getJSONObject(i).getString("Id");
+                            attendees[i] = json.getJSONObject(i).getString("Facebook_Id");
+                        }
+                    } catch (Exception e) {
+                        global.errorHandler(e);
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listview.setAdapter(mAdapter);
+                    }
+                });
+            }
+        }
+
+            try{
             Intent intent = getIntent();
 
             //If we get to this page from inside the app (they should be passing EventId)
@@ -49,13 +92,15 @@ public class ViewGathring extends ActionBarActivity {
                 eventId = url[(url.length - 1)];
             }
 
+                DBConn.executeQuery("SELECT Facebook_Id, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eventId + " )  AS JOINED) WHERE Id = User_Id", new load());
+
             if(AuthUser.getUserId(this) != null){
                 loggedin = true;
-                new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+                new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
             }else{
-                String[] title = {"Login"};
-                Class<?>[] link = {MainActivity.class};
-                new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, title, link );
+                //String[] title = {"Login"};
+                //Class<?>[] link = {MainActivity.class};
+                //new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, title, link );
                 loggedin = false;
             }
 
@@ -64,31 +109,17 @@ public class ViewGathring extends ActionBarActivity {
                 public void onTaskCompleted(String results){
                     try {
                         event_json = results;
-                        JSONArray json;
-                        json = new JSONArray(results);
-                        final String eventName = json.getJSONObject(0).getString("Name");
-                        final String description = json.getJSONObject(0).getString("Desc");
-                        final String address = json.getJSONObject(0).getString("Address");
-                        final String city = json.getJSONObject(0).getString("City");
-                        final String state = json.getJSONObject(0).getString("State");
-                        final String time = json.getJSONObject(0).getString("Time");
-                        final String date = json.getJSONObject(0).getString("Date");
-                        final String capacity = json.getJSONObject(0).getString("Capacity");
-                        final String population = json.getJSONObject(0).getString("Population");
-                        final String status = json.getJSONObject(0).getString("Status");
-                        if (status.equals("CLOSED")) {
+                        event = new Event(results);
+                        eventOrganizer = event.event_organizer;
+                        if (event.status.equals("CLOSED")) {
                             cancelled = true;
                         }
-                        final String event_organizer = json.getJSONObject(0).getString("Organizer").trim();
-                        eventOrganizer = event_organizer;
                         if (cancelled){
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
                                     buttonText.setVisibility(View.GONE);
-                                    TextView va = (TextView) findViewById(R.id.va_button);
-                                    va.setVisibility(View.GONE);
                                 }
                             });
                         }else if(!loggedin) {
@@ -97,11 +128,9 @@ public class ViewGathring extends ActionBarActivity {
                                 public void run() {
                                     TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
                                     buttonText.setText("Login");
-                                    TextView va = (TextView) findViewById(R.id.va_button);
-                                    va.setVisibility(View.GONE);
                                 }
                             });
-                        } else if (!event_organizer.equals(userId)) {
+                        } else if (!eventOrganizer.equals(userId)) {
                             class getCount implements DatabaseCallback{
                                 public void onTaskCompleted(String results) {
                                     try {
@@ -148,18 +177,17 @@ public class ViewGathring extends ActionBarActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ((TextView) findViewById(R.id.gathring_name_text)).setText(eventName);
-                                ((TextView) findViewById(R.id.gathring_description_text)).setText(description);
-                                ((TextView) findViewById(R.id.gathring_address_text)).setText(address);
-                                ((TextView) findViewById(R.id.gathring_city_text)).setText(city);
-                                ((TextView) findViewById(R.id.gathring_state_text)).setText(state);
-                                ((TextView) findViewById(R.id.gathring_limit_text)).setText(population + "/" + capacity);
+                                ((TextView) findViewById(R.id.gathring_name_text)).setText(event.name);
+                                ((TextView) findViewById(R.id.gathring_description_text)).setText(event.description);
+                                ((TextView) findViewById(R.id.gathring_address_text)).setText(event.address);
+                                ((TextView) findViewById(R.id.gathring_category_text)).setText(event.categories);
+                                ((TextView) findViewById(R.id.gathring_limit_text)).setText(event.pop + "/" + event.capacity);
                                 if(cancelled){
                                     ((TextView) findViewById(R.id.gathring_date_text)).setText("Cancelled");
                                     ((TextView) findViewById(R.id.gathring_time_text)).setText("");
                                 }else {
-                                    ((TextView) findViewById(R.id.gathring_time_text)).setText(global.normalTime(time));
-                                    ((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(date));
+                                    ((TextView) findViewById(R.id.gathring_time_text)).setText(global.normalTime(event.time));
+                                    ((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(event.date));
                                 }
                             }
                         });
@@ -222,19 +250,26 @@ public class ViewGathring extends ActionBarActivity {
 
     }
 
-    public void viewMembers(View view){
-        Intent i = new Intent(this, FollowingList.class);
-        i.putExtra("EventId", eventId);
-        startActivity(i);
-        //We do not finish because most users will go back
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_view_gathring, menu);
         return true;
     }
 
+    public void share(View v){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this event on Gathr: http://www.wegathr.tk/viewEvent/"+ eventId +" !" );
+        startActivity(Intent.createChooser(shareIntent, "Share this event"));
+    }
+
+    public void openChat(View v){
+        Intent i = new Intent(this, SplashActivity.class);
+        i.putExtra("EventId", eventId );
+        i.putExtra("EventName", event.name );
+        startActivity(i);
+    }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         if(!cancelled && userId.equals(eventOrganizer)){
@@ -247,16 +282,6 @@ public class ViewGathring extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_share) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this event on Gathr: http://www.wegathr.tk/viewEvent/"+ eventId +" !" );
-            startActivity(Intent.createChooser(shareIntent, "Share this event"));
-
-            return true;
-        }
 
         if (id == R.id.action_edit) {
             Intent i = new Intent(this, CreateEvent.class);
@@ -307,5 +332,48 @@ public class ViewGathring extends ActionBarActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    private BaseAdapter mAdapter = new BaseAdapter() {
+
+        @Override
+        public int getCount() {
+            return attendees.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View retval = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, null);
+            ProfilePictureView imgView = (ProfilePictureView) retval.findViewById(R.id.attendee_profile_pic);
+            //new MyGlobals(context).tip(images[position]);
+            imgView.setCropped(true);
+            imgView.setProfileId(attendees[position]);
+
+
+            imgView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String friendID = attendeeIds[position];
+                    Intent i = new Intent(c, Profile.class);
+                        i.putExtra("userId", friendID);
+                        startActivity(i);
+
+                }
+            });
+
+            return retval;
+        }
+
+    };
+
 
 }

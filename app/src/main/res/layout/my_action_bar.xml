@@ -7,12 +7,12 @@
 
     <ImageButton
         android:id="@+id/btn_slide"
-        android:layout_height="67dp"
-        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_width="37dp"
         android:background="@null"
         android:scaleType="centerInside"
         android:src="@drawable/menu"
-        android:paddingRight="50dp"
+        android:paddingRight="15dp"
         android:onClick="openSideBar"
         android:paddingTop="4dp"
         android:layout_gravity="center_vertical"/>
@@ -21,11 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:textSize="14pt"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_gravity="center"
+        style ="@style/TitleTextStyle"
         android:textColor="#FFFFFF"
         />
 </LinearLayout>

@@ -74,16 +74,16 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/gathring_city"
                     />
-                <Button
+                <ImageButton
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+"
                     android:id="@+id/select_category"
                     android:clickable="true"
                     android:linksClickable="true"
                     android:onClick="openCategory"
                     android:layout_alignBottom="@+id/gathring_category"
+                    android:layout_alignTop="@+id/gathring_category"
                     android:layout_alignRight="@+id/gathring_state"
                     android:layout_alignEnd="@+id/gathring_state" />
             </RelativeLayout>

@@ -1,10 +1,10 @@
 package com.gathr.gathr;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.facebook.android.Facebook;
+import com.gathr.gathr.classes.AuthUser;
 
 public class MainActivity extends FragmentActivity{
     @Override

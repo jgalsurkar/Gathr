@@ -7,6 +7,9 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.gathr.gathr.classes.MyGlobals;
+
 import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment

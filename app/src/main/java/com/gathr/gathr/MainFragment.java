@@ -1,6 +1,8 @@
 package com.gathr.gathr;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,25 +11,21 @@ import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphLocation;
-import com.facebook.model.GraphObject;
-import com.facebook.model.GraphPlace;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.google.android.gms.maps.model.LatLng;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import java.util.Arrays;
 
 public class MainFragment extends Fragment{
     String id;
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
@@ -83,8 +81,24 @@ public class MainFragment extends Fragment{
 
         });
 
+        Intent notificationIntent = new Intent(getActivity(), NotificationReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent,0);
+        //getNotifications();
+
         Session.getActiveSession().getPermissions();
         return view;
+    }
+
+    public void getNotifications(){
+        manager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        int interval = 10000;
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
+        Toast.makeText(getActivity(), "WE GOT THIS SON", Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent(getActivity(), Settings.class);
+        i.putExtra("stopNotification", pendingIntent);
+        startActivityForResult(i, 0);
     }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
@@ -100,7 +114,7 @@ public class MainFragment extends Fragment{
             if (!session.isOpened() && !session.isClosed()) {
 
                 session.openForRead(new Session.OpenRequest(getActivity())
-                        .setPermissions(Arrays.asList("user_about_me", "email", "user_birthday", "user_friends", "user_location"))
+                        .setPermissions(Arrays.asList("user_about_me", "email", "user_birthday", "user_friends"))
                         .setCallback(callback));
 
             } else {

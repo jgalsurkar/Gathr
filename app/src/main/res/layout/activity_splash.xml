@@ -39,19 +39,14 @@
         android:textSize="100sp"
         android:typeface="sans" />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="O"
-        android:id="@+id/textView2"
-        android:textColor="#ffe8e8e8"
-        android:textSize="920sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        android:typeface="sans"
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar2"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/authButton"
-        android:layout_alignStart="@+id/authButton" />
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:indeterminateBehavior="cycle" />
 
 </RelativeLayout>

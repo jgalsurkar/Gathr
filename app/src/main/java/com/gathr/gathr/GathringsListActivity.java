@@ -5,17 +5,19 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.gathr.gathr.adapters.GathringArrayAdapter;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 
@@ -28,7 +30,7 @@ public class GathringsListActivity extends ActionBarActivity {
         setContentView(R.layout.gathrings_list_activity);
         setActionBar();
         MyGlobals global = new MyGlobals();
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment())

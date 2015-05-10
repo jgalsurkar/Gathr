@@ -1,12 +1,15 @@
 package com.gathr.gathr.chat.ui.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.ViewGathring;
 import com.gathr.gathr.chat.core.ChatManager;
 import com.gathr.gathr.chat.core.GroupChatManagerImpl;
 import com.gathr.gathr.chat.ui.adapters.ChatAdapter;
@@ -34,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ChatActivity extends Activity {
+public class ChatActivity extends ActionBarActivity {
 
     private static final String TAG = ChatActivity.class.getSimpleName();
 
@@ -52,6 +58,7 @@ public class ChatActivity extends Activity {
     private ChatAdapter adapter;
     private QBDialog dialog;
 
+    String eventId;
     private ArrayList<QBChatMessage> history;
 
     public static void start(Context context, Bundle bundle) {
@@ -64,6 +71,8 @@ public class ChatActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        MyGlobals global = new MyGlobals(this);
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         initViews();
     }
 
@@ -71,6 +80,10 @@ public class ChatActivity extends Activity {
     public void onBackPressed() {
         try {
             chat.release();
+            //super.onBackPressed();
+            Intent intent = new Intent(ChatActivity.this , ViewGathring.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
         } catch (XMPPException e) {
             Log.e(TAG, "failed to release chat", e);
         }
@@ -88,7 +101,7 @@ public class ChatActivity extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Intent intent = getIntent();
-
+        eventId = intent.getStringExtra("eventId");
         // Get chat dialog
         //
         dialog = (QBDialog) intent.getSerializableExtra(EXTRA_DIALOG);
@@ -212,4 +225,23 @@ public class ChatActivity extends Activity {
     }
 
     public static enum Mode {PRIVATE, GROUP}
+
+    public void setActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        //displaying custom ActionBar
+        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
+        actionBar.setCustomView(mActionBarView);
+        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
+        title.setText(R.string.title_activity_view_gathring);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    }
+    public void openSideBar(View view)
+    {
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
+    }
+
+
 }

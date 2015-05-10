@@ -19,4 +19,7 @@
     <string name="title_activity_connection_error">ConnectionError</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_following_list">Following List</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

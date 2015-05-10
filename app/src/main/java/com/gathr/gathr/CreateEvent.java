@@ -1,6 +1,5 @@
 package com.gathr.gathr;
 
-import android.content.SharedPreferences;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -11,17 +10,20 @@ import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.GCoder;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.plus.model.people.Person;
 
 import org.json.JSONArray;
-
-import java.util.jar.Attributes;
 
 public class CreateEvent extends ActionBarActivity {
     MyGlobals global = new MyGlobals(this);
@@ -37,8 +39,8 @@ public class CreateEvent extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         setActionBar();
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
-
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
+        ((ImageButton)(findViewById(R.id.select_category))).setBackgroundResource(R.drawable.create_contact);
         my_interests = (EditText) findViewById(R.id.gathring_category);
         Intent i = getIntent();
         String prefillJson = i.getStringExtra("prefill");

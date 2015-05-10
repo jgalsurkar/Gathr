@@ -9,17 +9,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
+
 import org.json.JSONArray;
-import org.json.JSONException;
 
 public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     Button button;
@@ -41,7 +42,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.list);
         button = (Button) findViewById(R.id.testbutton);
         final Context c = this;
-        class getCategories implements DatabaseCallback{
+        class getCategories implements DatabaseCallback {
             public void onTaskCompleted(final String results) {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -99,8 +100,8 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
         //displaying custom ActionBar
         View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
         actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_list_view_multiple_selection);
+        ((ImageButton)mActionBarView.findViewById(R.id.btn_slide)).setVisibility(View.INVISIBLE);
+        ((TextView)mActionBarView.findViewById(R.id.title)).setText(R.string.title_activity_list_view_multiple_selection);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     }
     public void openSideBar(View view)

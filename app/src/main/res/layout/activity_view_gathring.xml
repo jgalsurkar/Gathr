@@ -8,15 +8,15 @@
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="#fff">
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <TextView
                 android:layout_width="fill_parent"
@@ -27,7 +27,9 @@
                 android:gravity="center"
                 android:textSize="30dp"
                 android:layout_margin="5dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:paddingTop="15dp"
+                android:textColor="#ff50b4c8"/>
 
             <TextView
                 android:textSize="23dp"
@@ -57,20 +59,23 @@
                         android:text="Location"
                         android:layout_margin="10dp"
                         android:textSize="23dp"
-                        android:layout_gravity="left"/>
+                        android:layout_gravity="left"
+                        android:textColor="#ff50b4c8"/>
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="View On Map"
-                        android:id="@+id/button"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/imageButton"
+                        android:layout_gravity="right"
+                        android:src="@drawable/location_icon"
                         android:onClick="showOnMap"
-                        android:nestedScrollingEnabled="true" />
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/gathring_address_header"
+                        android:layout_toEndOf="@+id/gathring_address_header" />
 
                 </RelativeLayout>
+
+
 
 
                 <TextView
@@ -82,29 +87,7 @@
                     android:layout_margin="10dp"
                     android:text="No Input" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:textSize="23dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/gathring_city_text"
-                        android:textStyle="italic"
-                        android:layout_margin="10dp"
-                        android:text="No Input"/>
-
-                    <TextView
-                        android:textSize="23dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/gathring_state_text"
-                        android:textStyle="italic"
-                        android:layout_margin="10dp"
-                        android:text="No Input"/>
-                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -117,8 +100,9 @@
                     android:id="@+id/gathring_time_header"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
-                    android:text="Time"
-                    android:textSize="23dp"/>
+                    android:text="When"
+                    android:textSize="23dp"
+                    android:textColor="#ff50b4c8"/>
 
                 <TextView
                     android:textSize="23dp"
@@ -146,11 +130,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/gathring_category_header"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"
+                    android:text="Categories"
+                    android:textSize="23dp"
+                    android:textColor="#ff50b4c8"/>
+
+                <TextView
+                    android:textSize="23dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gathring_category_text"
+                    android:textStyle="italic"
+                    android:layout_margin="10dp"
+                    android:text="No Input" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="20px">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:id="@+id/gathring_limit_header"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
                     android:text="Attendees"
-                    android:textSize="23dp"/>
+                    android:textSize="23dp"
+                    android:textColor="#ff50b4c8"/>
                 <TextView
                     android:textSize="23dp"
                     android:layout_width="wrap_content"
@@ -159,22 +169,29 @@
                     android:textStyle="italic"
                     android:layout_margin="10dp"
                     android:text="No Input"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View Attendees"
-                    android:id="@+id/va_button"
-                    android:onClick="viewMembers"
-                    android:gravity="right" />
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="30dp"
-                android:id="@+id/space" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:background="#fff"
+                >
+                <com.devsmart.android.ui.HorizontalListView
+                    android:id="@+id/listview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dp"
+                    android:background="#fff"
+                    />
+            </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:background="#fff"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
 
             <Button
                 android:layout_width="80dp"
@@ -182,16 +199,43 @@
                 android:text="Join"
                 android:id="@+id/join_leave_button"
                 android:gravity="center"
-                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:textSize="20dp"
                 android:textAlignment="center"
-                android:onClick="joinOrLeave"/>
+                android:onClick="joinOrLeave"
+                android:background="#ff50b4c8"
+                android:layout_gravity="center_horizontal" />
 
-
-
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:id="@+id/share"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:onClick="share"
+                android:background="#ff50b4c8"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="15dp" />
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Chat"
+                android:id="@+id/joinChat"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:onClick="openChat"
+                android:background="#ff50b4c8"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
+
+        </LinearLayout>
+
     </ScrollView>
 
     <ListView android:id="@+id/left_drawer"

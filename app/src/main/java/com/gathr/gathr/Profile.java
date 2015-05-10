@@ -6,37 +6,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.facebook.widget.ProfilePictureView;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 
 public class Profile extends ActionBarActivity {
-    public String userId = AuthUser.getUserId(this),
-            interests = "",
-            categoryId = "",
-            results = "",
-            inst,
-            fb,
-            tw;
-    TextView past_events,
-            followers,
-            events_created,
-            events_attended;
-    Boolean following = false,
-            blocking = false;
+    public String userId = AuthUser.getUserId(this), interests = "", categoryId = "", results = "", inst, fb, tw;
+    TextView past_events, followers, events_created, events_attended;
+    Boolean following = false, blocking = false;
     MyGlobals global = new MyGlobals(this);
 
     class getUser implements DatabaseCallback {
@@ -49,94 +39,30 @@ public class Profile extends ActionBarActivity {
             });
         }
     }
-    class getCategory implements DatabaseCallback {
-        public void onTaskCompleted(final String results){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setCategory(results);
-                }
-            });
-        }
-    }
-    class getEventsAttended implements DatabaseCallback {
-        public void onTaskCompleted(final String results){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setEventsAttended(results);
-                }
-            });
-        }
-    }
-    class getFollowers implements DatabaseCallback {
-        public void onTaskCompleted(final String results){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setFollowers(results);
-                }
-            });
-        }
-    }
-    class getEventsCreated implements DatabaseCallback {
-        public void onTaskCompleted(final String results){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setEventsCreated(results);
-                }
-            });
-        }
-    }
-    class getPastEvent implements DatabaseCallback {
-        public void onTaskCompleted(final String results){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setPastEvents(results);
-                }
-            });
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         setActionBar();
-        QueryDB DBconn = new QueryDB(this);
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
+
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
         try {
-
-
             Intent i = getIntent();
             String temp = i.getStringExtra("userId");
-            if (temp != null) {
+            QueryDB DBconn = new QueryDB(this, "getProfile.php");
+            if (temp != null)
                 userId = temp;
-                DBconn.executeQuery("SELECT * FROM USERS WHERE Id = " + userId + ";", new getUser());
-            }else{
-                setProfileInfo(global.getUserJSON());
-            }
-            QueryDB DBconn2 = new QueryDB(this);
-            DBconn2.executeQuery("SELECT Category_Id, Name FROM  CATEGORIES JOIN (SELECT * FROM USER_INTERESTS WHERE User_Id = " + userId + ") AS JOINED WHERE JOINED.Category_Id = Id",new getCategory());
-            QueryDB DBconn5 = new QueryDB(this);
-            DBconn5.executeQuery("SELECT Count(Event_Id) as Count FROM JOINED_EVENTS WHERE User_Id= " + userId+";",new getEventsAttended());
-            QueryDB DBconn3 = new QueryDB(this);
-            DBconn3.executeQuery("SELECT Count(User_Id) as Count FROM FRIENDS WHERE Friend_User_Id= " + userId+";",new getFollowers());
-            QueryDB DBconn4 = new QueryDB(this);
-            DBconn4.executeQuery("SELECT Count(Id) as Count FROM EVENTS WHERE Organizer= " + userId+";", new getEventsCreated());
-            QueryDB DBconn6 = new QueryDB(this);
-            DBconn6.executeQuery("SELECT Name FROM EVENTS WHERE Organizer= " + userId + " and Date < DATE(NOW()) ORDER BY Date DESC LIMIT 15", new getPastEvent());
+
+            DBconn.executeQuery(userId, new getUser());
         }
         catch(Exception e) {
             global.errorHandler(e);
         }
     }
 
-    public void setActionBar()
-    {
+    public void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         //displaying custom ActionBar
@@ -146,40 +72,11 @@ public class Profile extends ActionBarActivity {
         title.setText(R.string.title_activity_profile);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     }
-    public void openSideBar(View view)
-    {
-            DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-            sidebar.openDrawer(Gravity.LEFT);
-    }
-    public void setFollowers(String r){
-        try{
-            followers = (TextView) findViewById(R.id.followers);
-            JSONArray json = new JSONArray(r);
-            if (!r.contains("ERROR")) {
-                String count = json.getJSONObject(0).getString("Count").trim();
-                followers.append(count);
-            }
-        }
-        catch(Exception e) {
-            global.errorHandler(e);
-        }
+    public void openSideBar(View view){
+        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
+        sidebar.openDrawer(Gravity.LEFT);
     }
 
-
-    public void setEventsAttended(String r)
-    {
-        try{
-            events_attended = (TextView) findViewById(R.id.events_attended);
-            if (!r.contains("ERROR")) {
-                JSONArray json = new JSONArray(r);
-                String count = json.getJSONObject(0).getString("Count").trim();
-                events_attended.append(count);
-            }
-        }
-        catch(Exception e) {
-            global.errorHandler(e);
-        }
-    }
     public void setProfileInfo(String r)
     {
         try {
@@ -193,6 +90,22 @@ public class Profile extends ActionBarActivity {
                 userNameView.setText(elem1.getString("First_Name") + " " + elem1.getString("Last_Name"));
                 profilePictureView.setProfileId(elem1.getString("Facebook_Id"));
                 about_me.setText(elem1.getString("About_Me"));
+
+                TextView my_interests = (TextView) findViewById(R.id.my_interests);
+                my_interests.setText(elem1.getString("Interests"));
+
+                events_created = (TextView) findViewById(R.id.events_created);
+                events_created.append(elem1.getString("Num_Created_Events").trim());
+
+                past_events = (TextView) findViewById(R.id.past_events);
+                past_events.setText(elem1.getString("Past_Events"));
+
+                events_attended = (TextView) findViewById(R.id.events_attended);
+                events_attended.append(elem1.getString("Num_Joined_Events"));
+
+                followers = (TextView) findViewById(R.id.followers);
+                followers.append(elem1.getString("Num_Friends"));
+
                 inst = elem1.getString("Instagram");
                 fb = elem1.getString("Facebook");
                 tw = elem1.getString("Twitter");
@@ -204,67 +117,18 @@ public class Profile extends ActionBarActivity {
             global.errorHandler(e);
         }
     }
-    public void setCategory(String r){
-        try{
-            TextView my_interests = (TextView) findViewById(R.id.my_interests);
-            if(!r.contains("ERROR")) {
-                if (!r.equals("")) {
-                    JSONArray json = new JSONArray(r);
-                    for (int j = 0; j < json.length(); j++) {
-                        interests = interests + json.getJSONObject(j).getString("Name") + ", ";
-                        categoryId = categoryId + json.getJSONObject(j).getString("Category_Id") + ",";
-                    }
-                    interests = interests.substring(0, interests.length() - 2);
-                    my_interests.setText(interests);
-                } else my_interests.setText("");
-            }
-        }
-        catch(Exception e) {
-            global.errorHandler(e);
-        }
 
-    }
-    public void setEventsCreated(String r)
-    {
-        try {
-            events_created = (TextView) findViewById(R.id.events_created);
-            if (!r.contains("ERROR")) {
-                JSONArray json = new JSONArray(r);
-                String count = json.getJSONObject(0).getString("Count").trim();
-                events_created.append(count);
-            }
-        } catch (Exception e) {
-            global.errorHandler(e);
-        }
-    }
-    public void setPastEvents(String r)
-    {
-        try{
-            past_events = (TextView) findViewById(R.id.past_events);
-            String events="";
-            if(!r.contains("ERROR")) {
-                if (!r.equals("")) {
-                    JSONArray json = new JSONArray(r);
-                    for (int j = 0; j < json.length(); j++)
-                        events = events + json.getJSONObject(j).getString("Name") + ", ";
-                    events = events.substring(0, events.length() - 2);
-                    past_events.setText(events);
-                }
-            }
-        }
-        catch(Exception e) {
-            global.errorHandler(e);
-        }
-    }
+
+
     public void setImages(String sid,int vid, int dr_id,int gdr_id)
     {
         if (!sid.equals("")) {
-            ((ImageButton) findViewById(vid)).setBackgroundResource(dr_id);
-            ((ImageButton) findViewById(vid)).setVisibility(View.VISIBLE);
-            ((ImageButton) findViewById(vid)).setClickable(true);
+            (findViewById(vid)).setBackgroundResource(dr_id);
+            (findViewById(vid)).setVisibility(View.VISIBLE);
+            (findViewById(vid)).setClickable(true);
         } else {
-            ((ImageButton) findViewById(vid)).setBackgroundResource(gdr_id);
-            ((ImageButton) findViewById(vid)).setClickable(false);
+            (findViewById(vid)).setBackgroundResource(gdr_id);
+            (findViewById(vid)).setClickable(false);
         }
     }
     public void goToInsta (View view ) {
@@ -276,8 +140,7 @@ public class Profile extends ActionBarActivity {
     public void goToTwit (View view) {
         goToUrl ( "http://twitter.com/"+ parseUN(tw));
     }
-    public String parseUN(String u)
-    {
+    public String parseUN(String u){
         if (u.charAt(0)=='@')
             u = u.substring(1, u.length());
         return u;
@@ -344,23 +207,18 @@ public class Profile extends ActionBarActivity {
                     followers.setText("Followers: " + count);
                     following = true;
                 } catch (Exception e) {
-                    if (!e.getMessage().equals("NO RESULTS")) {
-                        global.errorHandler(e);
-                    }
+                    global.errorHandler(e);
                 }
             }
             else {
                 try {
-                    DBconn10.executeQuery("DELETE FROM FRIENDS " +
-                            " WHERE " +
-                            "Friend_User_Id = "+userId + " AND User_Id = "+ AuthUser.getUserId(this) +" ;");
-                    //results = DBconn4.getResults();
-                    String [] text = followers.getText().toString().split(" ");
+                    DBconn10.executeQuery("DELETE FROM FRIENDS WHERE Friend_User_Id = "+userId + " AND User_Id = "+ AuthUser.getUserId(this) +" ;");
+                    String[] text = followers.getText().toString().split(" ");
                     Integer count = Integer.valueOf(text[1])-1;
                     followers.setText("Followers: "+count);
                     following = false;
                 } catch (Exception e){
-                    if (!e.getMessage().equals("NO RESULTS")) {global.errorHandler(e);}
+                    global.errorHandler(e);
                 }
             }
             return true;
@@ -378,7 +236,6 @@ public class Profile extends ActionBarActivity {
     }
     public boolean onPrepareOptionsMenu(final Menu menu)
     {
-
         class getFollowing implements DatabaseCallback {
             public void onTaskCompleted(final String results){
                 runOnUiThread(new Runnable() {
@@ -442,8 +299,6 @@ public class Profile extends ActionBarActivity {
             }catch(Exception e){
                 global.errorHandler(e);
             }
-
-
         }else{
             menu.findItem(R.id.action_edit_profile).setVisible(true);
         }

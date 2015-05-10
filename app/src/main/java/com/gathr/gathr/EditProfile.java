@@ -1,21 +1,22 @@
 package com.gathr.gathr;
 
 import android.content.Intent;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.facebook.widget.ProfilePictureView;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
+
 import org.json.JSONArray;
-import org.json.JSONException;
 
 public class EditProfile extends ActionBarActivity {
 
@@ -37,6 +38,7 @@ public class EditProfile extends ActionBarActivity {
         setContentView(R.layout.activity_edit_profile);
         setActionBar();
         try {
+            ((ImageButton)(findViewById(R.id.add_category))).setBackgroundResource(R.drawable.create_contact);
             userNameView = (TextView) findViewById(R.id.user_name);
             profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
             profilePictureView.setCropped(true);
@@ -80,8 +82,8 @@ public class EditProfile extends ActionBarActivity {
         //displaying custom ActionBar
         View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
         actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_edit_profile);
+        ((ImageButton)mActionBarView.findViewById(R.id.btn_slide)).setVisibility(View.INVISIBLE);
+        ((TextView)mActionBarView.findViewById(R.id.title)).setText(R.string.title_activity_edit_profile);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
     }
     @Override

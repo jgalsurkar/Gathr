@@ -1,3 +1,5 @@
 include ':app', ':pull-to-refresh'
 include ':libraries:facebook'
 
+
+include ':devsmartAndroid'

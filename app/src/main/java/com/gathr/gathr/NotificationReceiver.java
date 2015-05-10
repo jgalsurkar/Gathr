@@ -7,15 +7,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
+
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 
 public class NotificationReceiver extends BroadcastReceiver {
     private MyGlobals global;
-    private String event_json;
+    //private String event_json;
 
 
     @Override
@@ -27,7 +29,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     PushNotification(342342, "NO GATHRINGS FOR YOU LOSER!", "PLZ WORK", "IM SUEPR DUPER SRS", MapsActivity.class, context);
                 } else {
                     try {
-                        event_json = results;
+                       // event_json = results;
                         JSONArray json = new JSONArray(results);
                         final String eventName = json.getJSONObject(0).getString("Name");
                         final String eventId = json.getJSONObject(0).getString("Id");

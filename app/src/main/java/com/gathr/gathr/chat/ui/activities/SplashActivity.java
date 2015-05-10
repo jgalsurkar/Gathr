@@ -1,42 +1,110 @@
 package com.gathr.gathr.chat.ui.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.gathr.gathr.AuthUser;
+import com.gathr.gathr.classes.AuthUser;
 import com.gathr.gathr.chat.ApplicationSingleton;
-import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.chat.QBGroupChatManager;
+import com.quickblox.chat.model.QBDialog;
+import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.QBSettings;
 import com.quickblox.auth.QBAuth;
-import com.quickblox.auth.model.QBSession;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.gathr.gathr.R;
-
 import org.jivesoftware.smack.SmackException;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class SplashActivity extends Activity {
 
-    private static final String APP_ID = "21154";
-    private static final String AUTH_KEY = "YEJHvsAAaz74X98";
-    private static final String AUTH_SECRET = "ZrOvZMWUQK9tNtw";
-    //
-    private static final String USER_LOGIN = "dmcalumpit"/*AuthUser.user_fname + AuthUser.user_id*/;
-    private static final String USER_PASSWORD = "test12345"/*AuthUser.fb_id*/;
-    private static final String USER_FULLNAME = "Dustin Calumpit"/*AuthUser.user_fname + " " + AuthUser.user_lname*/;
-
-    static final int AUTO_PRESENCE_INTERVAL_IN_SECONDS = 30;
-
+    private static final String APP_ID = "21154", AUTH_KEY = "YEJHvsAAaz74X98", AUTH_SECRET = "ZrOvZMWUQK9tNtw";
+    final Context c = this;
+    final QBUser user = new QBUser(AuthUser.user_fname + AuthUser.getUserId(this),  "Gathr_" + AuthUser.getFBId(this));
     private QBChatService chatService;
+
+    class setupChat extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String[] params) {
+            try {
+                QBAuth.createSession();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                QBUsers.signUp(user);
+            } catch (QBResponseException e) {
+                e.printStackTrace();
+            }
+            try {
+                QBUser user1 = QBUsers.signIn(user);
+                user.setId(user1.getId());
+                ((ApplicationSingleton) getApplication()).setCurrentUser(user);
+
+            } catch (QBResponseException e) {
+                e.printStackTrace();
+            }
+            try {
+                chatService.login(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            try {
+                chatService.startAutoSendPresence(30); // every 30 seconds
+            } catch (SmackException.NotLoggedInException e) {
+                e.printStackTrace();
+            }
+
+            // go to Dialogs screen
+            Intent old = getIntent();
+
+            final String eventId = old.getStringExtra("EventId");
+            final String eventName = old.getStringExtra("EventName");
+            QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
+            customObjectRequestBuilder.eq("name",eventName + eventId);
+
+            Bundle x = new Bundle();
+            try {
+                ArrayList<QBDialog> dialogs = QBChatService.getChatDialogs(null, customObjectRequestBuilder,x );
+                QBDialog dialog;
+                if(dialogs.size() < 1){
+                    dialog = new QBDialog();
+                    dialog.setName(eventName + eventId);
+                    dialog.setType(QBDialogType.PUBLIC_GROUP);
+                    dialog.setRoomJid(eventId);
+                    QBGroupChatManager groupChatManager = QBChatService.getInstance().getGroupChatManager();
+                    dialog = groupChatManager.createDialog(dialog);
+                }else{
+                    dialog = dialogs.get(0);
+                }
+
+                Log.i("Testing", "Chatroom successfully received");
+                Intent i = new Intent(c, ChatActivity.class);
+                i.putExtra("dialog", dialog);
+                i.putExtra("eventId", eventId);
+                startActivity(i);
+
+            } catch (QBResponseException e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -49,106 +117,14 @@ public class SplashActivity extends Activity {
         }
         chatService = QBChatService.getInstance();
 
+        // create QB user (locally)
+        //user.setLogin(USER_LOGIN);
+        //user.setPassword(USER_PASSWORD);
+        user.setFullName(AuthUser.user_fname + " " + AuthUser.user_lname);
 
-        // create QB user
-        //
-        final QBUser user = new QBUser();
-        user.setLogin(USER_LOGIN);
-        user.setPassword(USER_PASSWORD);
-        user.setFullName(USER_FULLNAME);
+        setupChat x = new setupChat();
+        x.execute();
 
 
-        QBAuth.createSession(user, new QBEntityCallbackImpl<QBSession>() {
-            @Override
-            public void onSuccess(QBSession session, Bundle args) {
-                Log.i("Testing", "Successfully created new session");
-                // save current user
-                //
-                user.setId(session.getUserId());
-                ((ApplicationSingleton) getApplication()).setCurrentUser(user);
-
-                // login to Chat
-                //
-                Log.i("Testing","Logging in to chat now");
-                loginToChat(user);
-            }
-
-            @Override
-            public void onError(List<String> errors) {
-                //AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                //dialog.setMessage("create session errors: " + errors).create().show();
-                Log.i("Testing","No existing user in the server, calling signUp function now");
-                signUp(user);
-            }
-        });
-    }
-
-    private void signUp(final QBUser user){
-
-        QBUsers.signUp(user, new QBEntityCallbackImpl<QBUser>() {
-            @Override
-            public void onSuccess(final QBUser user, Bundle args) {
-                Log.i("Testing","Successfully created a new user, creating new session now");
-                QBAuth.createSession(user, new QBEntityCallbackImpl<QBSession>(){
-                    @Override
-                    public void onSuccess(QBSession session, Bundle args) {
-                        Log.i("Testing","Successfully created a new session with a new user");
-                        // save current user
-                        //
-                        user.setId(session.getUserId());
-                        ((ApplicationSingleton)getApplication()).setCurrentUser(user);
-
-                        // login to Chat
-                        //
-                        Log.i("Testing","Logging in with the new user account");
-                        loginToChat(user);
-                    }
-
-                    @Override
-                    public void onError(List<String> errors) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                        dialog.setMessage("create session errors: " + errors).create().show();
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onError(List<String> errors) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                dialog.setMessage("Fail to sign up: " + errors).create().show();
-            }
-        });
-    }
-
-    private void loginToChat(final QBUser user){
-
-        chatService.login(user, new QBEntityCallbackImpl() {
-            @Override
-            public void onSuccess() {
-
-                // Start sending presences
-                //
-                try {
-                    chatService.startAutoSendPresence(AUTO_PRESENCE_INTERVAL_IN_SECONDS);
-                } catch (SmackException.NotLoggedInException e) {
-                    e.printStackTrace();
-                }
-
-                // go to Dialogs screen
-                //
-                Log.i("Testing","Going to dialogs now");
-                Intent intent = new Intent(SplashActivity.this, DialogsActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onError(List errors) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(SplashActivity.this);
-                dialog.setMessage("chat login errors: " + errors).create().show();
-            }
-        });
     }
 }

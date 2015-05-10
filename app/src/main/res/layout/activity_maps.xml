@@ -21,9 +21,9 @@
                 android:id="@+id/btn_filters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filters"
+                android:text="Search"
                 android:layout_alignParentRight="true"
-                android:onClick="goToSearchInput"
+                android:onClick="searchEventsAtInput"
                 />
 
             <EditText

@@ -5,35 +5,32 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.gathr.gathr.adapters.FriendArrayAdapter;
+import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
+import com.gathr.gathr.database.DatabaseCallback;
+import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 
 
 public class FollowingList extends ActionBarActivity {
-    static String eid = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_list);
         setActionBar();
         MyGlobals global = new MyGlobals();
-        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this, global.titles, global.links );
-
-        Intent i = getIntent();
-        eid = i.getStringExtra("EventId");
-        if(eid != null)
-            getSupportActionBar().setTitle("Attendee List");
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment())
@@ -78,7 +75,7 @@ public class FollowingList extends ActionBarActivity {
             final MyGlobals global = new MyGlobals(getActivity());
 
             try{
-                class load implements DatabaseCallback{
+                class load implements DatabaseCallback {
                     public void onTaskCompleted(String results){
                         if(results.contains("ERROR")){
                             friendNames = new String[]{"No friends to show"};
@@ -109,13 +106,8 @@ public class FollowingList extends ActionBarActivity {
                         });
                     }
                 }
+                DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(getActivity()) + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
 
-
-                if(eid == null) {
-                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(getActivity()) + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
-                }else{
-                    DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eid + " )  AS JOINED) WHERE Id = User_Id", new load());
-                }
             }catch(Exception e){
                 global.errorHandler(e);
             }

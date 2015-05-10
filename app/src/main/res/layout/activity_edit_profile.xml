@@ -79,18 +79,18 @@
             android:textSize="10pt"
             android:textStyle="bold"
             android:layout_below="@id/space8" />
-        <Button
+        <ImageButton
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
             android:id="@+id/add_category"
             android:clickable="true"
             android:linksClickable="true"
             android:onClick="openCategory"
             android:layout_below="@+id/my_interests_label"
-            android:layout_alignRight="@+id/space8"
-            android:layout_alignEnd="@+id/space8" />
+            android:layout_above="@+id/space9"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <EditText
             android:layout_width="wrap_content"

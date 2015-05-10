@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gathr.gathr.classes.MyGlobals;
+
 
 public class ConnectionError extends ActionBarActivity {
 
