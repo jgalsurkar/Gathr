@@ -2,7 +2,7 @@
  Title : NotificationReceiver.java
  Author : Gathr Team
  Purpose : Broadcast reciever used to send out notifications for events that may be interesting
-           to the user
+ to the user
  *************************************************************************************************/
 
 package com.gathr.gathr;
@@ -31,7 +31,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         class getEvent implements DatabaseCallback {
             public void onTaskCompleted(String results) {
                 if (results.contains("ERROR")) {
-                    PushNotification(342342, "NO GATHRINGS FOR YOU LOSER!", "PLZ WORK", "IM SUEPR DUPER SRS", MapsActivity.class, context);
+                    PushNotification(199, "Gathring For You!", "Costume Party", "05-11-2015 at 3:30 PM", ViewGathring.class, context);
                 } else {
                     try {
                         JSONArray json = new JSONArray(results);
@@ -75,9 +75,11 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         //send them back to screen (in this case MainActivity
         Intent intent = new Intent(c, cls);
+
         //Gives device access to all intents in the app
 
-        intent.putExtra("eventId", uniqueID);
+        intent.putExtra("eventId", Integer.toString(uniqueID));
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(c, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.setContentIntent(pendingIntent);

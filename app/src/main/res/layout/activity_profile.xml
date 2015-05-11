@@ -7,7 +7,8 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -19,11 +20,11 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="com.gathr.gathr.Profile">
 
-            <TextView
+<!--            <TextView
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="Times New Roman"
+
                 android:gravity="center"
                 android:textAlignment="inherit"
                 android:textAppearance="?android:attr/textAppearance"
@@ -36,28 +37,22 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3pt"
                 android:layout_below="@+id/user_name" />
-
+-->
             <com.facebook.widget.ProfilePictureView
                 android:id="@+id/selection_profile_pic"
                 android:layout_width="117dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/space5"
                 android:layoutMode="clipBounds"
                 android:textAlignment="inherit" />
 
-            <Space
-                android:id="@+id/space2"
-                android:layout_width="fill_parent"
-                android:layout_height="3pt"
-                android:layout_below="@+id/user_name" />
+
 
             <ImageButton
                 android:id="@+id/insta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/space2"
                 android:layout_toRightOf="@+id/selection_profile_pic"
                 android:autoLink="web"
                 android:clickable="true"
@@ -68,14 +63,14 @@
                 android:id="@+id/space3"
                 android:layout_width="3pt"
                 android:layout_height="fill_parent"
-                android:layout_below="@+id/space2"
+
                 android:layout_toRightOf="@+id/insta" />
 
             <ImageButton
                 android:id="@+id/face"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/space2"
+
                 android:layout_toRightOf="@+id/space3"
                 android:autoLink="web"
                 android:clickable="true"
@@ -86,14 +81,14 @@
                 android:id="@+id/space4"
                 android:layout_width="3pt"
                 android:layout_height="fill_parent"
-                android:layout_below="@+id/space2"
+
                 android:layout_toRightOf="@+id/face" />
 
             <ImageButton
                 android:id="@+id/twit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/space2"
+
                 android:layout_toRightOf="@+id/space4"
                 android:autoLink="web"
                 android:clickable="true"
@@ -144,43 +139,54 @@
             <Space
                 android:id="@+id/space6"
                 android:layout_width="fill_parent"
-                android:layout_height="3pt"
-                android:layout_below="@+id/selection_profile_pic" />
+                android:layout_height="13pt"
+                android:layout_alignBottom="@+id/insta"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
+            <Space
+                android:id="@+id/space14"
+                android:layout_width="fill_parent"
+                android:layout_height="7pt"
+                android:layout_below="@+id/selection_profile_pic"
+                android:backgroundTint="#feffffff"
+                android:padding="5dp" />
             <TextView
                 android:id="@+id/about_me_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/space6"
-                android:fontFamily="Times New Roman"
+                android:layout_below="@+id/space14"
                 android:linksClickable="false"
                 android:text="About Me"
                 android:textSize="10pt"
                 android:textStyle="bold"
-                android:textColor="@color/bg"/>
+                android:textColor="@color/bg"
+                />
 
             <TextView
                 android:id="@+id/about_me"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/about_me_label"
-                android:fontFamily="Times New Roman"
                 android:linksClickable="false"
                 android:textSize="9pt"
+                android:paddingLeft="5pt"
+                android:paddingRight="5pt"
+                android:paddingTop="5pt"
+                android:paddingBottom="5pt"
                 android:background="#DCDCDC"/>
 
             <Space
                 android:id="@+id/space11"
                 android:layout_width="fill_parent"
-                android:layout_height="3pt"
+                android:layout_height="7pt"
                 android:layout_below="@+id/about_me"
-                android:background="#ff010001"
                 android:backgroundTint="#feffffff"
                 android:padding="5dp" />
 
@@ -193,7 +199,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/space11"
-                android:fontFamily="Times New Roman"
                 android:linksClickable="false"
                 android:text="My Interests"
                 android:textSize="10pt"
@@ -203,22 +208,25 @@
             <TextView
                 android:id="@+id/my_interests"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/my_interests_label"
-                android:fontFamily="Times New Roman"
                 android:linksClickable="false"
                 android:textSize="9pt"
-                android:background="#DCDCDC"/>
+                android:background="#DCDCDC"
+                android:paddingLeft="5pt"
+                android:paddingRight="5pt"
+                android:paddingTop="5pt"
+                android:paddingBottom="5pt"/>
 
 
             <Space
                 android:id="@+id/space8"
                 android:layout_width="fill_parent"
-                android:layout_height="3pt"
+                android:layout_height="7pt"
                 android:layout_below="@+id/my_interests" />
 
             <TextView
@@ -230,12 +238,12 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/space8"
-                android:fontFamily="Times New Roman"
                 android:linksClickable="false"
-                android:text="Past Events"
+                android:text="Recently Organized"
                 android:textSize="10pt"
                 android:textStyle="bold"
                 android:textColor="@color/bg"/>
+
 
 
             <TextView
@@ -244,13 +252,16 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/past_events_label"
-                android:fontFamily="Times New Roman"
                 android:linksClickable="false"
                 android:textSize="9pt"
                 android:background="#DCDCDC"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_alignRight="@+id/past_events_label"
-                android:layout_alignEnd="@+id/past_events_label" />
+                android:layout_alignEnd="@+id/past_events_label"
+                android:paddingLeft="5pt"
+                android:paddingRight="5pt"
+                android:paddingTop="5pt"
+                android:paddingBottom="5pt"/>
 
 
         </RelativeLayout>

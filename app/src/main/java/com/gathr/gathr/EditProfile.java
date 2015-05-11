@@ -45,10 +45,10 @@ public class EditProfile extends ActionBarActivity {
         setContentView(R.layout.activity_edit_profile);
         setActionBar();
         try {
-            ((ImageButton)(findViewById(R.id.add_category))).setBackgroundResource(R.drawable.create_contact);
-            userNameView = (TextView) findViewById(R.id.user_name);
-            profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-            profilePictureView.setCropped(true);
+            //((ImageButton)(findViewById(R.id.add_category))).setBackgroundResource(R.drawable.create_contact);
+            //userNameView = (TextView) findViewById(R.id.user_name);
+            //profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
+            //profilePictureView.setCropped(true);
             about_me = (EditText) findViewById(R.id.about_me);
             final EditText instagram = (EditText) findViewById(R.id.instagram);
             instagram.setHint("@username");
@@ -64,8 +64,8 @@ public class EditProfile extends ActionBarActivity {
             results = global.getUserJSON();
             if (!results.contains("ERROR")) {
                 JSONArray json = new JSONArray(results);
-                userNameView.setText(json.getJSONObject(0).getString("First_Name") + " " + json.getJSONObject(0).getString("Last_Name"));
-                profilePictureView.setProfileId(json.getJSONObject(0).getString("Facebook_Id"));
+              //  userNameView.setText(json.getJSONObject(0).getString("First_Name") + " " + json.getJSONObject(0).getString("Last_Name"));
+              //  profilePictureView.setProfileId(json.getJSONObject(0).getString("Facebook_Id"));
                 about_me.setText(json.getJSONObject(0).getString("About_Me"));
                 instagram.setText(json.getJSONObject(0).getString("Instagram"));
                 facebook.setText(json.getJSONObject(0).getString("Facebook"));

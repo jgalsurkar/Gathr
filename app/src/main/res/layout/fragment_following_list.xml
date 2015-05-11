@@ -1,21 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.gathr.gathr.FollowingList$PlaceholderFragment">
+    android:layout_height="match_parent"
+    tools:context="com.gathr.gathr.FollowingList$PlaceholderFragment"
+    android:padding = "10dp">
 
     <ListView android:layout_width="match_parent"
         android:layout_height="match_parent" android:id="@+id/list"> </ListView>
 <LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/roundedbox"
+    android:padding="15dp"
+    android:nestedScrollingEnabled="true">
     <com.facebook.widget.ProfilePictureView
         android:id="@+id/friend_profile_pic"
         android:layout_width="117dp"
         android:layout_height="wrap_content"
         android:layoutMode="clipBounds"
-        android:background="@drawable/round"/>
+      />
 
     <TextView
         android:id="@+id/friend_list_name"
@@ -24,7 +25,7 @@
         android:textStyle="bold"
         android:textSize="30sp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="15dp">
+        android:layout_marginLeft="20dp">
 
     </TextView>
 </LinearLayout>

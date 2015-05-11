@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gathr.gathr">
+    package="com.gathr.gathr" >
 
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <provider
         android:name="com.facebook.FacebookContentProvider"
@@ -38,7 +38,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme">
+        android:theme="@style/CustomActionBarTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -59,9 +59,10 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -73,8 +74,8 @@
             android:label="@string/title_activity_list_view_multiple_selection" />
         <activity
             android:name=".ViewGathring"
-            android:label="@string/title_activity_view_gathring">
-            <intent-filter android:label="Gathr">
+            android:label="@string/title_activity_view_gathring" >
+            <intent-filter android:label="Gathr" >
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -98,34 +99,29 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".EditProfile"
-            android:label="@string/title_activity_edit_profile"/>
+            android:label="@string/title_activity_edit_profile" />
         <activity
             android:name=".ConnectionError"
-            android:label="@string/title_activity_connection_error"/>
+            android:label="@string/title_activity_connection_error" />
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings"/>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".GathringsListActivity"
-            android:label="@string/title_activity_gathrings_list"/>
+            android:label="@string/title_activity_gathrings_list" />
         <activity
             android:name=".FollowingList"
             android:label="@string/title_activity_following_list" />
         <activity
-            android:name="com.gathr.gathr.chat.ui.activities.SplashActivity"
+            android:name=".chat.ui.activities.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.gathr.gathr.chat.ui.activities.NewDialogActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:name=".SearchEvents"
+            android:label="@string/title_activity_search_events" />
         <activity
-            android:name="com.gathr.gathr.chat.ui.activities.DialogsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.gathr.gathr.chat.ui.activities.ChatActivity"
+            android:name=".chat.ui.activities.ChatActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />

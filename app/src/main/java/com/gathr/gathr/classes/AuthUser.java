@@ -13,22 +13,50 @@ public class AuthUser {
 
     private static String user_id = null;
     private static String fb_id = null;
-    public static String user_fname = null;
-    public static String user_lname = null;
+    private static String user_fname = null;
+    private static String user_lname = null;
     //These arent really used
 
     private static String latitude = null;
     private static String longitude = null;
 
+
+    public static String getFullName(Context c){
+        if(user_id == null)
+            loadUser(c);
+
+        if(user_id == null)
+            return "0";
+
+        return user_fname + " " + user_lname;
+    }
+
+    public static String getLogin(Context c){
+        if(user_id == null)
+            loadUser(c);
+
+        if(user_id == null)
+            return "0";
+
+
+        return user_fname  + user_id;
+    }
     public static String getUserId(Context c){
         if(user_id == null)
             loadUser(c);
 
+        if(user_id == null)
+            return "0";
+
+
         return user_id;
     }
     public static String getFBId(Context c){
-        if(fb_id == null)
+        if(user_id == null)
             loadUser(c);
+
+        if(user_id == null)
+            return "0";
 
         return fb_id;
     }
@@ -42,6 +70,8 @@ public class AuthUser {
         longitude = _lon;
         SharedPreferences settings = c.getSharedPreferences("AuthUser", 0);
         SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("notifications", false);
+        editor.apply();
         editor.putString("userid", user_id);
         editor.putString("fbid",  fb_id);
         editor.putString("fname", user_fname);

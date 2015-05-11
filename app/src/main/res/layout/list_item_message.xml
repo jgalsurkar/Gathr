@@ -2,41 +2,53 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true">
+
+    <TextView
+        android:id="@+id/txtInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@android:color/secondary_text_dark" />
+
+    <LinearLayout
+        android:id="@+id/contentWithBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/outgoing_message_bg"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="20sp"
-            android:layout_gravity="right"
-            android:textSize="10sp"
-            android:textColor="@android:color/secondary_text_dark" />
-
-        <LinearLayout
-            android:id="@+id/contentWithBackground"
+            android:id="@+id/txtMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/outgoing_message_bg"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="vertical">
+            android:textColor="@android:color/black"
+            android:maxWidth="250dp" />
 
-            <TextView
-                android:id="@+id/txtMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:maxWidth="250dp" />
 
-        </LinearLayout>
+    <!--<com.facebook.widget.ProfilePictureView
+        android:id="@+id/profile_pic"
+        android:layout_width="93.6dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/content"
+        android:layout_alignStart="@+id/content" />-->
+
+</LinearLayout>
+
+
+
 
     </LinearLayout>
 </RelativeLayout>

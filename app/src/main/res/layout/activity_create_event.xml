@@ -22,7 +22,10 @@
                 android:hint="Name"
                 android:inputType="text"
                 android:textStyle="bold"
-                android:layout_margin="12dp"/>
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"/>
 
             <EditText
                 android:layout_width="fill_parent"
@@ -31,7 +34,10 @@
                 android:textStyle="bold"
                 android:inputType="textPostalAddress"
                 android:hint="Address"
-                android:layout_margin="12dp"/>
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -40,50 +46,62 @@
                     android:layout_width="213dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/gathring_city"
-                    android:textStyle="bold"
                     android:inputType="textPostalAddress"
                     android:hint="City"
-                    android:layout_margin="12dp"/>
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="12dp"/>
 
                 <EditText
                     android:layout_width="115dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/gathring_state"
-                    android:textStyle="bold"
                     android:inputType="textCapCharacters"
+                    android:textStyle="bold"
                     android:hint="State"
                     android:layout_gravity="right"
                     android:maxLength="2"
                     android:layout_toRightOf="@+id/gathring_city"
                     android:layout_toEndOf="@+id/gathring_city"
-                    android:layout_alignTop="@+id/gathring_city"
-                    android:layout_alignBottom="@+id/gathring_city" />
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_alignBottom="@+id/gathring_city"
+                    android:layout_alignTop="@+id/gathring_city" />
 
                 <EditText
-                    android:layout_width="268dp"
-                    android:layout_height="70dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:id="@+id/gathring_category"
                     android:hint="Category"
-                    android:inputType="text"
-                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
                     android:editable="false"
-                    android:layout_margin="12dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                    android:textStyle="bold"
                     android:layout_below="@+id/gathring_city"
-                    />
+                    android:layout_alignLeft="@+id/gathring_city"
+                    android:layout_alignStart="@+id/gathring_city"
+                    android:layout_toLeftOf="@+id/select_category"
+                    android:layout_toStartOf="@+id/select_category" />
+
                 <ImageButton
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:id="@+id/select_category"
                     android:clickable="true"
                     android:linksClickable="true"
                     android:onClick="openCategory"
+                    android:background="#FFFFFF"
+                    android:maxHeight="36dp"
+                    android:maxWidth="36dp"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/create_contact"
-                    android:layout_alignBottom="@+id/gathring_category"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignRight="@+id/gathring_state"
                     android:layout_alignEnd="@+id/gathring_state" />
+
             </RelativeLayout>
 
 
@@ -95,7 +113,10 @@
                 android:hint="Limit"
                 android:inputType="number"
                 android:textStyle="bold"
-                android:layout_margin="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="12dp"
                 android:phoneNumber="true" />
 
             <EditText
@@ -103,18 +124,21 @@
                 android:layout_height="70dp"
                 android:id="@+id/gathring_description"
                 android:hint="Description"
-                android:inputType="textMultiLine"
                 android:textStyle="bold"
-                android:layout_margin="12dp"/>
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:inputType="textMultiLine"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="124dp"
+                android:layout_height="130dp"
                 android:orientation="horizontal">
 
                 <ToggleButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
                     android:text="New ToggleButton"
                     android:id="@+id/toggleButton"
                     android:checked="false"
@@ -125,9 +149,10 @@
                     android:onClick="onToggleClicked"
                     android:background="@drawable/mybutton"
                     android:textColor="#FFFFFF"
+                    android:layout_marginLeft="10pt"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,13 +167,14 @@
 
                 <Button
                     android:layout_width="100dp"
-                    android:layout_height="20dp"
+                    android:layout_height="40dp"
                     android:text="Pick Time"
                     android:id="@+id/time_picker_button"
                     android:gravity="center"
                     android:textSize="15dp"
                     android:textAlignment="center"
                     android:textAllCaps="false"
+                    android:layout_marginRight="10pt"
                     android:onClick="showTimePickerDialog"
                     android:background="@drawable/mybutton"
                     android:layout_alignParentRight="true"
@@ -158,12 +184,11 @@
                     android:layout_width = "fill_parent"
                     android:layout_height="20pt"
                     android:id="@+id/space"
-                    android:layout_above="@+id/toggleButton"
-                    android:layout_below="@+id/toggleButton" />
+                    android:layout_below="@+id/time_picker_button" />
 
                 <Button
-                    android:layout_width="50dp"
-                    android:layout_height="20dp"
+                    android:layout_width="150dp"
+                    android:layout_height="75dp"
                     android:text="Create"
                     android:textAllCaps="false"
                     android:id="@+id/create_event_button"
@@ -172,11 +197,10 @@
                     android:onClick="viewGathring"
                     android:background="@drawable/mybutton"
                     android:textColor="#FFFFFF"
+                    android:textSize="12pt"
+                    android:layout_below="@id/space"
                     android:layout_centerVertical="true"
-                    android:layout_alignLeft="@+id/gathring_time"
-                    android:layout_alignStart="@+id/gathring_time"
-                    android:layout_alignRight="@+id/gathring_time"
-                    android:layout_alignEnd="@+id/gathring_time" />
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

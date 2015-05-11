@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.facebook.Session;
@@ -30,24 +31,23 @@ import com.facebook.widget.LoginButton;
 import com.gathr.gathr.classes.MyGlobals;
 import com.gathr.gathr.classes.SidebarGenerator;
 
-public class Settings extends ActionBarActivity {
+public class Settings extends ActionBarActivityPlus {
 
     MyGlobals global = new MyGlobals(this);
     Context context = this;
 
-    //  private PendingIntent pendingIntent;
-    // private AlarmManager manager;
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setActionBar();
+        setActionBar("Settings");
         ProgressBar spinner;
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
-        // spinner.setVisibility(View.VISIBLE);
 
         LoginButton authButton = (LoginButton)findViewById(R.id.authButton);
         uiHelper = new UiLifecycleHelper(this, callback);
@@ -55,35 +55,20 @@ public class Settings extends ActionBarActivity {
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
-        //Intent notificationIntent = new Intent(this, NotificationReceiver.class);
-        //pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent,0);
+        SharedPreferences sharedPrefs = getSharedPreferences("AuthUser", MODE_PRIVATE);
+        ToggleButton toggle = (ToggleButton)findViewById(R.id.notificationsButton);
+        toggle.setChecked(sharedPrefs.getBoolean("notifications", true));
 
-        //getNotifications();
 
     }
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_action_settings);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view)
-    {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
-    /*public void getNotifications(){
+
+    public void getNotifications(){
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         int interval = 10000;
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
-        Toast.makeText(this, "WE GOT THIS SON", Toast.LENGTH_SHORT).show();
-    }*/
+        Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+    }
 
     public void onToggleClicked(View view) {
         // Is the toggle on?
@@ -91,14 +76,30 @@ public class Settings extends ActionBarActivity {
         SharedPreferences settings = this.getSharedPreferences("AuthUser", 0);
         SharedPreferences.Editor editor = settings.edit();
         if (on) {
+            Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent,0);
+            getNotifications();
+
             editor.putBoolean("notifications", true);
             editor.apply();
+
         } else {
             editor.putBoolean("notifications", false);
             editor.apply();
+            try {
+                Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+                pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent,0);
+                manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                int interval = 10000;
+                manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
+
+                manager.cancel(pendingIntent);
+            }catch(Exception e){
+                global = new MyGlobals(context);
+                global.errorHandler(e);
+            }
         }
     }
-
 
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
@@ -108,11 +109,6 @@ public class Settings extends ActionBarActivity {
 
                 SharedPreferences settings = context.getSharedPreferences("AuthUser", Context.MODE_PRIVATE);
                 settings.edit().clear().apply();
-
-                final Intent intent = getIntent();
-                PendingIntent pendingIntent = (PendingIntent) intent.getParcelableExtra("stopNotification");
-                AlarmManager manager= (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-                manager.cancel(pendingIntent);
 
                 global.tip("You are now logged out!");
 

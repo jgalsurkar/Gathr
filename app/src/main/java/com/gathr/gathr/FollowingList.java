@@ -29,13 +29,13 @@ import com.gathr.gathr.database.QueryDB;
 import org.json.JSONArray;
 
 
-public class FollowingList extends ActionBarActivity {
+public class FollowingList extends ActionBarActivityPlus {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_list);
-        setActionBar();
+        setActionBar("Following List");
         MyGlobals global = new MyGlobals();
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
@@ -51,22 +51,7 @@ public class FollowingList extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_following_list, menu);
         return true;
     }
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_following_list);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view)
-    {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
+
     public static class PlaceholderFragment extends ListFragment {
         static String[] friendNames;
         static String[]    images;

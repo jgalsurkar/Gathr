@@ -28,7 +28,7 @@ import com.gathr.gathr.database.QueryDB;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Profile extends ActionBarActivity {
+public class Profile extends ActionBarActivityPlus {
     public String userId = AuthUser.getUserId(this), interests = "", categoryId = "", results = "", inst, fb, tw;
     TextView past_events, followers, events_created, events_attended;
     Boolean following = false, blocking = false;
@@ -49,7 +49,7 @@ public class Profile extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        setActionBar();
+
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
@@ -67,32 +67,18 @@ public class Profile extends ActionBarActivity {
         }
     }
 
-    public void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_profile);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view){
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
-
     public void setProfileInfo(String r)
     {
         try {
-            TextView userNameView = (TextView) findViewById(R.id.user_name);
+           // TextView userNameView = (TextView) findViewById(R.id.user_name);
             ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
             profilePictureView.setCropped(true);
             TextView about_me = (TextView) findViewById(R.id.about_me);
             if(!r.contains("ERROR")) {
                 JSONArray json = new JSONArray(r);
                 JSONObject elem1 = json.getJSONObject(0);
-                userNameView.setText(elem1.getString("First_Name") + " " + elem1.getString("Last_Name"));
+                setActionBar(elem1.getString("First_Name") + " " + elem1.getString("Last_Name"));
+             //   userNameView.setText(elem1.getString("First_Name") + " " + elem1.getString("Last_Name"));
                 profilePictureView.setProfileId(elem1.getString("Facebook_Id"));
                 about_me.setText(elem1.getString("About_Me"));
 

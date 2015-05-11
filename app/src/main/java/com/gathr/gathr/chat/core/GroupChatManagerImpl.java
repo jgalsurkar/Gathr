@@ -55,7 +55,7 @@ public class GroupChatManagerImpl extends QBMessageListenerImpl<QBGroupChat> imp
                     public void run() {
                         callback.onSuccess();
 
-                        Toast.makeText(chatActivity, "Join successful", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(chatActivity, "Join successful", Toast.LENGTH_LONG).show();
                     }
                 });
                 Log.w("Chat", "Join successful");

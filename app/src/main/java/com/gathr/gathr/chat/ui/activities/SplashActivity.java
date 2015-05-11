@@ -33,7 +33,7 @@ public class SplashActivity extends Activity {
 
     private static final String APP_ID = "21154", AUTH_KEY = "YEJHvsAAaz74X98", AUTH_SECRET = "ZrOvZMWUQK9tNtw";
     final Context c = this;
-    final QBUser user = new QBUser(AuthUser.user_fname + AuthUser.getUserId(this),  "Gathr_" + AuthUser.getFBId(this));
+    final QBUser user = new QBUser(AuthUser.getLogin(this),  "Gathr_" + AuthUser.getFBId(this));
     private QBChatService chatService;
 
     class setupChat extends AsyncTask<String, Void, Boolean> {
@@ -124,7 +124,7 @@ public class SplashActivity extends Activity {
         // create QB user (locally)
         //user.setLogin(USER_LOGIN);
         //user.setPassword(USER_PASSWORD);
-        user.setFullName(AuthUser.user_fname + " " + AuthUser.user_lname);
+        user.setFullName(AuthUser.getFullName(this));
 
         setupChat x = new setupChat();
         x.execute();

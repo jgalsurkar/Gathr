@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:weightSum="1"
     android:focusableInTouchMode="true"
-    android:background="#ff50b4c8">
+    android:background="#fff">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp"
         android:textStyle="bold"
-        android:textColor="#ffe8e8e8"
+        android:textColor="@color/bg"
         android:textSize="100sp"
         android:typeface="sans" />
     <TextView
@@ -27,7 +27,7 @@
         android:text="Error! Not Connected to the Internet"
         android:id="@+id/textView3"
         android:textStyle="bold"
-        android:textColor="#ffe8e8e8"
+        android:textColor="@color/bg"
         android:textSize="30sp"
         android:typeface="sans"
         android:layout_alignParentLeft="true"
@@ -39,7 +39,7 @@
     <Button
         android:id="@+id/tryAgainButton"
         android:onClick="tryAgain"
-        android:text="Please Try Again"
+        android:text="Try Again"
         android:textAlignment="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

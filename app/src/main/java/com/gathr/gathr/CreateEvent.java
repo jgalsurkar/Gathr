@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.gathr.gathr.classes.AuthUser;
+import com.gathr.gathr.classes.Event;
 import com.gathr.gathr.classes.GCoder;
 import com.gathr.gathr.classes.MyGlobals;
 import com.gathr.gathr.classes.SidebarGenerator;
@@ -33,7 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 
-public class CreateEvent extends ActionBarActivity {
+public class CreateEvent extends ActionBarActivityPlus {
     MyGlobals global = new MyGlobals(this);
     QueryDB DBconn = new QueryDB(this);
     String date = "CURDATE() + INTERVAL 1 DAY"; //Default date if they do not select anything
@@ -46,9 +47,9 @@ public class CreateEvent extends ActionBarActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        setActionBar();
+        setActionBar("Create Gathring");
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
-        ((ImageButton)(findViewById(R.id.select_category))).setBackgroundResource(R.drawable.create_contact);
+       // ((ImageButton)(findViewById(R.id.select_category))).setBackgroundResource(R.drawable.create_contact);
         my_interests = (EditText) findViewById(R.id.gathring_category);
         Intent i = getIntent();
         String prefillJson = i.getStringExtra("prefill");
@@ -56,45 +57,31 @@ public class CreateEvent extends ActionBarActivity {
             try {
                 update = true;
 
-                JSONArray json = new JSONArray(prefillJson);
-                eventId = json.getJSONObject(0).getString("Id").trim();
-                final String eventName = json.getJSONObject(0).getString("Name");
+                Event e = new Event(prefillJson);
+               // JSONArray json = new JSONArray(prefillJson);
+                eventId = e.id;//json.getJSONObject(0).getString("Id").trim();
+                /*final String eventName = json.getJSONObject(0).getString("Name");
                 final String description = json.getJSONObject(0).getString("Desc");
                 final String address = json.getJSONObject(0).getString("Address");
                 final String city = json.getJSONObject(0).getString("City");
                 final String state = json.getJSONObject(0).getString("State");
                 final String time = json.getJSONObject(0).getString("Time");
                 final String capacity = json.getJSONObject(0).getString("Capacity");
-
-                ((TextView) findViewById(R.id.gathring_name)).setText(eventName);
-                ((TextView) findViewById(R.id.gathring_description)).setText(description);
-                ((TextView) findViewById(R.id.gathring_address)).setText(address);
-                ((TextView) findViewById(R.id.gathring_city)).setText(city);
-                ((TextView) findViewById(R.id.gathring_state)).setText(state);
-                ((TextView) findViewById(R.id.gathring_limit)).setText(capacity);
-                ((TextView) findViewById(R.id.gathring_time)).setText(global.normalTime(time));
+*/
+                ((TextView) findViewById(R.id.gathring_name)).setText(e.name);
+                ((TextView) findViewById(R.id.gathring_description)).setText(e.description);
+                ((TextView) findViewById(R.id.gathring_address)).setText(e.address);
+                ((TextView) findViewById(R.id.gathring_city)).setText(e.city);
+                ((TextView) findViewById(R.id.gathring_state)).setText(e.state);
+                ((TextView) findViewById(R.id.gathring_limit)).setText(e.capacity);
+                ((TextView) findViewById(R.id.gathring_time)).setText(global.normalTime(e.time));
 
             }catch(Exception e){
                 global.errorHandler(e);
             }
         }
     }
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_create_event);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view)
-    {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
+
     public void viewGathring(View view){
         try {
             //Error Checking

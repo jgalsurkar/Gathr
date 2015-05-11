@@ -2,7 +2,7 @@
  Title : MainFragment.java
  Author : Gathr Team
  Purpose : Ensures successful login and proper information is pulled from facebook during initial
-           "account creation"
+ "account creation"
  *************************************************************************************************/
 
 package com.gathr.gathr;
@@ -31,8 +31,6 @@ import java.util.Arrays;
 
 public class MainFragment extends Fragment{
     String id;
-    private PendingIntent pendingIntent;
-    private AlarmManager manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
@@ -88,25 +86,10 @@ public class MainFragment extends Fragment{
 
         });
 
-        Intent notificationIntent = new Intent(getActivity(), NotificationReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent,0);
-        //getNotifications();
-
         Session.getActiveSession().getPermissions();
         return view;
     }
 
-    public void getNotifications(){
-        manager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-        int interval = 10000;
-
-        manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
-        Toast.makeText(getActivity(), "WE GOT THIS SON", Toast.LENGTH_SHORT).show();
-
-        Intent i = new Intent(getActivity(), Settings.class);
-        i.putExtra("stopNotification", pendingIntent);
-        startActivityForResult(i, 0);
-    }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {

@@ -2,7 +2,6 @@ package com.gathr.gathr;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.content.Context;
@@ -10,12 +9,14 @@ import android.content.Context;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
+import com.gathr.gathr.classes.AuthUser;
 import com.gathr.gathr.classes.Event;
 import com.gathr.gathr.classes.GCoder;
 import com.gathr.gathr.classes.MyGlobals;
 import com.gathr.gathr.classes.SidebarGenerator;
 import com.gathr.gathr.database.DatabaseCallback;
 import com.gathr.gathr.database.QueryDB;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -43,13 +44,14 @@ import java.util.HashMap;
 import org.json.JSONArray;
 
 
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnMarkerClickListener {
 
     //Class Objects//
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager locationManager;
     private LocationListener locationListener;
     private HashMap<Integer, Event> allEvents = new HashMap<Integer, Event>();
+    private HashMap<String, Marker> allMarkers = new HashMap<String, Marker>();
     private QueryDB database= new QueryDB(this);
     private GCoder geocoder = new GCoder(this);
     MyGlobals global = new MyGlobals(this);
@@ -58,13 +60,11 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     //Auto-Population Settings//
     private boolean autoRepop = true;
     private double camMilesToRepop = 5.0;
-    private double camDistToRePop = milesToLat(5.0);  //5 miles to repopulate
+    private double camDistToRePop = milesToLat(camMilesToRepop);  //5 miles to repopulate
     private LatLng locationAlpha;
     private boolean startAtUserLocation = false;
 
     private boolean firstRun = true;
-
-
 
     private final GoogleMap.OnCameraChangeListener mOnCameraChangeListener =
             new GoogleMap.OnCameraChangeListener() {
@@ -82,27 +82,45 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                         if (mMap != null) {
                             //Set camera to user location if location provider available
 
-                            String thisProvider;
-                            Location location;
-                            List<String> allProviders = locationManager.getAllProviders();
-                            for(int n = 0; n < allProviders.size(); n++){
-                                thisProvider = allProviders.get(n);
-                                location = locationManager.getLastKnownLocation(thisProvider);
-                                if(location != null){
-                                    LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
-                                    startAtUserLocation = true;
-                                    break;
-                                }
-                            }
+                            Intent i = getIntent();
+                            if(i.hasExtra("event_json")){
+                                Event thisEvent = new Event(i.getStringExtra("event_json"));
+                                int thisId = Integer.parseInt(thisEvent.id);
+                                if(allMarkers.containsKey(thisId)){
+                                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
+                                } else {
+                                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
+                                    int markerHash = newMarker.hashCode();
+                                    allEvents.put(markerHash, thisEvent);
+                                    allMarkers.put(thisEvent.id, newMarker);
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
 
-                            if (startAtUserLocation) {
-                                locationAlpha = mMap.getCameraPosition().target;
-                                queryLocationEvents(locationAlpha, camMilesToRepop, true);
+                                }
                             } else {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
-                                locationAlpha = mMap.getCameraPosition().target;
-                                queryLocationEvents(locationAlpha, camMilesToRepop, true);
+
+                                String thisProvider;
+                                Location location;
+                                List<String> allProviders = locationManager.getAllProviders();
+                                for (int n = 0; n < allProviders.size(); n++) {
+                                    thisProvider = allProviders.get(n);
+                                    location = locationManager.getLastKnownLocation(thisProvider);
+                                    if (location != null) {
+                                        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+                                        startAtUserLocation = true;
+                                        break;
+                                    }
+                                }
+
+                                if (startAtUserLocation) {
+                                    locationAlpha = mMap.getCameraPosition().target;
+                                    queryLocationEvents(locationAlpha, camMilesToRepop, true);
+                                } else {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
+                                    locationAlpha = mMap.getCameraPosition().target;
+                                    queryLocationEvents(locationAlpha, camMilesToRepop, true);
+                                }
                             }
                             firstRun = false;
                         }
@@ -122,23 +140,28 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);   //Every app
         setContentView(R.layout.activity_maps);  //Sets up map
-        // mMap.setOnMapLoadedCallback(this);
         global.checkInternet();
+
+        setActionBar("Gathr");
+        //Set up user location services
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
+        locationListener = new MyLocationListener();   //Location listener listens to changes in location
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
 
         //Query database
         try {
             new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
-            //Set up user location services
-            locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
-            locationListener = new MyLocationListener();   //Location listener listens to changes in location
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
+            setUpMapIfNeeded();
 
             //Set up map
-            setUpMapIfNeeded();
+
         }catch(Exception e){
             global.errorHandler(e);
         }
+
+
+
     }
 
     @Override
@@ -149,7 +172,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+      //  mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
         EventMsg(allEvents.get(marker.hashCode()), this);
         return true;
     }
@@ -202,7 +225,18 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         }
         return search;
     }
+    /*
+        public void searchWithFilters(View v){
+          //  MsgBox("Hi","Hi");
 
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Search Events");
+            alert.setMessage("Enter Your Search Preferences");
+            alert.setView(R.layout.search_layout);
+            alert.show();
+
+        }
+    */
     private String msgBoxInput(String Title, String Message){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext= new EditText(this);
@@ -249,7 +283,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                         Intent i = new Intent(c, ViewGathring.class);
                         i.putExtra("eventId", (event.id));
                         startActivity(i);
-                        finish();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -280,18 +313,24 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     //Event Search Functions//
 
-    public void searchEventsAtInput(View v){
-        EditText mEdit = (EditText)findViewById(R.id.et_location);
-        String input = mEdit.getText().toString();
-        if(input.isEmpty())
+    public void goToSearch(View v){
+        Intent i = new Intent(this, SearchEvents.class);
+        startActivityForResult(i, 0);
+    }
+
+    private void makeSearch(String location, String categories, String time){
+        if(location.isEmpty())
             return;
-        LatLng searchLatLng = geocoder.addressToCoor(input);
+        QueryDB DBConn = new QueryDB(this, "storeSearch.php");
+        DBConn.executeQuery("("+ AuthUser.getUserId(this) +", '"+ DBConn.escapeString(location) +"', TIME(NOW()), DATE(NOW())) CATEGORIES " + categories); // replace 1, 5, 6, 7 with category names
+        LatLng searchLatLng = geocoder.addressToCoor(location);
         if(searchLatLng.latitude != 0.0 & searchLatLng.longitude != 0.0) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 15));
-            queryLocationEvents(mMap.getCameraPosition().target, 10, true);
+            queryLocationEvents(mMap.getCameraPosition().target, camMilesToRepop, true);
         }
         else
-            MsgBox("Sorry", "We couldn't find " + input + ". Try searching by address, city, zip code, or landmark");
+            MsgBox("Sorry", "We couldn't find " + location + ". Try searching by address, city, zip code, or landmark");
+
     }
 
     private void queryLocationEvents(LatLng target, double miles,final boolean populate){
@@ -324,19 +363,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
                         @Override
                         public void run() {
                             raw_json = r;
-                            if(!r.contains("ERROR") && populate){
-                                if(allEvents.isEmpty())
-                                    allEvents = populateEvents();
-                                else
-                                    updateEvents();
-                            }
+                            if(!r.contains("ERROR") && populate)
+                                populateEvents();
                         }
                     });
                 }
             }
             database.executeQuery("SELECT * FROM EVENTS WHERE " + areaRestriction + " AND Population < Capacity AND Status = 'OPEN' AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))", new getEvents());
-
-
         }  catch(Exception e) {
             Log.i("Error", "Failed to populate events at search location");
             global.errorHandler(e);
@@ -345,95 +378,77 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
 
     //Event Population Functions//
 
-    private void updateEvents(){
+    private void populateEvents(){
+
         try{
             JSONArray json = new JSONArray(raw_json);
 
-            //String event_name, event_desc, event_time, event_date;
-            int event_pop, event_cap, markerHash;
-            //double event_lat, event_lon;
+            int markerHash;
             Event thisEvent;
             Marker thisMarker;
 
-            for (int i=0;i<json.length();i++)
-            {
-                /*event_name = json.getJSONObject(i).getString("Name");
-                event_desc = json.getJSONObject(i).getString("Desc");
-                event_pop = Integer.parseInt(json.getJSONObject(i).getString("Population"));
-                event_cap = Integer.parseInt(json.getJSONObject(i).getString("Capacity"));
-                event_date = json.getJSONObject(i).getString("Date");
-                event_time = json.getJSONObject(i).getString("Time");
-                event_lat = Double.parseDouble(json.getJSONObject(i).getString("Latitude"));
-                event_lon = Double.parseDouble(json.getJSONObject(i).getString("Longitude"));
-
-                thisEvent = new Event(event_name, event_desc, event_cap, event_pop, event_time, event_lat, event_lon);
-                thisEvent.date = event_date;
-                thisEvent.id = json.getJSONObject(i).getString("Id");
-                */
+            for (int i=0;i<json.length();i++){
                 thisEvent = new Event(json.getJSONObject(i));
+                if(allMarkers.containsKey(thisEvent.id))
+                    continue;
                 thisMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
                 markerHash = thisMarker.hashCode();
                 allEvents.put(markerHash, thisEvent);
-            }
-        }catch(Exception e){
-            if(e.getMessage().equals("NO RESULTS")) {
-                Log.i("Error", e.getMessage());
-                return;
-            }
-            else {
-                Log.i("Error", "Failed to update events");
-                global.errorHandler(e);
-            }
-        }
-    }
-
-    private HashMap<Integer, Event> populateEvents( ){
-
-        HashMap<Integer, Event> result = new HashMap<Integer, Event>();
-        try{
-            //get json parser
-            //use to populate events
-            //Log.i("Results2", raw_json);
-            //String raw_json = database.getResults();
-            JSONArray json = new JSONArray(raw_json);
-
-            //String event_name, event_desc, event_time, event_date;
-            int event_pop, event_cap, markerHash;
-            //double event_lat, event_lon;
-            Event thisEvent;
-            Marker thisMarker;
-
-            for (int i=0;i<json.length();i++)
-            {
-               /* event_name = json.getJSONObject(i).getString("Name");
-                event_desc = json.getJSONObject(i).getString("Desc");
-                event_pop = Integer.parseInt(json.getJSONObject(i).getString("Population"));
-                event_cap = Integer.parseInt(json.getJSONObject(i).getString("Capacity"));
-                event_date = json.getJSONObject(i).getString("Date");
-                event_time = json.getJSONObject(i).getString("Time");
-                event_lat = Double.parseDouble(json.getJSONObject(i).getString("Latitude"));
-                event_lon = Double.parseDouble(json.getJSONObject(i).getString("Longitude"));
-
-                thisEvent = new Event(event_name, event_desc, event_cap, event_pop, event_time, event_lat, event_lon);
-                thisEvent.date = event_date;
-                thisEvent.id = json.getJSONObject(i).getString("Id");
-                */
-                thisEvent = new Event(json.getJSONObject(i));
-                thisMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
-                markerHash = thisMarker.hashCode();
-                result.put(markerHash, thisEvent);
+                allMarkers.put(thisEvent.id, thisMarker);
             }
         }catch(Exception e){
             Log.i("Error", "Failed to populate events");
             global.errorHandler(e);
         }
-        return result;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 0) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                //If we get to this page from inside the app (they should be passing EventId)
+                String category = data.getStringExtra("category");
+                String categoryId = data.getStringExtra("categoryId");
+                String location = data.getStringExtra("location");
+                String time = data.getStringExtra("time");
+                makeSearch(location, time, category);
+
+
+     /*
+                Intent intent = getIntent();
+                Bundle extras = intent.getExtras();
+                if(extras != null) {
+                    if(extras.containsKey("eventId")) {         //For intent to go to map location
+                        String eventId = (String) extras.get("eventId");
+                        Marker eventMarker = allMarkers.get(eventId);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventMarker.getPosition(), 15));
+                    }
+                    else {                                     //For intent to make search
+                        String time = (String) extras.get("time");
+                        String location = (String) extras.get("location");
+                        String categories = (String) extras.get("categories");
+                        makeSearch(location, categories, time);
+                    }
+                }
+
+                /*
+                category = data.getStringExtra("category");
+                categoryId = data.getStringExtra("categoryId");
+                my_interests.setText(category);
+                */
+            }
+        }
     }
 
     //Initial Map Setup Functions//
 
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
+
+
+
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
@@ -441,7 +456,24 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
             // Check if we were successful in obtaining the map.
             if (mMap != null)
                 setUpMap();
-        }
+        }/* else {
+            Intent i = getIntent();
+            if(i.hasExtra("event_json")){
+                Event thisEvent = new Event(i.getStringExtra("event_json"));
+                int thisId = Integer.parseInt(thisEvent.id);
+                if(allMarkers.containsKey(thisId)){
+                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
+                } else {
+                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
+                    int markerHash = newMarker.hashCode();
+                    allEvents.put(markerHash, thisEvent);
+                    allMarkers.put(thisEvent.id, newMarker);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
+
+                }
+            }
+        }*/
     }
 
     private void setUpMap() {
@@ -453,40 +485,5 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMarker
         mMap.setOnCameraChangeListener(mOnCameraChangeListener);
 
     }
-/*
-    @Override
-    public void onMapLoaded() {
-        if (mMap != null) {
-            //Set camera to user location if location provider available
-            String thisProvider;
-            Location location;
-
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location != null){
-                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
-                startAtUserLocation = true;
-            }
-        /* //comment paragraph begins here
-        List<String> allProviders = locationManager.getAllProviders();
-        for(int n = 0; n < allProviders.size(); n++){
-            thisProvider = allProviders.get(n);
-            location = locationManager.getLastKnownLocation(thisProvider);
-            if(location != null){
-                LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng,15));
-                startAtUserLocation = true;
-                break;
-            }
-        }
-        //comment paragraph ends here
-            if(startAtUserLocation){
-                locationAlpha = mMap.getCameraPosition().target;
-                queryLocationEvents(mMap.getCameraPosition().target, camMilesToRepop, true);
-            } else
-               queryLocationEvents(askUserLocation(), camMilesToRepop, true);
-        }
-    }
-*/
 
 }

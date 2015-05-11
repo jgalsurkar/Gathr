@@ -38,7 +38,7 @@ import com.gathr.gathr.classes.SidebarGenerator;
 import com.gathr.gathr.database.DatabaseCallback;
 import com.gathr.gathr.database.QueryDB;
 
-public class ViewGathring extends ActionBarActivity {
+public class ViewGathring extends ActionBarActivityPlus {
 
 private Context c = this;
     private String[] attendees, attendeeIds;
@@ -51,7 +51,7 @@ private Context c = this;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
-        setActionBar();
+        setActionBar("View Gathring");
 
         final HorizontalListView listview = (HorizontalListView) findViewById(R.id.listview);
 
@@ -207,22 +207,7 @@ private Context c = this;
         }
     }
 
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_view_gathring);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view)
-    {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
+
     public void joinOrLeave(View view){
         try {
             TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
@@ -252,7 +237,10 @@ private Context c = this;
     }
 
     public void showOnMap(View view){
+        Intent i = new Intent(this, MapsActivity.class);
+        i.putExtra("event_json", event_json);
 
+        startActivity(i);
     }
 
     @Override

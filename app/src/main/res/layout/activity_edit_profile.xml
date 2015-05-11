@@ -12,34 +12,6 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         tools:context="com.gathr.gathr.EditProfile">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearance"
-            android:id="@+id/user_name"
-            android:textSize="10pt"
-            android:textAlignment="inherit"
-            android:fontFamily="Times New Roman"
-            android:textStyle = "bold"
-            android:gravity="center"
-
-            />
-
-
-        <com.facebook.widget.ProfilePictureView
-            android:id="@+id/selection_profile_pic"
-            android:layout_width="117dp"
-            android:layout_height="wrap_content"
-            android:layoutMode="clipBounds"
-            android:textAlignment="inherit"
-            android:layout_below="@+id/user_name"/>
-        <Space
-            android:layout_width = "fill_parent"
-            android:layout_height="3pt"
-            android:id="@+id/space2"
-            android:layout_above="@+id/about_me_label"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +20,6 @@
             android:id="@+id/about_me_label"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/selection_profile_pic"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="@color/bg"/>
@@ -57,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="40pt"
             android:id="@+id/about_me"
-            android:fontFamily="Times New Roman"
             android:hint = "Tell us more about yourself"
             android:textSize="9pt"
             android:layout_alignParentRight="true"
@@ -69,7 +39,7 @@
 
         <Space
             android:layout_width = "fill_parent"
-            android:layout_height="3pt"
+            android:layout_height="13pt"
             android:id="@+id/space8"
             android:layout_below="@+id/about_me"
             />
@@ -89,19 +59,24 @@
             android:layout_height="wrap_content"
             android:id="@+id/add_category"
             android:clickable="true"
+
             android:linksClickable="true"
             android:onClick="openCategory"
             android:layout_below="@+id/my_interests_label"
             android:layout_above="@+id/space9"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@color/bg"/>
+            android:background="#FFFFFF"
+            android:maxHeight="36dp"
+            android:maxWidth="36dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/create_contact" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/my_interests"
-            android:textSize="10pt"
+            android:textSize="9pt"
             android:layout_below="@+id/my_interests_label"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -111,7 +86,7 @@
 
         <Space
             android:layout_width = "fill_parent"
-            android:layout_height="3pt"
+            android:layout_height="13pt"
             android:id="@+id/space9"
             android:layout_below="@+id/my_interests"
             />
@@ -135,6 +110,12 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             />
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="13pt"
+            android:id="@+id/space12"
+            android:layout_below="@+id/twitter"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -143,7 +124,7 @@
             android:text="Instagram Account"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/twitter"
+            android:layout_below="@+id/space12"
             android:textColor="@color/bg"/>
 
         <EditText
@@ -155,6 +136,14 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"/>
+
+        <Space
+            android:layout_width = "fill_parent"
+            android:layout_height="13pt"
+            android:id="@+id/space13"
+            android:layout_below="@+id/instagram"
+            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -162,7 +151,7 @@
             android:text="Facebook Account"
             android:textSize="10pt"
             android:textStyle="bold"
-            android:layout_below="@+id/instagram"
+            android:layout_below="@+id/space13"
             android:textColor="@color/bg"/>
         <EditText
             android:layout_width="wrap_content"
@@ -182,14 +171,12 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:layout_above="@+id/space2"
-            android:layout_toRightOf="@+id/selection_profile_pic"
             android:clickable="true"
             android:linksClickable="true"
             android:background="@drawable/mybutton"
             android:onClick="saveChanges"
-            android:layout_alignRight="@+id/my_interests"
-            android:layout_alignEnd="@+id/my_interests" />
+            android:layout_below="@+id/facebook"
+            android:layout_centerHorizontal="true" />
 
 
 

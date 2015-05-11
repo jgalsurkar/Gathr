@@ -15,6 +15,7 @@
     <string name="title_activity_gathrings_list">Gathring List</string>
     <string name="title_activity_friend_list">Friend List</string>
     <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_search_events">Search Gathring</string>
 
     <string name="title_activity_connection_error">ConnectionError</string>
     <string name="title_activity_settings">Settings</string>
@@ -22,4 +23,7 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>

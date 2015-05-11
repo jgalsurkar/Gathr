@@ -24,9 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gathr.gathr.classes.AuthUser;
 import com.gathr.gathr.classes.MyGlobals;
 import com.gathr.gathr.classes.SidebarGenerator;
 import com.gathr.gathr.ViewGathring;
+import com.gathr.gathr.ActionBarActivityPlus;
 import com.gathr.gathr.chat.core.ChatManager;
 import com.gathr.gathr.chat.core.GroupChatManagerImpl;
 import com.gathr.gathr.chat.ui.adapters.ChatAdapter;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ChatActivity extends ActionBarActivity {
+public class ChatActivity extends ActionBarActivityPlus {
 
     private static final String TAG = ChatActivity.class.getSimpleName();
 
@@ -64,21 +66,28 @@ public class ChatActivity extends ActionBarActivity {
     private ChatAdapter adapter;
     private QBDialog dialog;
 
+    private Context c = this;
+
     String eventId;
     private ArrayList<QBChatMessage> history;
 
+    /*
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
+*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        MyGlobals global = new MyGlobals(this);
+
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
+
+        setActionBar("Chat Room");
+
         initViews();
     }
 
@@ -147,6 +156,7 @@ public class ChatActivity extends ActionBarActivity {
                 QBChatMessage chatMessage = new QBChatMessage();
                 chatMessage.setBody(messageText);
                 chatMessage.setProperty(PROPERTY_SAVE_TO_HISTORY, "1");
+                chatMessage.setProperty("Sender_FullName", AuthUser.getFullName(c));
                 chatMessage.setDateSent(new Date().getTime() / 1000);
 
                 try {
@@ -228,22 +238,6 @@ public class ChatActivity extends ActionBarActivity {
 
     public static enum Mode {PRIVATE, GROUP}
 
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        TextView title= (TextView)mActionBarView.findViewById(R.id.title);
-        title.setText(R.string.title_activity_view_gathring);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
-    public void openSideBar(View view)
-    {
-        DrawerLayout sidebar = (DrawerLayout) findViewById(R.id.drawer_layout);
-        sidebar.openDrawer(Gravity.LEFT);
-    }
 
 
 }
