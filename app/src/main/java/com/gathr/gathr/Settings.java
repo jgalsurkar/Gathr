@@ -64,7 +64,7 @@ public class Settings extends ActionBarActivityPlus {
 
     public void getNotifications(){
         manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        int interval = 10000;
+        int interval = 600000; //10 minutes
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),interval,pendingIntent);
         Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();

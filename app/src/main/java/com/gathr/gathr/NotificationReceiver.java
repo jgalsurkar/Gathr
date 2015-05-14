@@ -24,6 +24,7 @@ import org.json.JSONArray;
 
 public class NotificationReceiver extends BroadcastReceiver {
     private MyGlobals global;
+    private static int counter = 0;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -31,7 +32,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         class getEvent implements DatabaseCallback {
             public void onTaskCompleted(String results) {
                 if (results.contains("ERROR")) {
-                    PushNotification(199, "Gathring For You!", "Costume Party", "05-11-2015 at 3:30 PM", ViewGathring.class, context);
+                   // PushNotification(199, "Gathring For You!", "Costume Party", "05-11-2015 at 3:30 PM", ViewGathring.class, context);
                 } else {
                     try {
                         JSONArray json = new JSONArray(results);
@@ -51,7 +52,15 @@ public class NotificationReceiver extends BroadcastReceiver {
             }
         }
         try {
-            DBconn.executeQuery("SELECT Id, Name, Date, Time, COUNT(My_Interests) AS Weight FROM (SELECT EVENTS.Id, EVENTS.Name, EVENTS.Date, EVENTS.Time , EC.Category_Id AS Event_Category FROM EVENTS LEFT OUTER JOIN (EVENT_CATEGORIES AS EC, JOINED_EVENTS AS JE) ON (EC.Event_Id = Id = JE.Event_Id) WHERE User_Id <> 7 AND Capacity > Population AND Status = 'OPEN') AS J1 JOIN ((SELECT Category_Id AS My_Interests FROM USERS JOIN USER_INTERESTS ON User_Id = Id WHERE Id = 7) UNION (SELECT Category_Id AS My_Past_Interests FROM JOINED_EVENTS AS JE2 JOIN EVENT_CATEGORIES AS EC2 ON EC2.Event_Id = JE2.Event_Id WHERE User_Id = 7) UNION (SELECT Category_Id AS My_Searched_Interests FROM SEARCHES JOIN SEARCH_CATEGORY ON Id = Search_Id WHERE User_Id = 7)) AS J2 WHERE My_Interests = Event_Category AND (Date > DATE(NOW()) OR (Date = DATE(NOW()) AND Time > TIME(NOW()))) GROUP BY Id ORDER BY Weight DESC, Date DESC, Time ASC LIMIT 1",new getEvent());
+            if(counter % 72 == 0)
+                DBconn.executeQuery("SELECT Id, Name, Date, Time, COUNT(My_Interests) AS Weight FROM (SELECT EVENTS.Id, EVENTS.Name, EVENTS.Date, EVENTS.Time , EC.Category_Id AS Event_Category FROM EVENTS LEFT OUTER JOIN (EVENT_CATEGORIES AS EC, JOINED_EVENTS AS JE) ON (EC.Event_Id = Id = JE.Event_Id) WHERE User_Id <> 7 AND Capacity > Population AND Status = 'OPEN') AS J1 JOIN ((SELECT Category_Id AS My_Interests FROM USERS JOIN USER_INTERESTS ON User_Id = Id WHERE Id = 7) UNION (SELECT Category_Id AS My_Past_Interests FROM JOINED_EVENTS AS JE2 JOIN EVENT_CATEGORIES AS EC2 ON EC2.Event_Id = JE2.Event_Id WHERE User_Id = 7) UNION (SELECT Category_Id AS My_Searched_Interests FROM SEARCHES JOIN SEARCH_CATEGORY ON Id = Search_Id WHERE User_Id = 7)) AS J2 WHERE My_Interests = Event_Category AND (Date > DATE(NOW()) OR (Date = DATE(NOW()) AND Time > TIME(NOW()))) GROUP BY Id ORDER BY Weight DESC, Date DESC, Time ASC LIMIT 1",new getEvent());
+            if(counter % 3 == 0){
+
+            }
+
+            counter += 600000;
+
+
 
         } catch (Exception e) {
             global = new MyGlobals(context);
