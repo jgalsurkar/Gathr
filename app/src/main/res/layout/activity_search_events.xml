@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -11,12 +17,20 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/et_location"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
     android:hint="Enter Location"
     android:textStyle="bold"
     android:textColor="#000000"
-    android:layout_marginTop="10dp"/>
+    android:layout_alignParentTop="true"
+    android:layout_alignLeft="@+id/et_categories"
+    android:layout_alignStart="@+id/et_categories" />
+
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="fill_parent"
+        android:layout_height="35pt"
+        android:layout_below="@+id/et_location"
+        android:layout_alignRight="@+id/btn_categories"
+        android:layout_alignEnd="@+id/btn_categories" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -25,12 +39,10 @@
         android:hint="Categories"
         android:editable="false"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/et_location"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/btn_categories"
-        android:layout_toLeftOf="@+id/btn_categories" />
+        android:layout_toLeftOf="@+id/btn_categories"
+        android:layout_below="@+id/space2"
+        android:layout_alignLeft="@+id/btn_search"
+        android:layout_alignStart="@+id/btn_search" />
     <ImageButton
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -44,23 +56,17 @@
         android:maxWidth="36dp"
         android:scaleType="fitCenter"
         android:src="@drawable/create_contact"
-        android:layout_alignTop="@+id/et_categories"
-        android:layout_alignRight="@+id/et_location"
-        android:layout_alignEnd="@+id/et_location" />
-<Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Change Time"
-    android:id="@+id/btn_timefilter"
-    android:onClick="getTimeFilter"
-    android:background="@drawable/mybutton"
-    android:textColor="#FFFFFF"
-    android:textAllCaps="false"
-    android:layout_alignTop="@+id/vw_time"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_toLeftOf="@+id/vw_time"
-    android:layout_toStartOf="@+id/vw_time" />
+        android:layout_alignBottom="@+id/et_categories"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Space
+        android:id="@+id/space3"
+        android:layout_width="fill_parent"
+        android:layout_height="20pt"
+        android:layout_below="@+id/et_categories" />
+
+
 
 <Button
     android:layout_width="fill_parent"
@@ -84,11 +90,32 @@
     android:text="12:00 PM"
     android:autoText="false"
     android:textColor="#ff50b4c8"
-    android:layout_marginLeft="10dp"
-    android:layout_below="@+id/btn_categories"
-    android:layout_centerHorizontal="true" />
-
-
-
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:layout_above="@+id/vw_time"
+    android:layout_alignLeft="@+id/vw_time"
+    android:layout_alignStart="@+id/vw_time"/>
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Change Time"
+        android:id="@+id/btn_timefilter"
+        android:onClick="getTimeFilter"
+        android:background="@drawable/mybutton"
+        android:textColor="#FFFFFF"
+        android:textAllCaps="false"
+        android:layout_below="@+id/vw_time"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
+<ListView
+android:id="@+id/left_drawer"
+android:layout_width="240dp"
+android:layout_height="match_parent"
+android:layout_gravity="start"
+android:background="#fff"
+android:choiceMode="singleChoice"
+android:divider="@android:color/transparent"
+android:dividerHeight="0dp"
+    />
+    </android.support.v4.widget.DrawerLayout>

@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.View;
@@ -44,7 +45,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view_multiple_selection);
-        setActionBar();
+        setActionBar(R.string.title_activity_list_view_multiple_selection);
         listView = (ListView) findViewById(R.id.list);
         button = (Button) findViewById(R.id.testbutton);
         final Context c = this;
@@ -58,7 +59,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
                             from = i.getStringExtra("from");
                             String[] selectedCategoryId;
                             String userCategoryId = i.getStringExtra("categoryId");
-
+                            Log.i("Results:", from +" "+userCategoryId);
                             if (userCategoryId != null) {
                                 selectedCategoryId = userCategoryId.split(",");
                             }else{
@@ -99,7 +100,7 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
 
     }
 
-    public void setActionBar()
+    public void setActionBar(int id)
     {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
@@ -137,7 +138,9 @@ public class ListViewMultipleSelectionActivity extends ActionBarActivity {
             intent= new Intent(getApplicationContext(),EditProfile.class );
         else if(from.equals("event"))
             intent= new Intent(getApplicationContext(),CreateEvent.class );
-        else  intent= new Intent(getApplicationContext(),MapsActivity.class );
+        else
+            intent= new Intent(getApplicationContext(),SearchEvents.class );
+
         intent.putExtra("categoryId",checkedId);
         intent.putExtra("category",output);
         // start the ResultActivity

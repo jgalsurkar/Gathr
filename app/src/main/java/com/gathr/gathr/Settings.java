@@ -44,7 +44,7 @@ public class Settings extends ActionBarActivityPlus {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setActionBar("Settings");
+        setActionBar(R.string.title_action_settings);
         ProgressBar spinner;
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);

@@ -142,7 +142,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         setContentView(R.layout.activity_maps);  //Sets up map
         global.checkInternet();
 
-        setActionBar("Gathr");
+        setActionBar(R.string.app_name);
         //Set up user location services
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
         locationListener = new MyLocationListener();   //Location listener listens to changes in location

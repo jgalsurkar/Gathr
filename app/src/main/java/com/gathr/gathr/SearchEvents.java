@@ -2,25 +2,32 @@ package com.gathr.gathr;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gathr.gathr.classes.SidebarGenerator;
 
 
 public class SearchEvents extends ActionBarActivityPlus {
     public String category, categoryId;
+    EditText my_interests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBar("Search Events");
-        hideSidebarButton();
+        setActionBar(R.string.title_activity_search_events);
         setContentView(R.layout.activity_search_events);
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
+        my_interests = (EditText) findViewById(R.id.et_categories);
+        Intent i = getIntent();
     }
 
 
@@ -31,7 +38,7 @@ public class SearchEvents extends ActionBarActivityPlus {
 
     public void openCategory(View v){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
-        i.putExtra("from","event");
+        i.putExtra("from","search");
         i.putExtra("categoryId", categoryId);
         startActivityForResult(i, 0);
     }
@@ -44,6 +51,7 @@ public class SearchEvents extends ActionBarActivityPlus {
             if (resultCode == RESULT_OK) {
                 category = data.getStringExtra("category");
                 categoryId = data.getStringExtra("categoryId");
+                my_interests.setText(category);
             }
         }
     }

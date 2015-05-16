@@ -236,7 +236,8 @@
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="20dp"
-                    android:layout_marginRight="10pt" />
+                    android:layout_marginRight="10pt"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 

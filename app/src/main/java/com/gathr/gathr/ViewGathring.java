@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.json.JSONArray;
@@ -51,7 +52,7 @@ private Context c = this;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
-        setActionBar("View Gathring");
+        setActionBar(R.string.title_activity_view_gathring);
 
         final HorizontalListView listview = (HorizontalListView) findViewById(R.id.listview);
 
@@ -116,6 +117,7 @@ private Context c = this;
                         event_json = results;
                         event = new Event(results);
                         eventOrganizer = event.event_organizer;
+
                         if (event.status.equals("CLOSED")) {
                             cancelled = true;
                         }
@@ -148,6 +150,8 @@ private Context c = this;
                                                 public void run() {
                                                     TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
                                                     buttonText.setText("Join");
+                                                    if (event.pop.equals(event.capacity))
+                                                        ((Button)findViewById(R.id.join_leave_button)).setVisibility(View.INVISIBLE);
                                                     partOf = false;
                                                 }
                                             });
@@ -158,6 +162,7 @@ private Context c = this;
                                                 public void run() {
                                                     TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
                                                     buttonText.setText("Leave");
+                                                    ((Button)findViewById(R.id.joinChat)).setVisibility(View.VISIBLE);
                                                     partOf = true;
                                                 }
                                             });
@@ -174,6 +179,7 @@ private Context c = this;
                                 public void run() {
                                     TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
                                     buttonText.setVisibility(View.GONE);
+                                    ((Button)findViewById(R.id.joinChat)).setVisibility(View.VISIBLE);
 
                                     //menuText.setVisible(false);
                                 }

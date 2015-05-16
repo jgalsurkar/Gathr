@@ -47,7 +47,7 @@ public class CreateEvent extends ActionBarActivityPlus {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        setActionBar("Create Gathring");
+        setActionBar(R.string.title_activity_create_event);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
        // ((ImageButton)(findViewById(R.id.select_category))).setBackgroundResource(R.drawable.create_contact);
         my_interests = (EditText) findViewById(R.id.gathring_category);

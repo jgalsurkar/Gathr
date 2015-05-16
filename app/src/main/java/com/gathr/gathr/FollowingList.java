@@ -35,7 +35,7 @@ public class FollowingList extends ActionBarActivityPlus {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_list);
-        setActionBar("Following List");
+        setActionBar(R.string.title_activity_following_list);
         MyGlobals global = new MyGlobals();
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 

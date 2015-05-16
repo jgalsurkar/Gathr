@@ -97,6 +97,7 @@ public class SplashActivity extends Activity {
                 Intent i = new Intent(c, ChatActivity.class);
                 i.putExtra("dialog", dialog);
                 i.putExtra("eventId", eventId);
+                i.putExtra("EventName",eventName);
                 startActivity(i);
 
             } catch (QBResponseException e) {

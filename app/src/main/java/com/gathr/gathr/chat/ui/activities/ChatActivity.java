@@ -86,7 +86,7 @@ public class ChatActivity extends ActionBarActivityPlus {
 
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
-        setActionBar("Chat Room");
+
 
         initViews();
     }
@@ -117,6 +117,9 @@ public class ChatActivity extends ActionBarActivityPlus {
 
         Intent intent = getIntent();
         eventId = intent.getStringExtra("eventId");
+        String eventName = intent.getStringExtra("EventName");
+
+        setActionBar(eventName);
         // Get chat dialog
         //
         dialog = (QBDialog) intent.getSerializableExtra(EXTRA_DIALOG);

@@ -8,6 +8,7 @@
 package com.gathr.gathr;
 
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -16,16 +17,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.facebook.widget.ProfilePictureView;
 import com.gathr.gathr.classes.AuthUser;
 import com.gathr.gathr.classes.MyGlobals;
+import com.gathr.gathr.classes.SidebarGenerator;
 import com.gathr.gathr.database.DatabaseCallback;
 import com.gathr.gathr.database.QueryDB;
 
 import org.json.JSONArray;
 
-public class EditProfile extends ActionBarActivity {
+public class EditProfile extends ActionBarActivityPlus {
 
     private ProfilePictureView profilePictureView;
     private TextView userNameView;
@@ -37,13 +40,18 @@ public class EditProfile extends ActionBarActivity {
     public String userId = AuthUser.getUserId(this), category, categoryId;
     String results;
     EditText my_interests;
+    Boolean following = false, blocking = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
+        setActionBar(R.string.title_activity_edit_profile);
         setContentView(R.layout.activity_edit_profile);
-        setActionBar();
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
+
+
         try {
             //((ImageButton)(findViewById(R.id.add_category))).setBackgroundResource(R.drawable.create_contact);
             //userNameView = (TextView) findViewById(R.id.user_name);
@@ -82,17 +90,7 @@ public class EditProfile extends ActionBarActivity {
         i.putExtra("from","edit");
         startActivityForResult(i,0);
     }
-    public void setActionBar()
-    {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        //displaying custom ActionBar
-        View mActionBarView = getLayoutInflater().inflate(R.layout.my_action_bar, null);
-        actionBar.setCustomView(mActionBarView);
-        ((ImageButton)mActionBarView.findViewById(R.id.btn_slide)).setVisibility(View.INVISIBLE);
-        ((TextView)mActionBarView.findViewById(R.id.title)).setText(R.string.title_activity_edit_profile);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to

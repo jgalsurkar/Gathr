@@ -34,7 +34,7 @@ public class GathringsListActivity extends ActionBarActivityPlus {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gathrings_list_activity);
-        setActionBar("My Gathrings");
+        setActionBar(R.string.title_activity_gathrings_list);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
         if (savedInstanceState == null) {
