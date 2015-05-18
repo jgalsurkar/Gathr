@@ -81,6 +81,7 @@ public class Settings extends ActionBarActivityPlus {
             getNotifications();
 
             editor.putBoolean("notifications", true);
+            editor.putInt("counter",0);
             editor.apply();
 
         } else {

@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 
 import com.gathr.gathr.classes.MyGlobals;
@@ -24,10 +25,15 @@ import org.json.JSONArray;
 
 public class NotificationReceiver extends BroadcastReceiver {
     private MyGlobals global;
-    private static int counter = 0;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
+        SharedPreferences sharedPrefs = context.getSharedPreferences("AuthUser", context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        int counter = sharedPrefs.getInt("counter",0 );
+        editor.putInt("counter",counter + 1);
+        editor.apply();
         QueryDB DBconn = new QueryDB(context);
         class getEvent implements DatabaseCallback {
             public void onTaskCompleted(String results) {
@@ -55,10 +61,9 @@ public class NotificationReceiver extends BroadcastReceiver {
             if(counter % 72 == 0)
                 DBconn.executeQuery("SELECT Id, Name, Date, Time, COUNT(My_Interests) AS Weight FROM (SELECT EVENTS.Id, EVENTS.Name, EVENTS.Date, EVENTS.Time , EC.Category_Id AS Event_Category FROM EVENTS LEFT OUTER JOIN (EVENT_CATEGORIES AS EC, JOINED_EVENTS AS JE) ON (EC.Event_Id = Id = JE.Event_Id) WHERE User_Id <> 7 AND Capacity > Population AND Status = 'OPEN') AS J1 JOIN ((SELECT Category_Id AS My_Interests FROM USERS JOIN USER_INTERESTS ON User_Id = Id WHERE Id = 7) UNION (SELECT Category_Id AS My_Past_Interests FROM JOINED_EVENTS AS JE2 JOIN EVENT_CATEGORIES AS EC2 ON EC2.Event_Id = JE2.Event_Id WHERE User_Id = 7) UNION (SELECT Category_Id AS My_Searched_Interests FROM SEARCHES JOIN SEARCH_CATEGORY ON Id = Search_Id WHERE User_Id = 7)) AS J2 WHERE My_Interests = Event_Category AND (Date > DATE(NOW()) OR (Date = DATE(NOW()) AND Time > TIME(NOW()))) GROUP BY Id ORDER BY Weight DESC, Date DESC, Time ASC LIMIT 1",new getEvent());
             if(counter % 3 == 0){
-
+                //query to check if someone you are following creates an event
             }
-
-            counter += 1;
+            //query to check if event is updated
 
 
 

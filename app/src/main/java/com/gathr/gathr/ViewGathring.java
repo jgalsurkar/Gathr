@@ -2,7 +2,7 @@
  Title : ViewGathring.java
  Author : Gathr Team
  Purpose : Activity which represents a Gathring and all information associated with it. This
- infomration is loaded from the databse based on the Gathring id. Button functionality
+ infomration is loaded from the database based on the Gathring id. Button functionality
  to share the gathring, join/leave, and enter the chatroom are found here as well.
  *************************************************************************************************/
 
@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import org.json.JSONArray;
@@ -142,6 +141,7 @@ public class ViewGathring extends ActionBarActivityPlus {
             finish();
             return true;
         }
+
         if (id == R.id.action_share) {
             share(item.getActionView());
             return true;
@@ -204,89 +204,47 @@ public class ViewGathring extends ActionBarActivityPlus {
         public void onTaskCompleted(String results){
             try {
                 event_json = results;
-                event = new Event(results);
+                event = new Event(event_json);
                 eventOrganizer = event.event_organizer;
 
-                if (event.status.equals("CLOSED")) {
-                    cancelled = true;
-                }
-                if (cancelled){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-                            buttonText.setVisibility(View.GONE);
-                        }
-                    });
-                }else if(!loggedin) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-                            buttonText.setText("Login");
-                        }
-                    });
-                } else if (!eventOrganizer.equals(userId)) {
-                    class getCount implements DatabaseCallback{
-                        public void onTaskCompleted(String results) {
-                            try {
-                                JSONArray json2 = new JSONArray(results);
-                                String count = json2.getJSONObject(0).getString("Count").trim();
-
-                                if (count.equals("0")) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-                                            buttonText.setText("Join");
-                                            if (event.pop.equals(event.capacity))
-                                                ((Button)findViewById(R.id.join_leave_button)).setVisibility(View.INVISIBLE);
-                                            partOf = false;
-                                        }
-                                    });
-
-                                } else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-                                            buttonText.setText("Leave");
-                                            ((Button)findViewById(R.id.joinChat)).setVisibility(View.VISIBLE);
-                                            partOf = true;
-                                        }
-                                    });
-                                }
-                            }catch(Exception e){
-                                global.errorHandler(e);
-                            }
-                        }
-                    }
-                    DBConn.executeQuery("SELECT COUNT(User_Id) AS Count FROM JOINED_EVENTS WHERE User_Id = " + userId + " AND Event_Id = " + eventId + ";", new getCount());
-                } else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
-                            buttonText.setVisibility(View.GONE);
-                            ((Button)findViewById(R.id.joinChat)).setVisibility(View.VISIBLE);
-                            //menuText.setVisible(false);
-                        }
-                    });
-                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //Set Event Details
                         ((TextView) findViewById(R.id.gathring_name_text)).setText(event.name);
                         ((TextView) findViewById(R.id.gathring_description_text)).setText(event.description);
                         ((TextView) findViewById(R.id.gathring_address_text)).setText(event.address);
                         ((TextView) findViewById(R.id.gathring_category_text)).setText(event.categories);
                         ((TextView) findViewById(R.id.gathring_limit_text)).setText(event.pop + "/" + event.capacity);
-                        if(cancelled){
+                        ((TextView) findViewById(R.id.gathring_time_text)).setText(global.normalTime(event.time));
+                        ((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(event.date));
+
+                        TextView buttonText = (TextView) findViewById(R.id.join_leave_button);
+                        if (event.status.equals("CLOSED")) { //Event Cancelled
                             ((TextView) findViewById(R.id.gathring_date_text)).setText("Cancelled");
                             ((TextView) findViewById(R.id.gathring_time_text)).setText("");
-                        }else {
-                            ((TextView) findViewById(R.id.gathring_time_text)).setText(global.normalTime(event.time));
-                            ((TextView) findViewById(R.id.gathring_date_text)).setText(global.nDate(event.date));
+                            buttonText.setVisibility(View.GONE); //Cannot Join
+                            cancelled = true;
+                        }else if(!loggedin){ //Not logged into the app
+                            buttonText.setText("Login");
+                        }else { //They are apart of the event
+                            if (!eventOrganizer.equals(userId)) {
+                                partOf = false;
+                                while (attendeeIds != null) ;
+                                for (String attendee : attendeeIds) {
+                                    if (attendee.equals(userId)) {
+                                        partOf = true;
+                                        buttonText.setText("Leave"); //They can't join, they must leave
+                                        (findViewById(R.id.joinChat)).setVisibility(View.VISIBLE); //They can Chat
+                                        break;
+                                    }
+                                }
+
+                            } else { // They are the organizer
+                                partOf = true;
+                                buttonText.setVisibility(View.GONE); //They cannot join/leave
+                                (findViewById(R.id.joinChat)).setVisibility(View.VISIBLE); // They Can Chat
+                            }
                         }
                     }
                 });
@@ -295,7 +253,6 @@ public class ViewGathring extends ActionBarActivityPlus {
             }
         }
     }
-
     private BaseAdapter mAdapter = new BaseAdapter() {
 
         @Override
@@ -328,7 +285,6 @@ public class ViewGathring extends ActionBarActivityPlus {
                     Intent i = new Intent(c, Profile.class);
                     i.putExtra("userId", friendID);
                     startActivity(i);
-
                 }
             });
 
