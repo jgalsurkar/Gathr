@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -72,8 +73,6 @@ public class EditProfile extends ActionBarActivityPlus {
             results = global.getUserJSON();
             if (!results.contains("ERROR")) {
                 JSONArray json = new JSONArray(results);
-              //  userNameView.setText(json.getJSONObject(0).getString("First_Name") + " " + json.getJSONObject(0).getString("Last_Name"));
-              //  profilePictureView.setProfileId(json.getJSONObject(0).getString("Facebook_Id"));
                 about_me.setText(json.getJSONObject(0).getString("About_Me"));
                 instagram.setText(json.getJSONObject(0).getString("Instagram"));
                 facebook.setText(json.getJSONObject(0).getString("Facebook"));

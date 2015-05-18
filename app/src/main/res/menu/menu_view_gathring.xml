@@ -8,4 +8,6 @@
         android:orderInCategory="100" app:showAsAction="never" android:visible="false" />
     <item android:id="@+id/action_transfer" android:title="Transfer Event"
         android:orderInCategory="100" app:showAsAction="never" android:visible="false" />
+    <item android:id="@+id/action_share" android:title="Share"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

@@ -229,19 +229,24 @@ private Context c = this;
                     partOf = true;
                     buttonText.setText("Leave");
                     ((TextView) findViewById(R.id.gathring_limit_text)).setText(Integer.parseInt(pAndC[0]) + 1 + "/" + pAndC[1]);
+                    refresh();
                 } else {
                     DBConn.executeQuery("DELETE FROM JOINED_EVENTS WHERE User_Id = " + userId + " and Event_Id = " + eventId + ";");
                     global.tip("You have left the Gathring");
                     partOf = false;
                     buttonText.setText("Join");
                     ((TextView) findViewById(R.id.gathring_limit_text)).setText(Integer.parseInt(pAndC[0]) - 1 + "/" + pAndC[1]);
+                    finish();
+                    startActivity(getIntent());
                 }
             }
         }catch(Exception e){
             global.errorHandler(e);
         }
     }
-
+    public void refresh()
+    {  finish();
+        startActivity(getIntent());}
     public void showOnMap(View view){
         Intent i = new Intent(this, MapsActivity.class);
         i.putExtra("event_json", event_json);
@@ -293,7 +298,10 @@ private Context c = this;
         if (id == R.id.action_transfer) {
             return true;
         }
-
+        if (id == R.id.action_share) {
+            share(item.getActionView());
+            return true;
+        }
         if (id == R.id.action_cancel) {
             MsgBox("Confirm","Are you sure you want to cancel this event? You can not undo this action.", this);
             return true;

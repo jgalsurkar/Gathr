@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,8 +125,8 @@ public class Profile extends ActionBarActivityPlus {
         goToUrl ("https://instagram.com/_u/"+ parseUN(inst));
     }
     public void goToFace (View view) {
-        goToUrl ( "fb://profile/"+fb);
-    }
+        goToUrl ( "https://facebook.com/"+fb);
+           }
     public void goToTwit (View view) {
         goToUrl ( "http://twitter.com/"+ parseUN(tw));
     }
