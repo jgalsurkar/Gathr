@@ -1,39 +1,43 @@
-
+<?xml version="1.0" encoding="utf-8"?><!--
+    Title : fragment_gathrings_list.xml
+    Author : Gathr Team
+    Purpose : part of the gathrings_list_activity.xml
+    -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="15dp"
-android:orientation="vertical"
-tools:context="com.gathr.gathr.GathringsListActivity$PlaceholderFragment"
->
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context="com.gathr.gathr.GathringsListActivity$PlaceholderFragment">
 
-<ListView android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/list"> </ListView>
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-<!-- -->
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/roundedbox"
-        android:padding="15dp"
         android:orientation="vertical"
-      >
-<TextView
-    android:id="@+id/gathring_list_item"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@+id/gathring_list_item"
-    android:textStyle="bold"
-    android:textSize="30sp">
-</TextView>
+        android:padding="15dp">
 
-<TextView
-    android:id="@+id/gathring_list_descr"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@+id/gathring_list_descr"
-    android:textSize="20sp">
-</TextView>
-</LinearLayout>
+        <TextView
+            android:id="@+id/gathring_list_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@+id/gathring_list_item"
+            android:textSize="30sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/gathring_list_descr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@+id/gathring_list_descr"
+            android:textSize="20sp"/>
+    </LinearLayout>
 </LinearLayout>
 

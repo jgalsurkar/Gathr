@@ -1,51 +1,57 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--
+Title : activity_settings.xml
+Author : Gathr Team
+Purpose : styling for the Settings.java
+The Page that opens when user clicks on Settings from Sidebar
+-->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff50b4c8">
+    android:background="@color/bg">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        tools:context="com.gathr.gathr.Settings"
-        android:orientation="vertical"
-        android:background="#fff">
+        tools:context="com.gathr.gathr.Settings">
 
         <TextView
+            android:id="@+id/notifText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Notifications"
-            android:id="@+id/notifText"
             android:layout_gravity="center"
             android:layout_marginTop="100dp"
-            />
+            android:text="Notifications"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ToggleButton
+            android:id="@+id/notificationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notifications"
-            android:id="@+id/notificationsButton"
-            android:onClick="onToggleClicked"
-            android:checked="false"
-            android:textAllCaps="false"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="104dp"
             android:background="@drawable/mybutton"
-            android:textColor="#FFFFFF" />
+            android:checked="false"
+            android:onClick="onToggleClicked"
+            android:text="Notifications"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
 
 
         <com.facebook.widget.LoginButton
             android:id="@+id/authButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
             android:layout_marginBottom="171dp" />
 
         <ProgressBar
@@ -53,22 +59,24 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
             android:indeterminate="true"
             android:indeterminateOnly="true"
-            android:isScrollContainer="true"
             android:indeterminateTintMode="screen"
-            android:soundEffectsEnabled="false"/>
+            android:isScrollContainer="true"
+            android:soundEffectsEnabled="false" />
 
 
     </LinearLayout>
-    <ListView android:id="@+id/left_drawer"
+
+    <ListView
+        android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/white"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#fff"/>
+        android:dividerHeight="0dp" />
 </android.support.v4.widget.DrawerLayout>

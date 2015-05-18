@@ -1,10 +1,15 @@
+<!--Menu shows up on the click on the Overview button on the Profile page-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.gathr.gathr.Profile" android:title="@string/title_activity_profile">
+
+   <!--Shows up for the user who is currently logged in to be able to change his profile-->
     <item android:id="@+id/action_edit_profile" android:title="@string/title_activity_edit_profile"
         android:orderInCategory="100" app:showAsAction="never" android:visible="false" />
+    <!--Shows up for the user when user looks at the other user profile page, to be able to follow/unfollow the user-->
     <item android:id="@+id/action_follow" android:title="@string/action_follow"
         android:orderInCategory="100" app:showAsAction="never" android:visible="false" />
+    <!--Shows up for the user when user looks at the other user profile page, to be able to block/unblock the user-->
     <item android:id="@+id/action_block" android:title="@string/action_block"
         android:orderInCategory="100" app:showAsAction="never" android:visible="false"/>
 </menu>

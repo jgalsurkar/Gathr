@@ -128,7 +128,6 @@ public class ViewGathring extends ActionBarActivityPlus {
         if(!cancelled && userId.equals(eventOrganizer)){
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_cancel).setVisible(true);
-            menu.findItem(R.id.action_transfer).setVisible(true);
         }
         return true;
     }
@@ -141,10 +140,6 @@ public class ViewGathring extends ActionBarActivityPlus {
             i.putExtra("prefill", event_json );
             startActivity(i);
             finish();
-            return true;
-        }
-
-        if (id == R.id.action_transfer) {
             return true;
         }
         if (id == R.id.action_share) {

@@ -1,52 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Title : activity_main.xml
+    Author : Gathr Team
+    Purpose : styling for the MainActivity.java (The first page with Login with Facebook button on it)
+    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
+    android:background="@color/bg"
     android:focusableInTouchMode="true"
-    android:background="#ff50b4c8">
-
-    <!--
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearance"
-        android:text="Welcome"
-        android:id="@+id/user_name"
-        android:layout_gravity="center_horizontal" />
-
-
-    <com.facebook.widget.ProfilePictureView
-        android:id="@+id/selection_profile_pic"
-        android:layout_gravity="left"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></com.facebook.widget.ProfilePictureView>-->
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Gathr."
         android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:text="Gathr."
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"
         android:textSize="100sp"
+        android:textStyle="bold"
         android:typeface="sans" />
-
 
     <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="147dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="147dp" />
 
 </RelativeLayout>

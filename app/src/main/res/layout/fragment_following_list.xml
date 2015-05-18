@@ -1,32 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Title : fragment_following_list.xml
+    Author : Gathr Team
+    Purpose : part of the activity_following_list.xml
+    -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gathr.gathr.FollowingList$PlaceholderFragment"
-    android:padding = "10dp">
+    android:padding="10dp"
+    tools:context="com.gathr.gathr.FollowingList$PlaceholderFragment">
 
-    <ListView android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/list"> </ListView>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/roundedbox"
-    android:padding="15dp"
-    android:nestedScrollingEnabled="true">
-    <com.facebook.widget.ProfilePictureView
-        android:id="@+id/friend_profile_pic"
-        android:layout_width="117dp"
-        android:layout_height="wrap_content"
-        android:layoutMode="clipBounds"
-      />
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/friend_list_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/roundedbox"
+        android:nestedScrollingEnabled="true"
+        android:padding="15dp">
 
-    </TextView>
-</LinearLayout>
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/friend_profile_pic"
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
+            android:layoutMode="clipBounds" />
+
+        <TextView
+            android:id="@+id/friend_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textSize="30sp"
+            android:textStyle="bold">
+
+        </TextView>
+    </LinearLayout>
 </RelativeLayout>

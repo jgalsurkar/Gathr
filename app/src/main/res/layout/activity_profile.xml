@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Title : activity_profile.xml
+Author : Gathr Team
+Purpose : styling for the Profile.java
+-->
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#FFFFFF">
+        android:background="@color/white">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -20,24 +24,6 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="com.gathr.gathr.Profile">
 
-<!--            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:gravity="center"
-                android:textAlignment="inherit"
-                android:textAppearance="?android:attr/textAppearance"
-                android:textSize="14pt"
-                android:textStyle="bold"
-                />
-
-            <Space
-                android:id="@+id/space5"
-                android:layout_width="fill_parent"
-                android:layout_height="3pt"
-                android:layout_below="@+id/user_name" />
--->
             <com.facebook.widget.ProfilePictureView
                 android:id="@+id/selection_profile_pic"
                 android:layout_width="117dp"
@@ -46,7 +32,6 @@
                 android:layout_alignParentStart="true"
                 android:layoutMode="clipBounds"
                 android:textAlignment="inherit" />
-
 
 
             <ImageButton
@@ -63,7 +48,6 @@
                 android:id="@+id/space3"
                 android:layout_width="3pt"
                 android:layout_height="fill_parent"
-
                 android:layout_toRightOf="@+id/insta" />
 
             <ImageButton
@@ -81,7 +65,6 @@
                 android:id="@+id/space4"
                 android:layout_width="3pt"
                 android:layout_height="fill_parent"
-
                 android:layout_toRightOf="@+id/face" />
 
             <ImageButton
@@ -102,7 +85,7 @@
                 android:layout_below="@+id/twit"
                 android:layout_toRightOf="@+id/selection_profile_pic"
                 android:text="Followers: "
-                android:textColor="#000000"/>
+                android:textColor="@color/black" />
 
             <Space
                 android:id="@+id/space7"
@@ -118,7 +101,7 @@
                 android:layout_below="@+id/space7"
                 android:layout_toRightOf="@+id/selection_profile_pic"
                 android:text="Events Created: "
-                android:textColor="#000000"/>
+                android:textColor="@color/black" />
 
             <Space
                 android:id="@+id/space10"
@@ -134,23 +117,24 @@
                 android:layout_below="@+id/space10"
                 android:layout_toRightOf="@+id/selection_profile_pic"
                 android:text="Events Attended: "
-                android:textColor="#000000"/>
+                android:textColor="@color/black" />
 
             <Space
                 android:id="@+id/space6"
                 android:layout_width="fill_parent"
                 android:layout_height="13pt"
                 android:layout_alignBottom="@+id/insta"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
 
             <Space
                 android:id="@+id/space14"
                 android:layout_width="fill_parent"
                 android:layout_height="7pt"
                 android:layout_below="@+id/selection_profile_pic"
-                android:backgroundTint="#feffffff"
+                android:backgroundTint="@color/white"
                 android:padding="5dp" />
+
             <TextView
                 android:id="@+id/about_me_label"
                 android:layout_width="wrap_content"
@@ -160,10 +144,9 @@
                 android:layout_below="@+id/space14"
                 android:linksClickable="false"
                 android:text="About Me"
-                android:textSize="10pt"
-                android:textStyle="bold"
                 android:textColor="@color/bg"
-                />
+                android:textSize="10pt"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/about_me"
@@ -174,20 +157,20 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/about_me_label"
+                android:background="@color/grey"
                 android:linksClickable="false"
-                android:textSize="9pt"
+                android:paddingBottom="5pt"
                 android:paddingLeft="5pt"
                 android:paddingRight="5pt"
                 android:paddingTop="5pt"
-                android:paddingBottom="5pt"
-                android:background="#DCDCDC"/>
+                android:textSize="9pt" />
 
             <Space
                 android:id="@+id/space11"
                 android:layout_width="fill_parent"
                 android:layout_height="7pt"
                 android:layout_below="@+id/about_me"
-                android:backgroundTint="#feffffff"
+                android:backgroundTint="@color/white"
                 android:padding="5dp" />
 
             <TextView
@@ -201,9 +184,9 @@
                 android:layout_below="@+id/space11"
                 android:linksClickable="false"
                 android:text="My Interests"
+                android:textColor="@color/bg"
                 android:textSize="10pt"
-                android:textStyle="bold"
-                android:textColor="@color/bg"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/my_interests"
@@ -214,13 +197,13 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/my_interests_label"
+                android:background="@color/grey"
                 android:linksClickable="false"
-                android:textSize="9pt"
-                android:background="#DCDCDC"
+                android:paddingBottom="5pt"
                 android:paddingLeft="5pt"
                 android:paddingRight="5pt"
                 android:paddingTop="5pt"
-                android:paddingBottom="5pt"/>
+                android:textSize="9pt" />
 
 
             <Space
@@ -240,28 +223,27 @@
                 android:layout_below="@+id/space8"
                 android:linksClickable="false"
                 android:text="Recently Organized"
+                android:textColor="@color/bg"
                 android:textSize="10pt"
-                android:textStyle="bold"
-                android:textColor="@color/bg"/>
-
+                android:textStyle="bold" />
 
 
             <TextView
                 android:id="@+id/past_events"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/past_events_label"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/past_events_label"
-                android:linksClickable="false"
-                android:textSize="9pt"
-                android:background="#DCDCDC"
-                android:layout_height="wrap_content"
                 android:layout_alignRight="@+id/past_events_label"
-                android:layout_alignEnd="@+id/past_events_label"
+                android:layout_below="@+id/past_events_label"
+                android:background="@color/grey"
+                android:linksClickable="false"
+                android:paddingBottom="5pt"
                 android:paddingLeft="5pt"
                 android:paddingRight="5pt"
                 android:paddingTop="5pt"
-                android:paddingBottom="5pt"/>
+                android:textSize="9pt" />
 
 
         </RelativeLayout>
@@ -272,9 +254,8 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
+        android:background="@color/white"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        />
+        android:dividerHeight="0dp" />
 </android.support.v4.widget.DrawerLayout>

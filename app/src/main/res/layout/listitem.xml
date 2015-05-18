@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<!--
+Title : listitem.xml
+Author : Gathr Team
+Purpose :
+Used in the View Gathrings for the horizontal list view
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#fff"
-    >
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.facebook.widget.ProfilePictureView
         android:id="@+id/attendee_profile_pic"
         android:layout_width="117dp"
         android:layout_height="100dp"
-        android:layoutMode="clipBounds"/>
-
+        android:layoutMode="clipBounds" />
 
 </LinearLayout>

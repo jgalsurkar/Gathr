@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
     <color name="bg">#50B4C8</color>
+    <color name="grey">#DCDCDC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <!-- general styles for the action bar -->
-    <style name="MyActionBar"
-        parent="@style/Widget.AppCompat.ActionBar">
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
-        <item name="android:background"  tools:ignore="NewApi">#50B4C8</item>
+        <item name="android:background" tools:ignore="NewApi">@color/bg</item>
         <item name="background">@color/bg</item>
-     <!-- Support library compatibility -->
+        <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/TitleTextStyle</item>
     </style>
 
     <!-- action bar title text -->
-    <style name="TitleTextStyle"
-        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">#FFFFFF</item>
+    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">left</item>
         <item name="android:textAlignment" tools:ignore="NewApi">textStart</item>
@@ -23,22 +24,20 @@
     </style>
 
     <!-- action bar tab text -->
-    <style name="TabTextStyle"
-        parent="@style/Widget.AppCompat.ActionBar.TabText">
-        <item name="android:textColor">#FFFFFF</item>
+    <style name="TabTextStyle" parent="@style/Widget.AppCompat.ActionBar.TabText">
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- the theme applied to the application or activity -->
-    <style name="CustomActionBarTheme"
-        parent="@style/Theme.AppCompat.Light">
+    <style name="CustomActionBarTheme" parent="@style/Theme.AppCompat.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="actionBarTabTextStyle">@style/TabTextStyle</item>
-        <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
 </resources>

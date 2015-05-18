@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+Title : my_action_bar.xml
+Author : Gathr Team
+Purpose :
+Used on every page to be able to have a button and custom styling for Action Bar
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,21 +12,20 @@
 
     <ImageButton
         android:id="@+id/btn_slide"
-        android:layout_height="30dp"
         android:layout_width="37dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
         android:background="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/menu"
-        android:paddingRight="15dp"
         android:onClick="openSideBar"
+        android:paddingRight="15dp"
         android:paddingTop="4dp"
-        android:layout_gravity="center_vertical"/>
+        android:scaleType="centerInside"
+        android:src="@drawable/menu" />
 
     <TextView
+        android:id="@+id/title"
+        style="@style/TitleTextStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
-        style ="@style/TitleTextStyle"
-        android:textColor="#FFFFFF"
-        />
+        android:textColor="@color/white" />
 </LinearLayout>
