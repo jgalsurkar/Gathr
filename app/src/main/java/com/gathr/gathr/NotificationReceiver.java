@@ -58,7 +58,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             }
 
-            counter += 600000;
+            counter += 1;
 
 
 

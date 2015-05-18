@@ -57,7 +57,7 @@ public class Profile extends ActionBarActivityPlus {
         String temp = i.getStringExtra("userId");
         QueryDB DBconn = new QueryDB(this, "getProfile.php");
         if (temp != null)
-           userId = temp;
+            userId = temp;
 
         DBconn.executeQuery(userId, new getUser());
     }
@@ -115,7 +115,7 @@ public class Profile extends ActionBarActivityPlus {
     }
     public void goToFace (View view) {
         goToUrl ( "https://facebook.com/"+fb);
-           }
+    }
     public void goToTwit (View view) {
         goToUrl ( "http://twitter.com/"+ parseUN(tw));
     }
@@ -139,23 +139,22 @@ public class Profile extends ActionBarActivityPlus {
         int id = item.getItemId();
         if (id == R.id.action_block) {
             if (!blocking) {
-               new QueryDB(this).executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`) VALUES ('" + AuthUser.getUserId(this) + "', '" + userId + "');");
+                new QueryDB(this).executeQuery("INSERT INTO BLOCKED_USERS (`User_Id`, `Blocked_User_Id`) VALUES ('" + AuthUser.getUserId(this) + "', '" + userId + "');");
             } else {
-               new QueryDB(this).executeQuery("DELETE FROM BLOCKED_USERS WHERE Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.getUserId(this) + " ;");
+                new QueryDB(this).executeQuery("DELETE FROM BLOCKED_USERS WHERE Blocked_User_Id = " + userId + " AND User_Id = " + AuthUser.getUserId(this) + " ;");
             }
+            //refresh();
             blocking = !blocking;
             return true;
         }
         if (id == R.id.action_follow) {
-            String [] text = followers.getText().toString().split(" ");
             if (!following) {
                 new QueryDB(this).executeQuery("INSERT INTO FRIENDS (`User_Id`, `Friend_User_Id`) VALUES ('" + AuthUser.getUserId(this) + "', '" + userId + "');");
-                followers.setText("Followers: " + Integer.valueOf(text[1])+1);
             } else {
                 new QueryDB(this).executeQuery("DELETE FROM FRIENDS WHERE Friend_User_Id = "+userId + " AND User_Id = "+ AuthUser.getUserId(this) +" ;");
-                followers.setText("Followers: "+ (Integer.valueOf(text[1])-1));
             }
-            following = !following;
+            global.getFollowersJSON(1); //our following list has changed, we should update our cache
+            refresh();
             return true;
         }
         if (id == R.id.action_edit_profile) {
@@ -167,7 +166,10 @@ public class Profile extends ActionBarActivityPlus {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    public void refresh(){
+        finish();
+        startActivity(getIntent());
+    }
     public boolean onPrepareOptionsMenu(final Menu menu){
         class getFollowing implements DatabaseCallback {
             public void onTaskCompleted(final String results){
@@ -223,8 +225,8 @@ public class Profile extends ActionBarActivityPlus {
         }
 
         if(!(AuthUser.getUserId(this).equals(userId))){
-             new QueryDB(this).executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(this) + " AND Friend_User_Id = " + userId + ";", new getFollowing());
-             new QueryDB(this).executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS  WHERE User_Id = " + AuthUser.getUserId(this) + " AND Blocked_User_Id = " + userId + ";", new getBlocking());
+            new QueryDB(this).executeQuery("SELECT COUNT(Friend_User_Id) AS Count FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(this) + " AND Friend_User_Id = " + userId + ";", new getFollowing());
+            new QueryDB(this).executeQuery("SELECT COUNT(Blocked_User_Id) AS Count FROM BLOCKED_USERS  WHERE User_Id = " + AuthUser.getUserId(this) + " AND Blocked_User_Id = " + userId + ";", new getBlocking());
         }else{ //This is the users' own profile
             menu.findItem(R.id.action_edit_profile).setVisible(true);
         }

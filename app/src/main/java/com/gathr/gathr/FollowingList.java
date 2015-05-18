@@ -2,7 +2,7 @@
  Title : FollowingList.java
  Author : Gathr Team
  Purpose : Activity which represents a list view of who the user is following. Clicking on any
-           of list items, brings the user to the appropriate profile page
+ of list items, brings the user to the appropriate profile page
  *************************************************************************************************/
 
 package com.gathr.gathr;
@@ -62,43 +62,27 @@ public class FollowingList extends ActionBarActivityPlus {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            QueryDB DBConn = new QueryDB(getActivity());
+
             final MyGlobals global = new MyGlobals(getActivity());
-
             try{
-                class load implements DatabaseCallback {
-                    public void onTaskCompleted(String results){
-                        if(results.contains("ERROR")){
-                            friendNames = new String[]{"No friends to show"};
-                            friendIds = new String[]{"-1"};
-                            images = new String[]{"-1"};
-
-                        }else{
-                            try {
-                                JSONArray json = new JSONArray(results);
-                                int numFriends = json.length();
-                                friendNames = new String[numFriends];
-                                images = new String[numFriends];
-                                friendIds = new String[numFriends];
-
-                                for (int i = 0; i < json.length(); i++) {
-                                    friendIds[i] = json.getJSONObject(i).getString("Id");
-                                    friendNames[i] = json.getJSONObject(i).getString("First_Name") + " " + json.getJSONObject(i).getString("Last_Name");
-                                    images[i] = json.getJSONObject(i).getString("Facebook_Id");
-                                }
-                            }catch(Exception e){
-                                global.errorHandler(e);
-                            }
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                setListAdapter(new FriendArrayAdapter(getActivity(), friendNames, images));
-                            }
-                        });
+                String results =  global.getFollowersJSON();
+                if(results.contains("ERROR")){
+                    friendNames = new String[]{"No friends to show"};
+                    friendIds = new String[]{"-1"};
+                    images = new String[]{"-1"};
+                }else{
+                    JSONArray json = new JSONArray(results);
+                    int numFriends = json.length();
+                    friendNames = new String[numFriends];
+                    images = new String[numFriends];
+                    friendIds = new String[numFriends];
+                    for (int i = 0; i < json.length(); i++) {
+                        friendIds[i] = json.getJSONObject(i).getString("Id");
+                        friendNames[i] = json.getJSONObject(i).getString("First_Name") + " " + json.getJSONObject(i).getString("Last_Name");
+                        images[i] = json.getJSONObject(i).getString("Facebook_Id");
                     }
                 }
-                DBConn.executeQuery("SELECT Facebook_Id, First_Name, Last_Name, Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = " + AuthUser.getUserId(getActivity()) + " )  AS JOINED) WHERE Id = Friend_User_Id", new load());
-
+                setListAdapter(new FriendArrayAdapter(getActivity(), friendNames, images));
             }catch(Exception e){
                 global.errorHandler(e);
             }

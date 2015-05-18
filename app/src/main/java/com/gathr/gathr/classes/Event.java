@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class Event {
 
-    public String id, name, description, time, capacity, pop, date, address, city, state, status, event_organizer, categories; //separated by a comma
+    public String id, name, description, time, capacity, pop, date, address, city, state, status, event_organizer, categories, categoriesId; //separated by a comma
     public Double latitude, longitude;
 
     public Event(String JSON){
@@ -47,11 +47,10 @@ public class Event {
         }
         try {
             categories = jsonObject.getString("Categories");
+            categoriesId = jsonObject.getString("CategoriesId");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
 }
-
-
