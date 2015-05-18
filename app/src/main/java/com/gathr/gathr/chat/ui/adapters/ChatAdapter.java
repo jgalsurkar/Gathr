@@ -89,7 +89,7 @@ public class ChatAdapter extends BaseAdapter {
     }
 
     private void setAlignment(ViewHolder holder, boolean isOutgoing) {
-        if (!isOutgoing) {
+        if (isOutgoing) {
             holder.contentWithBG.setBackgroundResource(R.drawable.outgoing_message_bg);
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();

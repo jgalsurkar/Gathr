@@ -50,15 +50,9 @@ public class MainFragment extends Fragment{
                     final String user_email = user.asMap().get("email").toString();
                     final String user_gender = user.getProperty("gender").toString();
                     final String user_dob = user.getBirthday();
-
                     final String user_fname = user.getFirstName();
                     final String user_lname = user.getLastName();
-                    // final Object user_loc = user.getProperty("current_location");
 
-                    //user_loc.get
-                    //  Log.i("tesT",user_loc.toString()).getLocation();
-                    final String latitude = "-1";//Double.toString(user.getLocatgetProperty(""));
-                    final String longitude = "0";//Double.toString(user_loc.getLongitude());
 
                     QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid );
 
@@ -70,17 +64,15 @@ public class MainFragment extends Fragment{
                             }else{
                                 i = new Intent(getActivity().getApplicationContext(), MapsActivity.class); //Existing User
                             }
-                            AuthUser.setUser(getActivity(), results.substring(1), user_fid, user_fname, user_lname, latitude, longitude);
+                            AuthUser.setUser(getActivity(), results.substring(1), user_fid, user_fname, user_lname);
                             startActivity(i);
                             getActivity().finish();
                         }
                     }
 
-                    try {
-                        DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "', '" + latitude + "', '" + longitude + "')", new login());
-                    }catch(Exception e){
-                        Log.i("Exception", e.getMessage());
-                    }
+
+                    DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + ")", new login());
+
                 }
             }
 

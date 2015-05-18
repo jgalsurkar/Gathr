@@ -56,18 +56,8 @@ public class CreateEvent extends ActionBarActivityPlus {
         if(prefillJson != null){
             try {
                 update = true;
-
                 Event e = new Event(prefillJson);
-               // JSONArray json = new JSONArray(prefillJson);
-                eventId = e.id;//json.getJSONObject(0).getString("Id").trim();
-                /*final String eventName = json.getJSONObject(0).getString("Name");
-                final String description = json.getJSONObject(0).getString("Desc");
-                final String address = json.getJSONObject(0).getString("Address");
-                final String city = json.getJSONObject(0).getString("City");
-                final String state = json.getJSONObject(0).getString("State");
-                final String time = json.getJSONObject(0).getString("Time");
-                final String capacity = json.getJSONObject(0).getString("Capacity");
-*/
+                eventId = e.id;
                 ((TextView) findViewById(R.id.gathring_name)).setText(e.name);
                 ((TextView) findViewById(R.id.gathring_description)).setText(e.description);
                 ((TextView) findViewById(R.id.gathring_address)).setText(e.address);
@@ -75,7 +65,7 @@ public class CreateEvent extends ActionBarActivityPlus {
                 ((TextView) findViewById(R.id.gathring_state)).setText(e.state);
                 ((TextView) findViewById(R.id.gathring_limit)).setText(e.capacity);
                 ((TextView) findViewById(R.id.gathring_time)).setText(global.normalTime(e.time));
-
+                ((TextView) findViewById(R.id.gathring_category)).setText(e.categories);
             }catch(Exception e){
                 global.errorHandler(e);
             }
@@ -139,7 +129,7 @@ public class CreateEvent extends ActionBarActivityPlus {
     }
     public void openCategory(View view){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
-        i.putExtra("from","event");
+        i.putExtra("from",CreateEvent.class);
         i.putExtra("categoryId",categoryId);
         startActivityForResult(i,0);
     }

@@ -27,7 +27,6 @@ public class SearchEvents extends ActionBarActivityPlus {
         setContentView(R.layout.activity_search_events);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         my_interests = (EditText) findViewById(R.id.et_categories);
-        Intent i = getIntent();
     }
 
 
@@ -38,7 +37,7 @@ public class SearchEvents extends ActionBarActivityPlus {
 
     public void openCategory(View v){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
-        i.putExtra("from","search");
+        i.putExtra("from",SearchEvents.class);
         i.putExtra("categoryId", categoryId);
         startActivityForResult(i, 0);
     }
@@ -61,9 +60,7 @@ public class SearchEvents extends ActionBarActivityPlus {
         String location = locEdit.getText().toString(),
                 time = timeEdit.getText().toString();
 
-        Intent intent;
-
-        intent= new Intent(getApplicationContext(),MapsActivity.class );
+        Intent intent = new Intent(getApplicationContext(),MapsActivity.class );
         intent.putExtra("category", category);
         intent.putExtra("categoryId", categoryId);
         intent.putExtra("location",location);
@@ -73,23 +70,7 @@ public class SearchEvents extends ActionBarActivityPlus {
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_events, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
-        return super.onOptionsItemSelected(item);
-    }
 }
 
 

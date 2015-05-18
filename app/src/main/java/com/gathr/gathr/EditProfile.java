@@ -31,8 +31,6 @@ import org.json.JSONArray;
 
 public class EditProfile extends ActionBarActivityPlus {
 
-    private ProfilePictureView profilePictureView;
-    private TextView userNameView;
     private EditText about_me;
 
     MyGlobals global = new MyGlobals(this);
@@ -41,7 +39,6 @@ public class EditProfile extends ActionBarActivityPlus {
     public String userId = AuthUser.getUserId(this), category, categoryId;
     String results;
     EditText my_interests;
-    Boolean following = false, blocking = false;
 
 
     @Override
@@ -54,10 +51,7 @@ public class EditProfile extends ActionBarActivityPlus {
 
 
         try {
-            //((ImageButton)(findViewById(R.id.add_category))).setBackgroundResource(R.drawable.create_contact);
-            //userNameView = (TextView) findViewById(R.id.user_name);
-            //profilePictureView = (ProfilePictureView) findViewById(R.id.selection_profile_pic);
-            //profilePictureView.setCropped(true);
+
             about_me = (EditText) findViewById(R.id.about_me);
             final EditText instagram = (EditText) findViewById(R.id.instagram);
             instagram.setHint("@username");
@@ -86,7 +80,7 @@ public class EditProfile extends ActionBarActivityPlus {
     public void openCategory(View view){
         Intent i = new Intent(this, ListViewMultipleSelectionActivity.class);
         i.putExtra("categoryId",categoryId);
-        i.putExtra("from","edit");
+        i.putExtra("from",EditProfile.class);
         startActivityForResult(i,0);
     }
 
