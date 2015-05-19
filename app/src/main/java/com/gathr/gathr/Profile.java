@@ -81,9 +81,14 @@ public class Profile extends ActionBarActivityPlus {
                     interests = "None";
                     categoryId = "";
                 }
+
+                String pe = elem1.getString("Past_Events");
+                if(pe.equals("null"))
+                    pe = "None";
+
                 ((TextView) findViewById(R.id.my_interests)).setText(interests);
                 ((TextView) findViewById(R.id.events_created)).append(elem1.getString("Num_Created_Events").trim());
-                ((TextView) findViewById(R.id.past_events)).setText(elem1.getString("Past_Events"));
+                ((TextView) findViewById(R.id.past_events)).setText(pe);
                 ((TextView) findViewById(R.id.events_attended)).append(elem1.getString("Num_Joined_Events"));
                 ((TextView) findViewById(R.id.followers)).append(elem1.getString("Num_Friends"));
 
@@ -111,7 +116,7 @@ public class Profile extends ActionBarActivityPlus {
         }
     }
     public void goToInsta (View view ) {
-        goToUrl ("https://instagram.com/_u/"+ parseUN(inst));
+        goToUrl ("https://instagram.com/"+ parseUN(inst));
     }
     public void goToFace (View view) {
         goToUrl ( "https://facebook.com/"+fb);

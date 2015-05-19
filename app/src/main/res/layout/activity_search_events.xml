@@ -90,6 +90,17 @@ The Page that opens when user clicks on Search Button from Map page
             android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/vw_time"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Only Events After"
+            android:textColor="@color/bg"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <TextView
             android:id="@+id/vw_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

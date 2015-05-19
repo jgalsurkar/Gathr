@@ -23,6 +23,7 @@ public class GCoder {
         coder = new Geocoder(c, Locale.getDefault());
     }
 
+    //Converts an address to Lat/Lon Object
     public LatLng addressToCoor(String address){
         List<Address> queryResults;
         LatLng result = new LatLng(0,0);
@@ -37,6 +38,7 @@ public class GCoder {
         return result;
     }
 
+    //Converts a Latitude and Longitude to an Address
     public String coorToAddress(double lat, double lon){
         List<Address> queryResults;
         String address;

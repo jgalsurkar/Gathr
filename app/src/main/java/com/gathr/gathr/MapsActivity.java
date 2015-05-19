@@ -414,7 +414,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     }
 
     private void populateEvents(){
-
         try{
             JSONArray json = new JSONArray(raw_json);
 
@@ -422,7 +421,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
             Event thisEvent;
             Marker thisMarker;
 
-            clearAllEvents();
+
             for (int i=0;i<json.length();i++){
                 thisEvent = new Event(json.getJSONObject(i));
                 if(allMarkers.containsKey(thisEvent.id))
@@ -446,6 +445,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 //If we get to this page from inside the app (they should be passing EventId)
+                clearAllEvents();
                 String category = data.getStringExtra("category");
                 String categoryId = data.getStringExtra("categoryId");
                 String location = data.getStringExtra("location");

@@ -34,6 +34,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class CreateEvent extends ActionBarActivityPlus {
     MyGlobals global = new MyGlobals(this);
     QueryDB DBconn = new QueryDB(this);
@@ -49,7 +52,6 @@ public class CreateEvent extends ActionBarActivityPlus {
         setContentView(R.layout.activity_create_event);
         setActionBar(R.string.title_activity_create_event);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
-        // ((ImageButton)(findViewById(R.id.select_category))).setBackgroundResource(R.drawable.create_contact);
         my_interests = (EditText) findViewById(R.id.gathring_category);
         Intent i = getIntent();
         String prefillJson = i.getStringExtra("prefill");
@@ -101,6 +103,7 @@ public class CreateEvent extends ActionBarActivityPlus {
                 global.tip("You must provide at least 1 Category!");
                 return;
             }
+
             //Escape everything and create the event
             String name = DBconn.escapeString(getElementText(R.id.gathring_name));
             String desc = DBconn.escapeString(getElementText(R.id.gathring_description));

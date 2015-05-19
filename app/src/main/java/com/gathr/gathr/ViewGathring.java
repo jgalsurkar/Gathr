@@ -71,8 +71,8 @@ public class ViewGathring extends ActionBarActivityPlus {
             }
 
             DBConn.executeQuery("SELECT Facebook_Id, Id FROM (USERS JOIN (SELECT User_Id FROM JOINED_EVENTS WHERE Event_Id = " + eventId + " )  AS JOINED) WHERE Id = User_Id", new loadAttendees());
-            QueryDB getEvent = new QueryDB(this,"getEvent.php");
-            getEvent.executeQuery(eventId, new loadEvent());
+
+
         }catch(Exception e){
             global.errorHandler(e);
         }
@@ -174,6 +174,8 @@ public class ViewGathring extends ActionBarActivityPlus {
     }
     class loadAttendees implements DatabaseCallback {
         public void onTaskCompleted(String results) {
+            QueryDB getEvent = new QueryDB(c, "getEvent.php");
+            getEvent.executeQuery(eventId, new loadEvent());
             if (results.contains("ERROR")) {
                 attendees = new String[]{};
                 attendeeIds = new String[]{};
@@ -227,10 +229,9 @@ public class ViewGathring extends ActionBarActivityPlus {
                             cancelled = true;
                         }else if(!loggedin){ //Not logged into the app
                             buttonText.setText("Login");
-                        }else { //They are apart of the event
+                        }else { //They are logged in
                             if (!eventOrganizer.equals(userId)) {
                                 partOf = false;
-                                while (attendeeIds != null) ;
                                 for (String attendee : attendeeIds) {
                                     if (attendee.equals(userId)) {
                                         partOf = true;

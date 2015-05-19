@@ -27,26 +27,23 @@ import com.gathr.gathr.database.DatabaseCallback;
 import com.gathr.gathr.database.QueryDB;
 
 public class MyGlobals {
-
     Context c;
 
     public MyGlobals(Context _c){ c = _c; }
     public MyGlobals(){  }
 
+    //Functions to check if the phone is connected to the internet
     public void checkInternet(){
         if(!isNetworkAvailable(c))
             c.startActivity(new Intent(c, ConnectionError.class));
     }
-    public void checkInternet(Context c){
-        if(!isNetworkAvailable(c))
-            c.startActivity(new Intent(c, ConnectionError.class));
-    }
-
     public boolean isNetworkAvailable(Context c) {
         ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    //Functions to convert time and date from "Computer" language to Normal Language
     public String nDate(String uDate){// uDate = XXXX-XX-XX
         String[] temp = uDate.split("-");
         return temp[1] + "-" + temp[2] + "-" + temp[0];
@@ -74,16 +71,22 @@ public class MyGlobals {
         return "";
     }
 
+    //Our Universal errorHandler
     public void errorHandler(Exception e){
         e.printStackTrace();
         tip(e.getClass() + ": " + e.getMessage());
         //Intent intent = new Intent(c, MainActivity.class);
         //c.startActivity(intent);
     }
+
+    //A function to quickly create a Toast Message
     public void tip(String message){
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
     }
 
+
+    //Cache Functions
+    private String JSON = "";
     public String getUserJSON() { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", false); }
     public String getUserJSON(int x) { return getJSON("UserFile", "SELECT * FROM USERS WHERE Id = " + AuthUser.getUserId(c) + ";", true); }
     public String getFollowersJSON() { return getJSON("Followers", "SELECT Facebook_Id, First_Name, Last_Name, Id, Friend_User_Id FROM (USERS JOIN (SELECT  Friend_User_Id FROM FRIENDS WHERE User_Id = "+AuthUser.getUserId(c)+" )  AS JOINED) WHERE Id = Friend_User_Id", false); }
@@ -107,7 +110,6 @@ public class MyGlobals {
         }
         return true;
     }
-    private String JSON = "";
     public String getJSON(final String fileName, String query, boolean force){
         JSON = "";
         FileInputStream inputStream;

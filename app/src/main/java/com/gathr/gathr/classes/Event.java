@@ -14,6 +14,7 @@ public class Event {
     public String id, name, description, time, capacity, pop, date, address, city, state, status, event_organizer, categories, categoriesId; //separated by a comma
     public Double latitude, longitude;
 
+    //Constructor that can create Event from JSON string
     public Event(String JSON){
         try {
             JSONArray jsonArray = new JSONArray(JSON);
@@ -23,9 +24,12 @@ public class Event {
             e.printStackTrace();
         }
     }
+    //Constructer that can create an event from a JSONObject
     public Event(JSONObject jsonObject){
         JSONObjtoEvent(jsonObject);
     }
+
+    //The actual function that creates an event from a JSONObject
     public void JSONObjtoEvent(JSONObject jsonObject){
         try {
             id = jsonObject.getString("Id");
