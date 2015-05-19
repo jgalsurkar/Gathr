@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gathr.gathr.classes.SidebarGenerator;
+
 
 
 public class SearchEvents extends ActionBarActivityPlus {
@@ -27,6 +29,10 @@ public class SearchEvents extends ActionBarActivityPlus {
         setContentView(R.layout.activity_search_events);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         my_interests = (EditText) findViewById(R.id.et_categories);
+        TextView timeView = (TextView) findViewById(R.id.vw_time);
+        Time currentTime = new Time(Time.getCurrentTimezone());
+        currentTime.setToNow();
+        timeView.setText(currentTime.format("%k:%M"));
     }
 
 
