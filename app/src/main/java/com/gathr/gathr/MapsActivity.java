@@ -53,7 +53,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     private HashMap<Integer, Event> allEvents = new HashMap<Integer, Event>();
     private HashMap<String, Marker> allMarkers = new HashMap<String, Marker>();
     private QueryDB database= new QueryDB(this);
-    private GCoder geocoder = new GCoder(this);
+    private GCoder geocoder;
     MyGlobals global = new MyGlobals(this);
     private String raw_json;
 
@@ -144,25 +144,14 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         global.checkInternet();
 
         setActionBar(R.string.app_name);
+        geocoder = new GCoder(this);
         //Set up user location services
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE); //Location manager handles location tasks
         locationListener = new MyLocationListener();   //Location listener listens to changes in location
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);  //Attach location listener to location manager
 
-        //Query database
-        try {
-            new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
-
-            setUpMapIfNeeded();
-
-            //Set up map
-
-        }catch(Exception e){
-            global.errorHandler(e);
-        }
-
-
-
+        new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
+        setUpMapIfNeeded(); //Set up map
     }
 
     @Override
