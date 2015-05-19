@@ -53,25 +53,23 @@ public class MainFragment extends Fragment{
                     final String user_fname = user.getFirstName();
                     final String user_lname = user.getLastName();
 
-
                     QueryDB DBconn = new QueryDB(getActivity(), "login.php?fid=" + user_fid );
 
                     class login implements DatabaseCallback {
                         public void onTaskCompleted(String results) {
                             Intent i;
+                            Log.i("", results);
                             if(results.charAt(0) == 'N'){
-                                i = new Intent(getActivity().getApplicationContext(), EditProfile.class); //New User
+                                i = new Intent(getActivity(), EditProfile.class); //New User
                             }else{
-                                i = new Intent(getActivity().getApplicationContext(), MapsActivity.class); //Existing User
+                                i = new Intent(getActivity(), MapsActivity.class); //Existing User
                             }
                             AuthUser.setUser(getActivity(), results.substring(1), user_fid, user_fname, user_lname);
                             startActivity(i);
                             getActivity().finish();
                         }
                     }
-
-
-                    DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + ")", new login());
+                    DBconn.executeQuery("('" + user_fid + "', '" + user_email + "', '" + user_fname + "', '" + user_lname + "', '" + user_dob + "', '" + user_gender + "')", new login());
 
                 }
             }
@@ -152,6 +150,4 @@ public class MainFragment extends Fragment{
         super.onSaveInstanceState(outState);
         uiHelper.onSaveInstanceState(outState);
     }
-
-
 }

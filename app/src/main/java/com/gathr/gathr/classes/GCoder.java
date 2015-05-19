@@ -36,18 +36,6 @@ public class GCoder {
         }
         return result;
     }
-/*
-    public double getLat(String address){
-        List<Address> queryResults;
-        double result = 0.0;
-        try {
-            queryResults = coder.getFromLocationName(address,1);
-            result = queryResults.get(0).getLatitude();
-        } catch (IOException e){
-            Log.i("error", e.toString());
-        }
-        return result;
-    }
 
     public String coorToAddress(double lat, double lon){
         List<Address> queryResults;
@@ -61,5 +49,4 @@ public class GCoder {
         }
         return address;
     }
-    */
 }

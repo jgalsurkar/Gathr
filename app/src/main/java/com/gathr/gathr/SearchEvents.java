@@ -72,5 +72,3 @@ public class SearchEvents extends ActionBarActivityPlus {
     }
 
 }
-
-
