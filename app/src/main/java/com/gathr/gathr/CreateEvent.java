@@ -3,6 +3,7 @@
  Author : Gathr Team
  Purpose : Activity used to create a Gathring with all necessary information such as name, time,
  description, etc. Validation is done as well
+ as well
  *************************************************************************************************/
 
 package com.gathr.gathr;
@@ -11,11 +12,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -38,6 +41,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class CreateEvent extends ActionBarActivityPlus {
     MyGlobals global = new MyGlobals(this);
@@ -85,6 +89,10 @@ public class CreateEvent extends ActionBarActivityPlus {
                 global.tip("Your Gathring Name must have at least 5 characters!");
                 return;
             }
+            if(!getElementText(R.id.gathring_name).matches("[a-zA-Z.?'-/()!':; ]*")){
+                global.tip("Your Gathring Name contains characters that are not allowed!");
+                return;
+            }
             //Checking that description of the gathring has at least 10 characters
             if (getElementText(R.id.gathring_description).length() < 10) {
                 global.tip("Your Gathring Description must have at least 10 characters!");
@@ -108,15 +116,34 @@ public class CreateEvent extends ActionBarActivityPlus {
                 return;
             }
             //preventing of creating the gathring in the past
-          //  DateFormat formatter = new SimpleDateFormat("HH:mm");
-           // Calendar cal = Calendar.getInstance();
-           // java.sql.Time  timeNow = new java.sql.Time(formatter.parse(cal.getTime().toString()).getTime());
-           // java.sql.Time timeValue = new java.sql.Time(formatter.parse(((TextView) findViewById(R.id.gathring_time)).getText().toString()).getTime());
-           // if(date.equals("CURDATE()") && timeNow.after(timeValue)){
-          //      global.tip("timeValue: "+timeValue+", "+ timeNow);
+            //  DateFormat formatter = new SimpleDateFormat("HH:mm");
+            // Calendar cal = Calendar.getInstance();
+            // java.sql.Time  timeNow = new java.sql.Time(formatter.parse(cal.getTime().toString()).getTime());
+            // java.sql.Time timeValue = new java.sql.Time(formatter.parse(((TextView) findViewById(R.id.gathring_time)).getText().toString()).getTime());
+            // if(date.equals("CURDATE()") && timeNow.after(timeValue)){
+            //      global.tip("timeValue: "+timeValue+", "+ timeNow);
             //    global.tip("The event must be in the future!");
             //    return;
-           // }
+            // }
+            // Get calendar set to the current date and time
+
+            //Date date = new Date();   // given date
+            // Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+            // calendar.setTime(date);   // assigns calendar to given date
+            // int hNow = calendar.get(Calendar.HOUR);        // gets hour in 12h format
+            // //int mNow = calendar.get(Calendar.MINUTE);
+            // int sNow = calendar.get(Calendar.SECOND);
+
+            //if(date.equals("CURDATE()")&&(hNow>hour)
+            // Check if current time is after now today
+            // boolean afterNow = Calendar.getInstance().after(calendar);
+            //  Log.i("picked time" ,":"+calendar);
+            //  global.tip("picked time: " + Calendar.getInstance());
+            //  if (afterNow) {
+            //     global.tip("The event must be in the future!");
+            //     return;
+            //}
+
             //Escape everything and create the event
             String name = DBconn.escapeString(getElementText(R.id.gathring_name));
             String desc = DBconn.escapeString(getElementText(R.id.gathring_description));

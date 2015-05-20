@@ -66,7 +66,6 @@ public class NotificationReceiver extends BroadcastReceiver {
             if(counter % 3 == 0){ //Every 2 hours send a notification if someone you are following has created an event
                 DBconn.executeQuery("SELECT * FROM EVENTS, USERS, FRIENDS  WHERE FRIENDS.User_Id = USERS.Id AND FRIENDS.User_Id = " + AuthUser.getUserId(context) +" AND Organizer = Friend_User_Id");
             }
-            //Every 10 minutes check if an event was updated
 
         } catch (Exception e) {
             global = new MyGlobals(context);

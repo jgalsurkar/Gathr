@@ -1,3 +1,8 @@
+/**************************************************************************************************
+ Title : MapsActivity.java
+ Author : Gathr Team
+ Purpose : Allows user to navigate map and browse events by selecting them on the map
+ *************************************************************************************************/
 package com.gathr.gathr;
 
 import android.app.FragmentManager;
@@ -74,60 +79,58 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                         double delta = getDistance(locationAlpha, cameraPosition.target);
                         if(delta > camDistToRePop){
                             locationAlpha = cameraPosition.target;
-                            queryLocationEvents(locationAlpha, camMilesToRepop, true);
+                            queryLocationEvents(locationAlpha, camMilesToRepop);
                         }
                     }
 
                     if(firstRun){
-                        if (mMap != null) {
-                            //Set camera to user location if location provider available
-
-                            Intent i = getIntent();
-                            if(i.hasExtra("event_json")){
-                                Event thisEvent = new Event(i.getStringExtra("event_json"));
-                                int thisId = Integer.parseInt(thisEvent.id);
-                                if(allMarkers.containsKey(thisId)){
-                                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
-                                } else {
-                                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
-                                    int markerHash = newMarker.hashCode();
-                                    allEvents.put(markerHash, thisEvent);
-                                    allMarkers.put(thisEvent.id, newMarker);
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
-
-                                }
-                            } else {
-
-                                String thisProvider;
-                                Location location;
-                                List<String> allProviders = locationManager.getAllProviders();
-                                for (int n = 0; n < allProviders.size(); n++) {
-                                    thisProvider = allProviders.get(n);
-                                    location = locationManager.getLastKnownLocation(thisProvider);
-                                    if (location != null) {
-                                        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
-                                        startAtUserLocation = true;
-                                        break;
-                                    }
-                                }
-
-                                if (startAtUserLocation) {
-                                    locationAlpha = mMap.getCameraPosition().target;
-                                    queryLocationEvents(locationAlpha, camMilesToRepop, true);
-                                } else {
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
-                                    locationAlpha = mMap.getCameraPosition().target;
-                                    queryLocationEvents(locationAlpha, camMilesToRepop, true);
-                                }
-                            }
-                            firstRun = false;
-                        }
+                        onMapLoad();
+                        firstRun = false;
                     }
-
                 }
             };
+
+    private void onMapLoad(){
+        if (mMap != null) {
+            //Set camera to user location if location provider available
+            Intent i = getIntent();
+            if (i.hasExtra("event_json")) {
+                Event thisEvent = new Event(i.getStringExtra("event_json"));
+                int thisId = Integer.parseInt(thisEvent.id);
+                if (allMarkers.containsKey(thisId)) {
+                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
+                } else {
+                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
+                    int markerHash = newMarker.hashCode();
+                    allEvents.put(markerHash, thisEvent);
+                    allMarkers.put(thisEvent.id, newMarker);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
+                }
+            } else {
+                String thisProvider;
+                Location location;
+                List<String> allProviders = locationManager.getAllProviders();
+                for (int n = 0; n < allProviders.size(); n++) {
+                    thisProvider = allProviders.get(n);
+                    location = locationManager.getLastKnownLocation(thisProvider);
+                    if (location != null) {
+                        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+                        startAtUserLocation = true;
+                        break;
+                    }
+                }
+                if (startAtUserLocation)
+                    locationAlpha = mMap.getCameraPosition().target;
+                else {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
+                    locationAlpha = mMap.getCameraPosition().target;
+                }
+                queryLocationEvents(locationAlpha, camMilesToRepop);
+            }
+        }
+    }
 
     //Overridden Functions//
 
@@ -158,9 +161,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         }catch(Exception e){
             global.errorHandler(e);
         }
-
-
-
     }
 
     @Override
@@ -193,7 +193,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         @Override
         public void onProviderEnabled(String provider) {
             Toast.makeText(getApplicationContext(), "GPS Enabled", Toast.LENGTH_SHORT).show();
-            //   mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLatitude(), loc.getLongitude())).title("I AM HERE"));
         }
 
         @Override
@@ -224,16 +223,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         }
         return search;
     }
-    /*
-        public void searchWithFilters(View v){
-          //  MsgBox("Hi","Hi");
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Search Events");
-            alert.setMessage("Enter Your Search Preferences");
-            alert.setView(R.layout.search_layout);
-            alert.show();
-        }
-    */
+
     private String msgBoxInput(String Title, String Message){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext= new EditText(this);
@@ -255,7 +245,8 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                 .setMessage(Message)
                 .setCancelable(true)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {}
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
                 })
         ;
 
@@ -323,14 +314,18 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
         LatLng searchLatLng = geocoder.addressToCoor(location);
         if(searchLatLng.latitude != 0.0 & searchLatLng.longitude != 0.0) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 15));
-            queryLocationEvents(mMap.getCameraPosition().target, camMilesToRepop, true);
+            queryLocationEvents(mMap.getCameraPosition().target, camMilesToRepop);
         }
         else
             MsgBox("Sorry", "We couldn't find " + location + ". Try searching by address, city, zip code, or landmark");
 
     }
 
-    private void queryLocationEvents(LatLng target, double miles,final boolean populate){
+    private void queryLocationEvents(LatLng target, double miles){
+        queryLocationEvents(target, miles, "");
+    }
+
+    private void queryLocationEvents(LatLng target, double miles, String categories){
         double latDiff = milesToLat(miles),
                 lonDiff = milesToLon(miles, target.latitude);
         double latBoundary1 = target.latitude - latDiff,
@@ -352,21 +347,27 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
 
         try{
             String areaRestriction = "Latitude > " + latBoundary1 + " AND Latitude < " + latBoundary2 + " AND Longitude > " + lonBoundary1 + " AND Longitude < " + lonBoundary2;
+            String catRestriction = (categories == "")?"":" CATEGORIES " + categories;
+            String query = "SELECT * FROM EVENTS WHERE " + areaRestriction + " AND Population < Capacity AND Status = 'OPEN' AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))" + catRestriction;
 
             class getEvents implements DatabaseCallback {
                 public void onTaskCompleted(final String r){
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             raw_json = r;
-                            if(!r.contains("ERROR") && populate)
+                            Log.i("DEBUG",raw_json);
+                            if(!r.contains("ERROR") && !r.isEmpty()) {
+                                Log.i("DEBUG", "Now populating events with json: " + r);
                                 populateEvents();
+                            }
                         }
                     });
                 }
             }
-            database.executeQuery("SELECT * FROM EVENTS WHERE " + areaRestriction + " AND Population < Capacity AND Status = 'OPEN' AND ((Time > TIME(NOW()) AND Date = DATE(NOW())) OR Date > DATE(NOW()))", new getEvents());
+            Log.i("debug", query);
+            database = new QueryDB(this);
+            database.executeQuery(query, new getEvents());
         }  catch(Exception e) {
             Log.i("Error", "Failed to populate events at search location");
             global.errorHandler(e);
@@ -411,29 +412,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                 String location = data.getStringExtra("location");
                 String time = data.getStringExtra("time");
                 makeSearch(location, time, category);
-
-
-     /*
-                Intent intent = getIntent();
-                Bundle extras = intent.getExtras();
-                if(extras != null) {
-                    if(extras.containsKey("eventId")) {         //For intent to go to map location
-                        String eventId = (String) extras.get("eventId");
-                        Marker eventMarker = allMarkers.get(eventId);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventMarker.getPosition(), 15));
-                    }
-                    else {                                     //For intent to make search
-                        String time = (String) extras.get("time");
-                        String location = (String) extras.get("location");
-                        String categories = (String) extras.get("categories");
-                        makeSearch(location, categories, time);
-                    }
-                }
-                /*
-                category = data.getStringExtra("category");
-                categoryId = data.getStringExtra("categoryId");
-                my_interests.setText(category);
-                */
             }
         }
     }
@@ -443,8 +421,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
 
-
-
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
@@ -452,23 +428,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
             // Check if we were successful in obtaining the map.
             if (mMap != null)
                 setUpMap();
-        }/* else {
-            Intent i = getIntent();
-            if(i.hasExtra("event_json")){
-                Event thisEvent = new Event(i.getStringExtra("event_json"));
-                int thisId = Integer.parseInt(thisEvent.id);
-                if(allMarkers.containsKey(thisId)){
-                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
-                } else {
-                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
-                    int markerHash = newMarker.hashCode();
-                    allEvents.put(markerHash, thisEvent);
-                    allMarkers.put(thisEvent.id, newMarker);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
-                }
-            }
-        }*/
+        }
     }
 
     private void setUpMap() {

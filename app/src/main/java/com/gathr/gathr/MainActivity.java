@@ -55,4 +55,10 @@ public class MainActivity extends FragmentActivity{
             finish();
         }
     }
+
+    @Override
+         public void onBackPressed() {
+
+             return;
+         }
 }
