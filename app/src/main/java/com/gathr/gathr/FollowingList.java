@@ -51,7 +51,7 @@ public class FollowingList extends ActionBarActivityPlus {
             try{
                 String results =  global.getFollowersJSON();
                 if(results.contains("ERROR")){ //If the user has no friends
-                    friendNames = new String[]{"No friends to show"};
+                    friendNames = new String[]{"You are not following anyone"};
                     friendIds = new String[]{"-1"};
                     images = new String[]{"-1"};
                 }else{ // Populate the list with the user's friends
