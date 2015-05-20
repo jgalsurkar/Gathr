@@ -35,7 +35,6 @@ public class MainFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState)
     {
-
         View view = inflater.inflate(R.layout.activity_main, container, false);
         // Find the user's profile picture custom view
         LoginButton authButton = (LoginButton)view.findViewById(R.id.authButton);
@@ -80,7 +79,7 @@ public class MainFragment extends Fragment{
         return view;
     }
 
-
+    //Log in or out depending on session state
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Toast.makeText(super.getActivity(), "Logging in, Please Wait!", Toast.LENGTH_SHORT).show();

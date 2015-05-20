@@ -53,7 +53,7 @@ public class MyGlobals {
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");
         try {
             Date d = nFormat.parse(nTime);
-            return mFormat.format(d).toString();
+            return mFormat.format(d);
         }catch(ParseException x){
             x.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class MyGlobals {
         SimpleDateFormat nFormat = new SimpleDateFormat("h:mm a");
         try {
             Date d = mFormat.parse(mTime);
-            return nFormat.format(d).toString();
+            return nFormat.format(d);
         }catch(ParseException x){
             x.printStackTrace();
         }

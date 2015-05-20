@@ -3,7 +3,6 @@
  Author : Gathr Team
  Purpose : Activity used to create a Gathring with all necessary information such as name, time,
  description, etc. Validation is done as well
- as well
  *************************************************************************************************/
 
 package com.gathr.gathr;
@@ -34,6 +33,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,7 +52,7 @@ public class CreateEvent extends ActionBarActivityPlus {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        setActionBar(R.string.title_activity_create_event);
+        setActionBar("Create Event");
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         my_interests = (EditText) findViewById(R.id.gathring_category);
         Intent i = getIntent();
@@ -75,14 +77,15 @@ public class CreateEvent extends ActionBarActivityPlus {
             }
         }
     }
-
+    //Error Checking
     public void viewGathring(View view){
         try {
-            //Error Checking
+            //Checking that name of the gathring has at least 5 characters
             if (getElementText(R.id.gathring_name).length() < 5) {
                 global.tip("Your Gathring Name must have at least 5 characters!");
                 return;
             }
+            //Checking that description of the gathring has at least 10 characters
             if (getElementText(R.id.gathring_description).length() < 10) {
                 global.tip("Your Gathring Description must have at least 10 characters!");
                 return;
@@ -94,16 +97,26 @@ public class CreateEvent extends ActionBarActivityPlus {
                 global.tip("You must provide a valid address!");
                 return;
             }
-            if (getElementText(R.id.gathring_limit).equals("") || Integer.parseInt(getElementText(R.id.gathring_limit)) < 2) {
+            //make sure that gathring doesn't get created with capacity <= 3
+            if (getElementText(R.id.gathring_limit).equals("") || Integer.parseInt(getElementText(R.id.gathring_limit)) <= 3) {
                 global.tip("You must provide a Gathring Capacity greater than 3!");
                 return;
             }
-
+            //make sure that events doesn't get created without categories
             if(categoryId.length() < 1){
                 global.tip("You must provide at least 1 Category!");
                 return;
             }
-
+            //preventing of creating the gathring in the past
+          //  DateFormat formatter = new SimpleDateFormat("HH:mm");
+           // Calendar cal = Calendar.getInstance();
+           // java.sql.Time  timeNow = new java.sql.Time(formatter.parse(cal.getTime().toString()).getTime());
+           // java.sql.Time timeValue = new java.sql.Time(formatter.parse(((TextView) findViewById(R.id.gathring_time)).getText().toString()).getTime());
+           // if(date.equals("CURDATE()") && timeNow.after(timeValue)){
+          //      global.tip("timeValue: "+timeValue+", "+ timeNow);
+            //    global.tip("The event must be in the future!");
+            //    return;
+           // }
             //Escape everything and create the event
             String name = DBconn.escapeString(getElementText(R.id.gathring_name));
             String desc = DBconn.escapeString(getElementText(R.id.gathring_description));

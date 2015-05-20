@@ -21,7 +21,7 @@ public class SearchEvents extends ActionBarActivityPlus {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBar(R.string.title_activity_search_events);
+        setActionBar("Search Gathrings");
         setContentView(R.layout.activity_search_events);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         my_interests = (EditText) findViewById(R.id.et_categories);

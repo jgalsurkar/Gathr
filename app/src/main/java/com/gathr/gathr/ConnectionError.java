@@ -11,12 +11,10 @@ package com.gathr.gathr;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
 import com.gathr.gathr.classes.MyGlobals;
-
 
 public class ConnectionError extends ActionBarActivity {
 
@@ -27,16 +25,16 @@ public class ConnectionError extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connection_error);
     }
-
+    /*Called when the "Try Again" button is clicked.
+      Returns the user to the Main Activity(Page) if the user has internet connection*/
     public void tryAgain(View view){
         if(global.isNetworkAvailable(this)) {
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
-        }else{
+        }else{//Otherwise display the following message
             Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 }

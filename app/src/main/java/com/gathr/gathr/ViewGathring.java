@@ -49,8 +49,8 @@ public class ViewGathring extends ActionBarActivityPlus {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_gathring);
-        setActionBar(R.string.title_activity_view_gathring);
-        listview = (HorizontalListView) findViewById(R.id.listview);
+        setActionBar("View Gathrings");
+        listview = (HorizontalListView) findViewById(R.id.listview); //List of others in the Gathring
         try{
             Intent intent = getIntent();
 
@@ -77,7 +77,7 @@ public class ViewGathring extends ActionBarActivityPlus {
             global.errorHandler(e);
         }
     }
-    public void joinOrLeave(View view){
+    public void joinOrLeave(View view){ //Joining or leaving an event
         if(!loggedin){
             Intent intent = new Intent(this, MainActivity.class); // Send them back to login page
             startActivity(intent);
@@ -96,7 +96,7 @@ public class ViewGathring extends ActionBarActivityPlus {
         finish();
         startActivity(getIntent());
     }
-    public void showOnMap(View view){
+    public void showOnMap(View view){ //Show the Gathring on the maps page
         Intent i = new Intent(this, MapsActivity.class);
         i.putExtra("event_json", event_json);
         startActivity(i);
@@ -108,7 +108,7 @@ public class ViewGathring extends ActionBarActivityPlus {
         return true;
     }
 
-    public void share(View v){
+    public void share(View v){ //Share the Gathring
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
@@ -116,14 +116,14 @@ public class ViewGathring extends ActionBarActivityPlus {
         startActivity(Intent.createChooser(shareIntent, "Share this event"));
     }
 
-    public void openChat(View v){
+    public void openChat(View v){ //Go to the chatroom
         Intent i = new Intent(this, SplashActivity.class);
         i.putExtra("EventId", eventId );
         i.putExtra("EventName", event.name );
         startActivity(i);
     }
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu){//Set menu options
         if(!cancelled && userId.equals(eventOrganizer)){
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_cancel).setVisible(true);
@@ -134,7 +134,7 @@ public class ViewGathring extends ActionBarActivityPlus {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
+        if (id == R.id.action_edit) {//If edit event option is selected, go to create event activity with prefilled information
             Intent i = new Intent(this, CreateEvent.class);
             i.putExtra("prefill", event_json );
             startActivity(i);
@@ -202,7 +202,7 @@ public class ViewGathring extends ActionBarActivityPlus {
             });
         }
     }
-    class loadEvent implements DatabaseCallback{
+    class loadEvent implements DatabaseCallback{//Loads all event information and sets the corresponding fields
         public void onTaskCompleted(String results){
             try {
                 event_json = results;

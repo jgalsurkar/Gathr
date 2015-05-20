@@ -46,7 +46,7 @@ public class SidebarGenerator {
                 Bundle args = new Bundle();
                 args.putString("Menu", menu[position]);
                 View view = dLayout;
-                changeIntent(view, position);
+                changeIntent(dLayout, position);
             }
         });
     }

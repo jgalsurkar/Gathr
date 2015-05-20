@@ -115,12 +115,15 @@ public class Profile extends ActionBarActivityPlus {
             (findViewById(vid)).setClickable(false);
         }
     }
+    //Opening user's instagram profile
     public void goToInsta (View view ) {
         goToUrl ("https://instagram.com/"+ parseUN(inst));
     }
+    //Opening user's facebook profile
     public void goToFace (View view) {
         goToUrl ( "https://facebook.com/"+fb);
     }
+    //Opening user's twitter profile
     public void goToTwit (View view) {
         goToUrl ( "http://twitter.com/"+ parseUN(tw));
     }
@@ -167,6 +170,7 @@ public class Profile extends ActionBarActivityPlus {
             i.putExtra("category",interests);
             i.putExtra("categoryId",categoryId);
             startActivity(i);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -45,7 +45,7 @@ public class EditProfile extends ActionBarActivityPlus {
     protected void onCreate(Bundle savedInstanceState) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
-        setActionBar(R.string.title_activity_edit_profile);
+        setActionBar("Edit Profile");
         setContentView(R.layout.activity_edit_profile);
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
 
@@ -121,8 +121,8 @@ public class EditProfile extends ActionBarActivityPlus {
             DBconn.executeQuery("UPDATE USERS " +
                     "SET `About_Me`='"+about_me+"',`Instagram`='"+instagram+"',`Facebook`='"+facebook+"',`Twitter`='"+twitter+"' "+
                     "where `Id` ="+userId+";",new UpdateUser());
-            global.getUserJSON(1);
             DBconn.executeQuery("ADD INTERESTS " +categoryId+" FOR "+userId);
+            global.getUserJSON(1);
             // We dont really need to wait
         }catch(Exception e){
             global.errorHandler(e);

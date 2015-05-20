@@ -21,6 +21,7 @@ public class FriendArrayAdapter extends ArrayAdapter<String> {
     private final String[] names;
     private final String[] images;
 
+    //Constructor that initializes the array of friends names and profile pictures
     public FriendArrayAdapter(Context context, String[] names, String[] images) {
         super(context, R.layout.fragment_following_list, names);
         this.context = context;
@@ -29,17 +30,18 @@ public class FriendArrayAdapter extends ArrayAdapter<String> {
     }
 
     @Override
+    //Sets the name and profile picture of a friend(follower) list item and return it
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.fragment_following_list, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.friend_list_name);
-        textView.setText(names[position]);
+        View rowView = inflater.inflate(R.layout.fragment_following_list, parent, false);//Inflate the proper view
+        TextView textView = (TextView) rowView.findViewById(R.id.friend_list_name);// get the friend list item's name (view)
+        textView.setText(names[position]);//Set the text with the proper name from the array
 
-        ProfilePictureView imgView = (ProfilePictureView) rowView.findViewById(R.id.friend_profile_pic);
+        ProfilePictureView imgView = (ProfilePictureView) rowView.findViewById(R.id.friend_profile_pic); //get the friend list item's profile picture (view)
         imgView.setCropped(true);
-        imgView.setProfileId(images[position]);
+        imgView.setProfileId(images[position]);//Set the image with the proper profile picture from the array in the same position
 
         return rowView;
     }

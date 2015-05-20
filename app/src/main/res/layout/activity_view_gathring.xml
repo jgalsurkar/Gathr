@@ -55,13 +55,13 @@ The Page that opens when user clicks on the Gathring from the list of My Gathrin
                     android:id="@+id/imageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/gathring_description_text"
                     android:layout_gravity="right"
-                    android:layout_toEndOf="@+id/gathring_address_header"
-                    android:layout_toRightOf="@+id/gathring_address_header"
                     android:background="@color/white"
                     android:onClick="showOnMap"
-                    android:src="@drawable/perm_group_location" />
+                    android:src="@drawable/perm_group_location"
+                    android:layout_below="@+id/gathring_description_text"
+                    android:layout_alignRight="@+id/gathring_address_text"
+                    android:layout_alignEnd="@+id/gathring_address_text" />
 
                 <TextView
                     android:id="@+id/gathring_address_header"

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 public class Event {
 
+    //Event Information
     public String id, name, description, time, capacity, pop, date, address, city, state, status, event_organizer, categories, categoriesId; //separated by a comma
     public Double latitude, longitude;
 
@@ -24,7 +25,7 @@ public class Event {
             e.printStackTrace();
         }
     }
-    //Constructer that can create an event from a JSONObject
+    //Constructor that can create an event from a JSONObject
     public Event(JSONObject jsonObject){
         JSONObjtoEvent(jsonObject);
     }
