@@ -1,7 +1,7 @@
 /**************************************************************************************************
  Title : GCoder.java
  Author : Gathr Team
- Purpose : Given an address, returns the corresponding geo coordinates
+ Purpose : Converts address to geocoordinates and vice versa
  *************************************************************************************************/
 
 package com.gathr.gathr.classes;

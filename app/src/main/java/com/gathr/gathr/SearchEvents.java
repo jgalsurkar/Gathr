@@ -1,3 +1,9 @@
+/**************************************************************************************************
+ Title : SearchEvents.java
+ Author : Gathr Team
+ Purpose : Allows user to search for events based on various criteria
+ *************************************************************************************************/
+
 package com.gathr.gathr;
 
 import android.app.Activity;
@@ -26,7 +32,6 @@ public class SearchEvents extends ActionBarActivityPlus {
         new SidebarGenerator((DrawerLayout)findViewById(R.id.drawer_layout), (ListView)findViewById(R.id.left_drawer),android.R.layout.simple_list_item_1,this);
         my_interests = (EditText) findViewById(R.id.et_categories);
     }
-
 
     public void getTimeFilter(View v){
         TimePickerFragment newFragment = new TimePickerFragment((TextView)findViewById(R.id.vw_time));

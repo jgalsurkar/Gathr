@@ -70,7 +70,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     private boolean startAtUserLocation = false;
 
     private boolean firstRun = true;
-
     private final GoogleMap.OnCameraChangeListener mOnCameraChangeListener =
             new GoogleMap.OnCameraChangeListener() {
                 @Override
@@ -89,48 +88,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                     }
                 }
             };
-
-    private void onMapLoad(){
-        if (mMap != null) {
-            //Set camera to user location if location provider available
-            Intent i = getIntent();
-            if (i.hasExtra("event_json")) {
-                Event thisEvent = new Event(i.getStringExtra("event_json"));
-                int thisId = Integer.parseInt(thisEvent.id);
-                if (allMarkers.containsKey(thisId)) {
-                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
-                } else {
-                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
-                    int markerHash = newMarker.hashCode();
-                    allEvents.put(markerHash, thisEvent);
-                    allMarkers.put(thisEvent.id, newMarker);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
-                }
-            } else {
-                String thisProvider;
-                Location location;
-                List<String> allProviders = locationManager.getAllProviders();
-                for (int n = 0; n < allProviders.size(); n++) {
-                    thisProvider = allProviders.get(n);
-                    location = locationManager.getLastKnownLocation(thisProvider);
-                    if (location != null) {
-                        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
-                        startAtUserLocation = true;
-                        break;
-                    }
-                }
-                if (startAtUserLocation)
-                    locationAlpha = mMap.getCameraPosition().target;
-                else {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
-                    locationAlpha = mMap.getCameraPosition().target;
-                }
-                queryLocationEvents(locationAlpha, camMilesToRepop);
-            }
-        }
-    }
 
     //Overridden Functions//
 
@@ -201,45 +158,9 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
 
     //Message Box Functions//
 
-    private LatLng askUserLocation(){
-        String input;
-        LatLng search = null;
-        String title = "Where are you now?";
-        String message1 = "Enter a zip code, city, region, or landmark to get started";
-        String message2 = "We couldn't find that location. Try searching by address, city, zip code, or landmark";
-
-        boolean done = false,
-                firstTry = true;
-        while(!done){
-            if(firstTry)
-                input = msgBoxInput(title, message1);
-            else
-                input = msgBoxInput(title, message2);
-            search = geocoder.addressToCoor(input);
-            if(search.latitude != 0.0 & search.longitude != 0.0)
-                done = true;
-            else
-                firstTry = false;
-        }
-        return search;
-    }
-
-    private String msgBoxInput(String Title, String Message){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        final EditText edittext= new EditText(this);
-        alert.setMessage(Message);
-        alert.setTitle(Title);
-        alert.setView(edittext);
-        alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {}
-        });
-        alert.show();
-        return edittext.getText().toString();
-    }
-
     private void MsgBox(String Title, String Message){
+        //Generates message box popup
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
         alertDialogBuilder.setTitle(Title);
         alertDialogBuilder
                 .setMessage(Message)
@@ -249,19 +170,16 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                     }
                 })
         ;
-
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
     private void EventMsg(final Event event,  final Context c){
+        //Generates event message popup
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
         MyGlobals globals = new MyGlobals();
         String time = globals.normalTime(event.time.toString());
-
         String eventInfo = globals.nDate(event.date) + " at " + time +  "\n" +event.description + "\n\nCapacity: " + event.pop + "/" + event.capacity;
-
         alertDialogBuilder.setTitle(event.name);
         alertDialogBuilder
                 .setMessage(eventInfo)
@@ -279,7 +197,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
                     }
                 })
         ;
-
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -287,14 +204,17 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     //Distance Calculation functions//
 
     private double getDistance(LatLng a, LatLng b){
+        //Calculates distance between two LatLng objects
         return Math.sqrt(Math.pow(a.latitude - b.latitude, 2) + Math.pow(b.longitude - b.longitude, 2));
     }
 
     private double milesToLat(double miles){
+        //Converts miles to latitudinal distance
         return (miles/3960.0)*180.0/Math.PI;
     }
 
     private double milesToLon(double miles, double lat){
+        //Converts miles to longitudinal distance
         double r = 3960.0*Math.cos(lat*Math.PI/180);
         return (miles/r)*180.0/Math.PI;
     }
@@ -302,11 +222,13 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     //Event Search Functions//
 
     public void goToSearch(View v){
+        //Activates search
         Intent i = new Intent(this, SearchEvents.class);
         startActivityForResult(i, 0);
     }
 
     private void makeSearch(String location, String categories, String time){
+        //Runs search with parameters
         if(location.isEmpty())
             return;
         QueryDB DBConn = new QueryDB(this, "storeSearch.php");
@@ -326,6 +248,7 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     }
 
     private void queryLocationEvents(LatLng target, double miles, String categories){
+        //Queries database for events within given miles of given LatLng coordinates of type categories (optional parameter)
         double latDiff = milesToLat(miles),
                 lonDiff = milesToLon(miles, target.latitude);
         double latBoundary1 = target.latitude - latDiff,
@@ -377,14 +300,12 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     //Event Population Functions//
 
     private void populateEvents(){
-
+        //Populates map with event markers based on search made
         try{
             JSONArray json = new JSONArray(raw_json);
-
             int markerHash;
             Event thisEvent;
             Marker thisMarker;
-
             for (int i=0;i<json.length();i++){
                 thisEvent = new Event(json.getJSONObject(i));
                 if(allMarkers.containsKey(thisEvent.id))
@@ -420,7 +341,6 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
 
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
-
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
@@ -434,11 +354,55 @@ public class MapsActivity extends ActionBarActivityPlus implements GoogleMap.OnM
     private void setUpMap() {
         //Set user location
         mMap.setMyLocationEnabled(true);
-
         //Marker click listener
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraChangeListener(mOnCameraChangeListener);
 
+    }
+
+    private void onMapLoad(){
+        //Runs once when Map fragment is fully loaded
+        if (mMap != null) {
+            //Set camera to user location if location provider available
+            //Otherwise, set camera to NYC by default
+            Intent i = getIntent();
+            if (i.hasExtra("event_json")) {
+                //Runs if and only if this activity was opened to solely to view an event on the map
+                Event thisEvent = new Event(i.getStringExtra("event_json"));
+                int thisId = Integer.parseInt(thisEvent.id);
+                if (allMarkers.containsKey(thisId)) {
+                    LatLng thisCoor = allMarkers.get(thisId).getPosition();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisCoor, 15));
+                } else {
+                    Marker newMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(thisEvent.latitude, thisEvent.longitude)));
+                    int markerHash = newMarker.hashCode();
+                    allEvents.put(markerHash, thisEvent);
+                    allMarkers.put(thisEvent.id, newMarker);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newMarker.getPosition(), 15));
+                }
+            } else {
+                String thisProvider;
+                Location location;
+                List<String> allProviders = locationManager.getAllProviders();
+                for (int n = 0; n < allProviders.size(); n++) {
+                    thisProvider = allProviders.get(n);
+                    location = locationManager.getLastKnownLocation(thisProvider);
+                    if (location != null) {
+                        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+                        startAtUserLocation = true;
+                        break;
+                    }
+                }
+                if (startAtUserLocation)
+                    locationAlpha = mMap.getCameraPosition().target;
+                else {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40.7127, -74.0059), 15));
+                    locationAlpha = mMap.getCameraPosition().target;
+                }
+                queryLocationEvents(locationAlpha, camMilesToRepop);
+            }
+        }
     }
 
 }
